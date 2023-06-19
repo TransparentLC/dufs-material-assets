@@ -1,5 +1,7 @@
 # dufs-material-assets
 
+[![CI](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/ci.yml/badge.svg)](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/ci.yml)
+
 [dufs](https://github.com/sigoden/dufs) 的 Material Design 风格自定义前端界面。
 
 使用 Vue 3 + Vuetify 构建，部分设计参考 [Cloudreve](https://github.com/cloudreve/Cloudreve)，添加了一些额外的功能。

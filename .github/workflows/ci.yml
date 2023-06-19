@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: latest
+          architecture: x64
+          check-latest: true
+          cache: pnpm
+          cache-dependency-path: "**/package.json"
+      - name: Build assets
+        run: |
+          pnpm install
+          pnpm run build
+      - name: Upload assets
+        uses: actions/upload-artifact@v3
+        with:
+          name: dufs-material-assets
+          path: dist
+      - name: Upload stats
+        uses: actions/upload-artifact@v3
+        with:
+          name: stats
+          path: stats.html

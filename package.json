@@ -1,0 +1,37 @@
+{
+  "name": "dufs-material-assets",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node after-build.js",
+    "dufs": "vite build && node after-build.js && dufs --bind 127.0.0.1 --path-prefix /prefix/ --allow-archive --allow-search --assets dist .",
+    "dufs-api": "dufs --bind 127.0.0.1 --path-prefix /prefix/ --auth admin:admin@/:rw --auth guest:guest@/ --enable-cors --allow-all .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mdi/js": "*",
+    "blueimp-md5": "^2.19.0",
+    "jsmediatags": "^3.9.7",
+    "marked": "^5.1.0",
+    "marked-highlight": "^2.0.1",
+    "prismjs": "^1.29.0",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2",
+    "vuetify": "^3.3.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "autoprefixer": "^10.4.14",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "vite": "^4.3.9",
+    "vite-plugin-html": "^3.2.0",
+    "vite-plugin-vuetify": "^1.0.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "jsmediatags@3.9.7": "patches/jsmediatags@3.9.7.patch"
+    }
+  }
+}

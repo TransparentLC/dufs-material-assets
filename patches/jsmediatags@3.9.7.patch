@@ -1,0 +1,13 @@
+diff --git a/package.json b/package.json
+index 1265c61a16be5dc94dea97e1a7bcd117b0b5c0fe..4dae6b0bda9b891bcb02d6dde2d1a96125573652 100644
+--- a/package.json
++++ b/package.json
+@@ -19,7 +19,7 @@
+     }
+   ],
+   "main": "build2/jsmediatags.js",
+-  "browser": "dist/jsmediatags.js",
++  "browser": "dist/jsmediatags.min.js",
+   "repository": {
+     "type": "git",
+     "url": "git+https://github.com/aadsm/jsmediatags.git"

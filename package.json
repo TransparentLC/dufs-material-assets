@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mdi/js": "*",
+    "@mdi/js": "^7.2.96",
     "blueimp-md5": "^2.19.0",
     "jsmediatags": "^3.9.7",
     "marked": "^5.1.0",

@@ -5,8 +5,8 @@
 使用 Vue 3 + Vuetify 构建，部分设计参考 [Cloudreve](https://github.com/cloudreve/Cloudreve)，添加了一些额外的功能。
 
 <picture>
-    <source media="(prefers-color-scheme:dark)" srcset="">
-    <img src="">
+    <source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/02017b91-9d77-449c-9298-2ec31afc9a8f">
+    <img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/71a70e27-b8ed-4ae0-9c74-1dd22d3e5738">
 </picture>
 
 ## 已实现/适配的功能
@@ -39,7 +39,7 @@
 
 ## 使用方法
 
-从 []() 下载前端资源后，假定保存在 `dufs-material-assets` 目录，在启动 dufs 时添加参数 `--assets dufs-material-assets`。
+从 [GitHub Actions](https://github.com/TransparentLC/dufs-material-assets/actions) 或 [nightly.link](https://nightly.link/TransparentLC/dufs-material-assets/workflows/ci/master) 下载前端资源后，假定保存在 `dufs-material-assets` 目录，在启动 dufs 时添加参数 `--assets dufs-material-assets`。
 
 也可以自己构建前端资源。由于 jsmediatags 存在一个[小问题](https://github.com/aadsm/jsmediatags/pull/150)暂未修复，在安装时需要额外打一个补丁，可以使用 [patch-package](https://www.npmjs.com/package/patch-package)，不过我选择使用 [pnpm](https://pnpm.io/) 一步到位：
 
@@ -83,7 +83,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>搜索/响应式设计</summary>
 
-![]()
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/31ed125e-6fbc-42cb-a3b7-c254be1003d8)
 
 </details>
 
@@ -91,7 +91,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>文本文件预览</summary>
 
-![]()
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/9498375b-2439-44bf-91a8-98a6d54cd446)
 
 </details>
 
@@ -99,7 +99,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>图片查看器</summary>
 
-![]()
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/c294c0f0-7125-4495-a2ad-1298daf9ad25)
 
 </details>
 
@@ -107,7 +107,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>视频播放器</summary>
 
-![]()
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/d038a2c5-540f-4147-a591-6e2bc1ab85b9)
 
 </details>
 
@@ -115,6 +115,6 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>音乐播放器</summary>
 
-![]()
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/46973785-7768-4c3d-aa34-989f8378e5f5)
 
 </details>

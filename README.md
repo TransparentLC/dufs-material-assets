@@ -7,8 +7,8 @@
 使用 Vue 3 + Vuetify 构建，部分设计参考 [Cloudreve](https://github.com/cloudreve/Cloudreve)，添加了一些额外的功能。
 
 <picture>
-    <source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/02017b91-9d77-449c-9298-2ec31afc9a8f">
-    <img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/71a70e27-b8ed-4ae0-9c74-1dd22d3e5738">
+    <source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/f8488128-ad2b-4f3d-950e-10c2a11ac390">
+    <img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/094fa2be-afeb-4010-9bec-d014b888b97b">
 </picture>
 
 ## 已实现/适配的功能
@@ -85,7 +85,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>搜索/响应式设计</summary>
 
-![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/31ed125e-6fbc-42cb-a3b7-c254be1003d8)
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/bbf048b9-5be6-49fe-a9b1-22467575f5be)
 
 </details>
 
@@ -93,7 +93,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>文本文件预览</summary>
 
-![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/9498375b-2439-44bf-91a8-98a6d54cd446)
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/5f094480-1e53-4d80-8a5a-56b2db95be23)
 
 </details>
 
@@ -101,7 +101,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>图片查看器</summary>
 
-![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/c294c0f0-7125-4495-a2ad-1298daf9ad25)
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/17119400-d218-4a6d-85dd-3b9fa9e436e1)
 
 </details>
 
@@ -109,7 +109,7 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>视频播放器</summary>
 
-![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/d038a2c5-540f-4147-a591-6e2bc1ab85b9)
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/253dd093-de65-4ffc-8461-6139b23b47a7)
 
 </details>
 
@@ -117,6 +117,6 @@ window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 
 <summary>音乐播放器</summary>
 
-![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/46973785-7768-4c3d-aa34-989f8378e5f5)
+![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/c7852e66-495c-4ec0-86e6-db8a6c316f20)
 
 </details>

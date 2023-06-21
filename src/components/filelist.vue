@@ -190,13 +190,13 @@
                                     v-if="p.is_dir"
                                     :to="p.fullpath + '/'"
                                     class="text-decoration-none"
-                                    style="color:inherit"
+                                    style="color:inherit;overflow-wrap:anywhere"
                                 >{{ p.name }}</router-link>
                                 <a
                                     v-else
                                     :href="p.fullpath"
                                     class="text-decoration-none"
-                                    style="color:inherit"
+                                    style="color:inherit;overflow-wrap:anywhere"
                                 >{{ p.name }}</a>
                                 <v-icon
                                     v-if="p.is_symlink"

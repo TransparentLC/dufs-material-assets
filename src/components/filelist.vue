@@ -677,7 +677,10 @@ const filelist = ref({
 const filelistPathsSorted = computed(() => {
     switch (sortColumn.value) {
         case 'name':
-            return [...filelist.value.paths].sort((a, b) => a[sortColumn.value].localeCompare(b[sortColumn.value]) * (sortOrderDesc.value ? -1 : 1));
+            // sorting - Natural sort of alphanumerical strings in JavaScript - Stack Overflow
+            // https://stackoverflow.com/questions/2802341#answer-38641281
+            const c = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
+            return [...filelist.value.paths].sort((a, b) => c.compare(a[sortColumn.value], b[sortColumn.value]) * (sortOrderDesc.value ? -1 : 1));
         case 'mtime':
         case 'size':
             return [...filelist.value.paths].sort((a, b) => (a[sortColumn.value] - b[sortColumn.value]) * (sortOrderDesc.value ? -1 : 1));

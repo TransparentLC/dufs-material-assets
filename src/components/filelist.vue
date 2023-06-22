@@ -9,7 +9,7 @@
                     v-bind="props"
                     variant="text"
                     icon="$mdiUpload"
-                    @click="uploadFiles"
+                    @click="uploadFilesClick"
                 ></v-btn>
                 <input
                     id="upload"
@@ -846,18 +846,10 @@ const moveFile = async e => {
     await updateFilelist();
 };
 
-const uploadFilesSelectResolve = ref(() => {});
-const uploadFiles = async () => {
-    let t;
-    /** @type {File[]} */
-    const files = Array.from(await new Promise(resolve => {
-        document.getElementById('upload').value = null;
-        document.getElementById('upload').click();
-        uploadFilesSelectResolve.value = resolve;
-        t = setTimeout(() => resolve([]), 5 * 60 * 1000);
-    }));
-    clearTimeout(t);
-    if (!files.length) return;
+/**
+ * @param {File[]} files
+ */
+const uploadFiles = async files => {
     await Promise.all(files.map(e => dufsfetch(
         pathPrefix + e.name,
         {
@@ -868,6 +860,40 @@ const uploadFiles = async () => {
     $toast.success(`${files.length} files have been uploaded.`);
     await updateFilelist();
 };
+const uploadFilesSelectResolve = ref(() => {});
+const uploadFilesClick = async () => {
+    let t;
+    /** @type {File[]} */
+    const files = Array.from(await new Promise(resolve => {
+        document.getElementById('upload').value = null;
+        document.getElementById('upload').click();
+        uploadFilesSelectResolve.value = resolve;
+        t = setTimeout(() => resolve([]), 5 * 60 * 1000);
+    }));
+    clearTimeout(t);
+    if (!files.length) return;
+    await uploadFiles(files);
+};
+document.body.addEventListener('dragenter', e => e.preventDefault());
+document.body.addEventListener('dragover', e => e.preventDefault());
+document.body.addEventListener('drop', async e => {
+    e.preventDefault();
+    if (!filelist.value.allow_upload) {
+        return $toast.warning('File uploading is disabled.');
+    };
+    const files = Array.from(e.dataTransfer.files).filter(e => e.size || e.type);
+    if (
+        !files.length ||
+        !(await $dialog.promises.confirm(
+            `Are you sure to upload these files?<br><ul style="list-style-position:inside">${files.map(e => `<li>${e.name} (${formatSize(e.size)})</li>`).join('')}</ul>`,
+            'Upload files',
+            {
+                rawHtml: true,
+            }
+        ))
+    ) return;
+    await uploadFiles(files);
+});
 
 const createFolder = async () => {
     const path = await $dialog.promises.prompt('Folder name', 'Create new folder');

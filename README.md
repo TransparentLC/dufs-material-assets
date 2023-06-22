@@ -20,12 +20,13 @@
 * 显示符号链接
 * 打包下载
 * 文件上传
-    * 暂不支持拖拽和在线编辑
+    * 支持拖拽
+    * 暂不支持在线编辑
 * 新建文件夹
 * 移动/重命名/删除文件
 * 搜索
 * 深色模式
-* 响应式设计✨
+* 响应式设计
 * 文本文件预览✨
     * 代码高亮（使用 [prism](https://prismjs.com) 实现）
     * 数学公式渲染（使用 https://i.upmath.me/ 的 API 实现）
@@ -34,7 +35,9 @@
     * 自动在文件列表下方展示当前目录的 `README.md`、`README.txt` 或 `README` 文件
 * 图片查看器✨
 * 视频播放器✨
+    * 使用 `<video>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=video%20format)
 * 音乐播放器✨
+    * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=audio%20format)
     * 同一目录下音频文件顺序/随机/循环播放
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
 * 自定义页面标题和主题色✨
@@ -76,6 +79,21 @@ window.__CUSTOM_THEME__ = {
 window.__INITIAL_DATA__ = __INDEX_DATA__;
 window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
 ```
+
+</details>
+
+<details>
+
+<summary>对于开发的补充说明</summary>
+
+```shell
+pnpm run dev
+pnpm run dufs-api
+```
+
+为了方便适配各个功能，`dufs-api` 固定了一些启动 dufs 的参数，与代码中仅在开发模式下会运行的部分对应。
+
+由于 Vite 的 dev server 与 dufs 运行在不同的端口上，dufs 也无法在 HTML 代码的占位符处填充页面内容，开发模式下部分代码的运行效果与实际使用稍微存在一些差异（例如底部的版本号在开发模式下使用 `v0.0.0` 作为模拟；使用访问控制的情况下，实际使用时会浏览器会弹出输入用户名和密码的对话框，而在开发模式中不会弹出，此时会使用项目中对于 HTTP 的 Digest 认证的模拟实现）。
 
 </details>
 

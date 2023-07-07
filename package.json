@@ -18,14 +18,14 @@
     "marked-highlight": "^2.0.1",
     "prismjs": "^1.29.0",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.3",
-    "vuetify": "^3.3.6"
+    "vue-router": "^4.2.4",
+    "vuetify": "^3.3.7"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "autoprefixer": "^10.4.14",
     "rollup-plugin-visualizer": "^5.9.2",
-    "vite": "^4.3.9",
+    "vite": "^4.4.1",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-vuetify": "^1.0.2"
   },

@@ -761,6 +761,10 @@ const previewContent = ref('');
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
 
+watch(previewDialog, () => {
+    if (!previewDialog.value) setTimeout(() => previewItem.value = {}, 250);
+});
+
 const updateReadme = async () => {
     if (!readmeItem.value) return;
     const st = setTimeout(() => readmeSkeleton.value = true, 150);

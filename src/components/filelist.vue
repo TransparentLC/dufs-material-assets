@@ -422,8 +422,8 @@
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
                 <v-img
-                    max-width="320"
-                    max-height="320"
+                    width="320"
+                    height="320"
                     class="rounded flex-shrink-1"
                     aspect-ratio="1"
                     :src="previewAudioCover"

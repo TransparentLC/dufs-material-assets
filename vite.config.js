@@ -59,7 +59,7 @@ export default defineConfig({
                             //     },
                             // };
                             ${__IS_PROD__ ? 'window.__INITIAL_DATA__ = __INDEX_DATA__;' : ''}
-                            window.__DUFS_PREFIX__ = '${__IS_PROD__ ? '__ASSERTS_PREFIX__' : '/prefix/__dufs_v0.0.0_'}';
+                            window.__DUFS_PREFIX__ = '${__IS_PROD__ ? '__ASSETS_PREFIX__' : '/prefix/__dufs_v0.0.0_'}';
                         </script>
                     `,
                 },

@@ -77,7 +77,7 @@ window.__CUSTOM_THEME__ = {
 
 // 由dufs填充的页面内容，不要修改
 window.__INITIAL_DATA__ = __INDEX_DATA__;
-window.__DUFS_PREFIX__ = "__ASSERTS_PREFIX__";
+window.__DUFS_PREFIX__ = "__ASSETS_PREFIX__";
 ```
 
 </details>

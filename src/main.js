@@ -55,11 +55,7 @@ marked.use(markedHighlight({
         }
     },
 }));
-marked.use({
-    renderer,
-    mangle: false,
-    headerIds: false,
-});
+marked.use({ renderer });
 
 createApp(app)
     .use(router)

@@ -855,7 +855,7 @@ const moveFile = async e => {
  */
 const uploadFiles = async files => {
     await Promise.all(files.map(e => dufsfetch(
-        pathPrefix + e.name,
+        currentPath.value + e.name,
         {
             method: 'PUT',
             body: e,

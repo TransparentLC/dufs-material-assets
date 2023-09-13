@@ -14,15 +14,15 @@
     "@mdi/js": "^7.2.96",
     "blueimp-md5": "^2.19.0",
     "jsmediatags": "^3.9.7",
-    "marked": "^7.0.3",
-    "marked-highlight": "^2.0.4",
+    "marked": "^9.0.0",
+    "marked-highlight": "^2.0.6",
     "prismjs": "^1.29.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
-    "vuetify": "^3.3.13"
+    "vuetify": "^3.3.16"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.3.1",
+    "@vitejs/plugin-vue": "^4.3.4",
     "autoprefixer": "^10.4.15",
     "rollup-plugin-visualizer": "^5.9.2",
     "vite": "^4.4.9",

@@ -108,6 +108,12 @@ export default defineConfig({
                     brotliSize: true,
                 }),
             ],
+            ...(process.env.DUFS_EMBED_FILENAME ? {
+                output: {
+                    entryFileNames: 'index.js',
+                    assetFileNames: '[name][extname]',
+                },
+            } : {}),
         },
     },
     define: {

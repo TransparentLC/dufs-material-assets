@@ -1,5 +1,4 @@
 import { createVuetify } from 'vuetify';
-import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader';
 import { mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import {
@@ -73,9 +72,6 @@ import {
 } from '@mdi/js';
 
 export default createVuetify({
-    components: {
-        VSkeletonLoader,
-    },
     icons: {
         defaultSet: 'mdi',
         aliases: {

@@ -146,38 +146,8 @@ jobs:
     - name: Build
       shell: bash
       run: $BUILD_CMD build --locked --release --target=${{ matrix.target }} ${{ matrix.cargo-flags }}
-    - name: Build Archive
-      shell: bash
-      id: package
-      env:
-        target: ${{ matrix.target }}
-        version:  ${{ steps.check-tag.outputs.version }}
-      run: |
-        set -euxo pipefail
-
-        bin=${GITHUB_REPOSITORY##*/}
-        dist_dir=`pwd`/dist
-        name=$bin-$version-$target
-        executable=target/$target/release/$bin
-
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-          executable=$executable.exe
-        fi
-
-        mkdir $dist_dir
-        cp $executable $dist_dir
-        cd $dist_dir
-
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-            archive=$dist_dir/$name.zip
-            7z a $archive *
-            echo "archive=dist/$name.zip" >> $GITHUB_OUTPUT
-        else
-            archive=$dist_dir/$name.tar.gz
-            tar -czf $archive *
-            echo "archive=dist/$name.tar.gz" >> $GITHUB_OUTPUT
-        fi
-    - name: Upload Archive
+    - name: Upload executable
       uses: actions/upload-artifact@v3
       with:
-        path: ${{ steps.package.outputs.archive }}
+        name: dufs-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
+        path: target/${{ matrix.target }}/release

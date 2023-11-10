@@ -153,4 +153,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dufs-mod-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
-          path: ${{ steps.build.outputs.execitable }}
+          path: ${{ steps.build.outputs.executable }}

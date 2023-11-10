@@ -36,6 +36,7 @@ export default defineConfig({
             },
             inject: {
                 data: {
+                    DUFS_EMBED_FILENAME: process.env.DUFS_EMBED_FILENAME,
                     injectScript: `
                         <script>
                             // window.__CUSTOM_TITLE__ = 'Custom title';

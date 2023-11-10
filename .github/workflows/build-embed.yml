@@ -7,13 +7,13 @@ jobs:
   build-assets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
           version: latest
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: latest
           architecture: x64
@@ -94,60 +94,63 @@ jobs:
     env:
       BUILD_CMD: cargo
     steps:
-    - uses: actions/checkout@v4
-      with:
-        repository: sigoden/dufs
-    - name: Check Tag
-      id: check-tag
-      shell: bash
-      run: |
-        ver=${GITHUB_REF##*/}
-        echo "version=$ver" >> $GITHUB_OUTPUT
-        if [[ "$ver" =~ [0-9]+.[0-9]+.[0-9]+$ ]]; then
-          echo "rc=false" >> $GITHUB_OUTPUT
-        else
-          echo "rc=true" >> $GITHUB_OUTPUT
-        fi
-    - name: Install Rust Toolchain Components
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        targets: ${{ matrix.target }}
-        # Since rust 1.72, mips platforms are tier 3
-        toolchain: 1.71
-    - name: Install cross
-      if: matrix.use-cross
-      uses: taiki-e/install-action@v2
-      with:
-        tool: cross
-    - name: Overwrite build command env variable
-      if: matrix.use-cross
-      shell: bash
-      run: echo "BUILD_CMD=cross" >> $GITHUB_ENV
-    - name: Show Version Information (Rust, cargo, GCC)
-      shell: bash
-      run: |
-        gcc --version || true
-        rustup -V
-        rustup toolchain list
-        rustup default
-        cargo -V
-        rustc -V
-    - name: Download assets
-      uses: actions/download-artifact@v3
-      with:
-        name: dufs-material-assets-embed
-        path: dufs-material-assets-embed
-    - name: Replace assets
-      shell: bash
-      run: |
-        cp dufs-material-assets-embed/index.css assets/index.css
-        cp dufs-material-assets-embed/index.html assets/index.html
-        cp dufs-material-assets-embed/index.js assets/index.js
-    - name: Build
-      shell: bash
-      run: $BUILD_CMD build --locked --release --target=${{ matrix.target }} ${{ matrix.cargo-flags }}
-    - name: Upload executable
-      uses: actions/upload-artifact@v3
-      with:
-        name: dufs-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
-        path: target/${{ matrix.target }}/release
+      - name: Check Tag
+        id: check-tag
+        shell: bash
+        run: |
+          ver=$(curl https://api.github.com/repos/sigoden/dufs/tags | jq -r .[0].name)
+          echo "version=$ver" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v4
+        with:
+          repository: sigoden/dufs
+          ref: ${{ steps.check-tag.outputs.version }}
+      - name: Install Rust Toolchain Components
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+          # Since rust 1.72, mips platforms are tier 3
+          toolchain: 1.71
+      - name: Install cross
+        if: matrix.use-cross
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+      - name: Overwrite build command env variable
+        if: matrix.use-cross
+        shell: bash
+        run: echo "BUILD_CMD=cross" >> $GITHUB_ENV
+      - name: Show Version Information (Rust, cargo, GCC)
+        shell: bash
+        run: |
+          gcc --version || true
+          rustup -V
+          rustup toolchain list
+          rustup default
+          cargo -V
+          rustc -V
+      - name: Download assets
+        uses: actions/download-artifact@v3
+        with:
+          name: dufs-material-assets-embed
+          path: dufs-material-assets-embed
+      - name: Replace assets
+        shell: bash
+        run: |
+          cp dufs-material-assets-embed/index.css assets/index.css
+          cp dufs-material-assets-embed/index.html assets/index.html
+          cp dufs-material-assets-embed/index.js assets/index.js
+      - name: Build
+        shell: bash
+        id: build
+        run: |
+          $BUILD_CMD build --locked --release --target=${{ matrix.target }} ${{ matrix.cargo-flags }}
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            echo "executable=target/${{ matrix.target }}/release/dufs.exe" >> $GITHUB_OUTPUT
+            else
+            echo "executable=target/${{ matrix.target }}/release/dufs" >> $GITHUB_OUTPUT
+          fi
+      - name: Upload executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: dufs-mod-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
+          path: ${{ steps.build.outputs.execitable }}

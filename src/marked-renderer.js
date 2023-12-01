@@ -16,8 +16,7 @@ const handleExpression = expression => expression
     .replace(/&#(\d+);/gi, (_, m) => String.fromCharCode(parseInt(m, 10)))
     .replace(/\\\s+/g, '\\\\ ');
 
-const renderer = new Renderer;
-
+const renderer = {};
 
 // Alternatives:
 // https://www.zhihu.com/equation?tex={}
@@ -29,17 +28,15 @@ const mathRenderer = text => text
     .replace(/\$\$([\s\S]+?)\$\$/g, (_, /** @type {String} */ expression) => `<p style="text-align:center"><img class="math" src="https://i.upmath.me/svg/${encodeURIComponent(handleExpression(expression))}" alt="${expression}" referrerpolicy="no-referrer"></p>`)
     .replace(/\$([^\n]+?)\$/g, (_, /** @type {String} */ expression) => `<img class="math" style="vertical-align:middle" src="https://i.upmath.me/svg/${encodeURIComponent(handleExpression(expression))}" alt="${expression}" referrerpolicy="no-referrer">`);
 
-['listitems', 'paragraph', 'tablecell', 'text'].forEach(type => {
-    const original = renderer[type];
+['listitem', 'paragraph', 'tablecell', 'text'].forEach(type => {
     renderer[type] = function (...args) {
         args[0] = mathRenderer(args[0]);
-        return original.apply(this, args);
+        return Renderer.prototype[type].apply(this, args);
     };
 });
 
-const originalCode = renderer.code;
 renderer.code = function (...args) {
-    return originalCode.apply(this, args).replace(/^<pre><code/, '<pre class="line-numbers"><code');
+    return Renderer.prototype.code.apply(this, args).replace(/^<pre><code/, '<pre class="line-numbers"><code');
 };
 
 export default renderer;

@@ -146,7 +146,7 @@ jobs:
           $BUILD_CMD build --locked --release --target=${{ matrix.target }} ${{ matrix.cargo-flags }}
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             echo "executable=target/${{ matrix.target }}/release/dufs.exe" >> $GITHUB_OUTPUT
-            else
+          else
             echo "executable=target/${{ matrix.target }}/release/dufs" >> $GITHUB_OUTPUT
           fi
       - name: Upload executable

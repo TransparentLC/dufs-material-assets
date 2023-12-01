@@ -14,18 +14,18 @@
     "@mdi/js": "^7.3.67",
     "blueimp-md5": "^2.19.0",
     "jsmediatags": "^3.9.7",
-    "marked": "^9.1.5",
-    "marked-highlight": "^2.0.6",
+    "marked": "^11.0.0",
+    "marked-highlight": "^2.0.8",
     "prismjs": "^1.29.0",
-    "vue": "^3.3.8",
+    "vue": "^3.3.9",
     "vue-router": "^4.2.5",
-    "vuetify": "^3.4.0"
+    "vuetify": "^3.4.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^4.4.1",
+    "@vitejs/plugin-vue": "^4.5.0",
     "autoprefixer": "^10.4.16",
-    "rollup-plugin-visualizer": "^5.9.2",
-    "vite": "^4.5.0",
+    "rollup-plugin-visualizer": "^5.9.3",
+    "vite": "^5.0.4",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-vuetify": "^1.0.2"
   },

@@ -102,9 +102,9 @@
             :loading="filelistSkeleton"
             type="table-tbody"
         >
-            <v-table class="w-100" :class="{'overflow-x-auto': display.xs.value}">
+            <v-table class="w-100" :class="{'overflow-x-auto': display.xs.value}" style="font-size:1rem">
                 <thead>
-                    <tr>
+                    <tr style="color:rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))">
                         <th class="w-100">
                             <span
                                 style="cursor:pointer"
@@ -604,7 +604,7 @@ const dufsfetch = (input, init = {}) => {
                 if (r.headers.has('www-authenticate')) {
                     /** @type {{nonce: String}} */
                     const authdata = Object.fromEntries(removePrefix(r.headers.get('www-authenticate'), 'Digest ').split(',').map(e => {
-                        const m = e.match(/^(.+?)="?(.+?)"?$/);
+                        const m = e.trim().match(/^(.+?)="?(.+?)"?$/);
                         return [m[1], m[2]];
                     }));
                     localStorage.setItem('auth-nonce', authdata.nonce);

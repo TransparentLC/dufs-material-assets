@@ -53,6 +53,8 @@ pnpm install
 pnpm run build
 ```
 
+如果不想单独保存这个项目的前端资源和在每次启动 dufs 时设定 `--assets` 参数，在 Actions 里面也有编译好的、嵌入了这个项目的前端资源（替换了原版的前端资源）的 dufs [二进制文件](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/build-embed.yml)。
+
 <details>
 
 <summary>自定义页面标题和主题色</summary>

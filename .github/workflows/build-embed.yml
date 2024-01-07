@@ -143,6 +143,9 @@ jobs:
         shell: bash
         id: build
         run: |
+          # fix: corrupted zip when downloading large folders (#337) · sigoden/dufs@0ac0c04
+          curl https://github.com/sigoden/dufs/commit/0ac0c048eca56b2f19a98430691b208c1a196f17.patch | git apply
+
           $BUILD_CMD build --locked --release --target=${{ matrix.target }} ${{ matrix.cargo-flags }}
           if [[ "$RUNNER_OS" == "Windows" ]]; then
             echo "executable=target/${{ matrix.target }}/release/dufs.exe" >> $GITHUB_OUTPUT

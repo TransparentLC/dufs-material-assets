@@ -12,14 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: latest
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: latest
-          architecture: x64
           check-latest: true
           cache: pnpm
           cache-dependency-path: "**/package.json"
@@ -28,12 +27,12 @@ jobs:
           pnpm install
           pnpm run build
       - name: Upload assets
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dufs-material-assets
           path: dist
       - name: Upload stats
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: stats
           path: stats.html

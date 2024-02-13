@@ -9,14 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
+        uses: pnpm/action-setup@v3
         with:
           version: latest
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: latest
-          architecture: x64
           check-latest: true
           cache: pnpm
           cache-dependency-path: "**/package.json"
@@ -25,7 +24,7 @@ jobs:
           pnpm install
           DUFS_EMBED_FILENAME=1 pnpm run build
       - name: Upload assets
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dufs-material-assets-embed
           path: dist
@@ -129,7 +128,7 @@ jobs:
           cargo -V
           rustc -V
       - name: Download assets
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dufs-material-assets-embed
           path: dufs-material-assets-embed
@@ -150,7 +149,7 @@ jobs:
             echo "executable=target/${{ matrix.target }}/release/dufs" >> $GITHUB_OUTPUT
           fi
       - name: Upload executable
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dufs-mod-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
           path: ${{ steps.build.outputs.executable }}

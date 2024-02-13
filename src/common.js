@@ -1,4 +1,4 @@
-const dufsPrefixMatches = window.__DUFS_PREFIX__.match(/^(.+)__dufs_v(\d+\.\d+\.\d+)_$/);
+const dufsPrefixMatches = window.__DUFS_PREFIX__.match(/^(.+)__dufs_v(\d+\.\d+\.\d+)__\/$/);
 
 /** @type {String} Start and end with / */
 export const pathPrefix = dufsPrefixMatches[1];

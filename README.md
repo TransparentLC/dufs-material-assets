@@ -46,12 +46,7 @@
 
 从 [GitHub Actions](https://github.com/TransparentLC/dufs-material-assets/actions) 或 [nightly.link](https://nightly.link/TransparentLC/dufs-material-assets/workflows/ci/master) 下载前端资源后，假定保存在 `dufs-material-assets` 目录，在启动 dufs 时添加参数 `--assets dufs-material-assets`。
 
-也可以自己构建前端资源。由于 jsmediatags 存在一个[小问题](https://github.com/aadsm/jsmediatags/pull/150)暂未修复，在安装时需要额外打一个补丁，可以使用 [patch-package](https://www.npmjs.com/package/patch-package)，不过我选择使用 [pnpm](https://pnpm.io/) 一步到位：
-
-```shell
-pnpm install
-pnpm run build
-```
+也可以自己构建前端资源。
 
 如果不想单独保存这个项目的前端资源和在每次启动 dufs 时设定 `--assets` 参数，在 Actions 里面也有编译好的、嵌入了这个项目的前端资源（替换了原版的前端资源）的 dufs [二进制文件](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/build-embed.yml)。
 

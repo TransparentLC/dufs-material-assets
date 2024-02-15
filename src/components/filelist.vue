@@ -554,9 +554,7 @@ import { marked } from 'marked';
 import prism from 'prismjs';
 import md5 from 'blueimp-md5';
 
-// wrong browser field value in package.json and cause webpack bundle error · Issue #172 · aadsm/jsmediatags
-// https://github.com/aadsm/jsmediatags/issues/172
-import jsmediatags from 'jsmediatags';
+import * as jsmediatags from '../mami-chan/index.js';
 
 import { getExt, getIconFromExt, getColorFromExt, formatSize, formatTimestamp, pathPrefix, removePrefix, removeSuffix, debounce, codeLanguageTable } from '../common.js';
 const { $dialog, $toast } = getCurrentInstance().appContext.config.globalProperties;
@@ -977,20 +975,14 @@ const updateAudioTags = async e => {
          *      },
          * }}
          */
-        let tags;
-        if (e.ext === 'ogg' || e.ext === 'oga' || e.ext === 'opus') {
-            tags = {};
-            console.warn('OGG file is not supported by jsmediatags. Track issue #25 (https://github.com/aadsm/jsmediatags/issues/25) for details.');
-        } else {
-            tags = await new Promise(
-                (resolve, reject) => (new jsmediatags.Reader(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${e.fullpath}`))
-                    .setTagsToRead(['title', 'artist', 'album', 'picture'])
-                    .read({
-                        onSuccess: e => resolve(e.tags),
-                        onError: reject,
-                    })
-            );
-        }
+        const tags = await new Promise(
+            (resolve, reject) => (new jsmediatags.Reader(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${e.fullpath}`))
+                .setTagsToRead(['title', 'artist', 'album', 'picture'])
+                .read({
+                    onSuccess: e => resolve(e.tags),
+                    onError: reject,
+                })
+        );
         previewAudioTitle.value = tags.title;
         previewAudioArtist.value = tags.artist;
         previewAudioAlbum.value = tags.album;

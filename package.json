@@ -13,7 +13,6 @@
   "dependencies": {
     "@mdi/js": "^7.4.47",
     "blueimp-md5": "^2.19.0",
-    "jsmediatags": "^3.9.7",
     "marked": "^12.0.0",
     "marked-highlight": "^2.1.1",
     "prismjs": "^1.29.0",
@@ -28,10 +27,5 @@
     "vite": "^5.1.1",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vuetify": "^2.0.1"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "jsmediatags@3.9.7": "patches/jsmediatags@3.9.7.patch"
-    }
   }
 }

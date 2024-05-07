@@ -69,7 +69,7 @@
                         :to="item.href"
                         active-color="primary"
                         exact
-                        class="text-no-wrap"
+                        class="text-no-wrap px-0"
                     >{{ item.title }}</v-breadcrumbs-item>
                 </template>
             </v-breadcrumbs>
@@ -267,7 +267,11 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
-                                v-if="(new Set(['readme', 'license'])).has(p.filename.toLowerCase()) || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext) || codeLanguageTable[p.ext]"
+                                v-if="
+                                    (new Set(['readme', 'license'])).has(p.filename.toLowerCase())
+                                    || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext)
+                                    || codeLanguageTable[p.ext]
+                                "
                                 text="View file"
                             >
                                 <template v-slot:activator="{ props }">
@@ -277,6 +281,29 @@
                                         icon="$mdiFileSearch"
                                         density="comfortable"
                                         @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
+                                v-if="
+                                    filelist.allow_upload
+                                    && filelist.allow_delete
+                                    && p.size < 1048576
+                                    && (
+                                        (new Set(['readme', 'license'])).has(p.filename.toLowerCase())
+                                        || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext)
+                                        || codeLanguageTable[p.ext]
+                                    )
+                                "
+                                text="Edit file"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiFileDocumentEdit"
+                                        density="comfortable"
+                                        @click="editDialog = true; editItem = p; editContent = ''; updateEditContent()"
                                     ></v-btn>
                                 </template>
                             </v-tooltip>
@@ -530,6 +557,57 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog
+        v-model="editDialog"
+        width="min(960px, calc(100vw - 32px))"
+    >
+        <v-card>
+            <v-card-title class="d-flex align-center">
+                <v-icon
+                    :color="getColorFromExt(editItem.ext)"
+                    :icon="getIconFromExt(editItem.ext)"
+                    class="mr-2 flex-shrink-0"
+                ></v-icon>
+                <span class="flex-grow-1 text-truncate" :title="editItem.name">
+                    {{ editItem.filename }}
+                </span>
+                <v-btn
+                    variant="plain"
+                    :icon="editWrap ? '$mdiFormatTextWrappingWrap' : '$mdiFormatTextWrappingOverflow'"
+                    density="comfortable"
+                    @click="editWrap = !editWrap"
+                ></v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="$mdiContentSave"
+                    density="comfortable"
+                    @click="saveEditContent"
+                ></v-btn>
+                <v-btn
+                    variant="plain"
+                    icon="$mdiClose"
+                    density="comfortable"
+                    @click="editDialog = false"
+                ></v-btn>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-skeleton-loader
+                :loading="editSkeleton"
+                type="paragraph, subtitle, sentences"
+                class="overflow-y-auto"
+                style="max-height:calc(100vh - 48px - 52px - 16px)"
+            >
+                <v-card-text>
+                    <textarea
+                        v-model="editContent"
+                        :wrap="editWrap ? 'soft' : 'off'"
+                        style="font-family:ui-monospace,'Cascadia Mono','Segoe UI Mono','Liberation Mono',Menlo,Monaco,Consolas,sans-serif;width:100%;height:calc(100vh - 48px - 52px - 16px - 34px);resize:none;border:none;outline:none;font-size:1rem"
+                    ></textarea>
+                </v-card-text>
+            </v-skeleton-loader>
+        </v-card>
+    </v-dialog>
+
     <audio
         ref="previewAudio"
         preload="metadata"
@@ -552,7 +630,6 @@ import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
 import prism from 'prismjs';
-import md5 from 'blueimp-md5';
 
 import * as jsmediatags from '../mami-chan/index.js';
 
@@ -564,71 +641,19 @@ const { $dialog, $toast } = getCurrentInstance().appContext.config.globalPropert
  * @param {RequestInit | undefined} init
  * @returns {Promise<Response>}
  */
-const dufsfetch = (input, init = {}) => {
-    if (!(init.headers instanceof Headers)) init.headers = new Headers(init.headers);
-    init.headers.delete('Authorization');
-
-    // https://en.wikipedia.org/wiki/Digest_access_authentication
-    if (localStorage.getItem('auth-nonce') && localStorage.getItem('auth-username') && localStorage.getItem('auth-password')) {
-        const uri = encodeURI((input instanceof Request) ? input.url : input);
-        const nc = dufsfetch.nc[0].toString(16).padStart(8, 0);
-        const cnonce = btoa(String.fromCharCode.apply(null, crypto.getRandomValues(new Uint8Array(12))));
-        const h1 = md5(`${localStorage.getItem('auth-username')}:DUFS:${localStorage.getItem('auth-password')}`);
-        const h2 = md5(`${(init.method || 'GET').toUpperCase()}:${uri}`);
-        const response = md5(`${h1}:${localStorage.getItem('auth-nonce')}:${nc}:${cnonce}:auth:${h2}`);
-        init.headers.append('Authorization', `Digest ` + Object.entries({
-            username: localStorage.getItem('auth-username'),
-            realm: 'DUFS',
-            nonce: localStorage.getItem('auth-nonce'),
-            uri,
-            response,
-            qop: 'auth',
-            nc,
-            cnonce,
-        }).map(([k, v]) => `${k}="${v}"`).join(','));
-        dufsfetch.nc[0]++;
-    }
-    return fetch(input, init)
-        .then(async r => {
-            if (r.status === 403) {
-                localStorage.removeItem('auth-nonce');
-                $toast.error((new Error(r.statusText)).toString());
-                return dufsfetch(input, init);
-            } else if (r.status === 401) {
-                if (localStorage.getItem('auth-nonce')) {
-                    localStorage.removeItem('auth-nonce');
-                    $toast.error((new Error(r.statusText)).toString());
-                }
-                if (r.headers.has('www-authenticate')) {
-                    /** @type {{nonce: String}} */
-                    const authdata = Object.fromEntries(removePrefix(r.headers.get('www-authenticate'), 'Digest ').split(',').map(e => {
-                        const m = e.trim().match(/^(.+?)="?(.+?)"?$/);
-                        return [m[1], m[2]];
-                    }));
-                    localStorage.setItem('auth-nonce', authdata.nonce);
-                }
-                localStorage.setItem(
-                    'auth-username',
-                    await $dialog.promises.prompt('Username', 'Authorization', {value: localStorage.getItem('auth-username') || ''}) || '',
-                );
-                localStorage.setItem(
-                    'auth-password',
-                    await $dialog.promises.prompt('Password', 'Authorization', {value: localStorage.getItem('auth-password') || '', password: true}) || '',
-                );
-                return dufsfetch(input, init);
-            } else if (r.status >= 400) {
-                const e = new Error(r.statusText);
-                e.status = r.status;
-                throw e;
-            }
-            return r;
-        })
-        .catch(e => {
-            $toast.error(e.toString());
+const dufsfetch = (input, init = {}) => fetch(input, init)
+    .then(r => {
+        if (r.status >= 400) {
+            const e = new Error(r.statusText);
+            e.status = r.status;
             throw e;
-        });
-};
-dufsfetch.nc = crypto.getRandomValues(new Uint32Array(1));
+        }
+        return r;
+    })
+    .catch(e => {
+        $toast.error(e.toString());
+        throw e;
+    });
 
 /**
  * @typedef {{
@@ -663,6 +688,7 @@ const display = useDisplay();
 const filelistSkeleton = ref(false);
 const readmeSkeleton = ref(false);
 const previewSkeleton = ref(false);
+const editSkeleton = ref(false);
 const search = ref('');
 const sortColumn = ref('');
 const sortOrderDesc = ref(false);
@@ -756,6 +782,12 @@ const previewMode = ref('');
 const previewItem = ref({});
 const previewContent = ref('');
 
+const editDialog = ref(false);
+const editWrap = ref(false);
+/** @type {import('vue').Ref<PathItem>} */
+const editItem = ref({});
+const editContent = ref('');
+
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
 
@@ -803,6 +835,37 @@ const updatePreviewContent = async () => {
             previewContent.value = r;
         }
     }
+};
+
+const updateEditContent = async () => {
+    if (!editItem.value.fullpath) return;
+    const st = setTimeout(() => editSkeleton.value = true, 150);
+    const r = await dufsfetch(editItem.value.fullpath)
+        .then(r => {
+            if (r.status >= 400) throw new Error(r.statusText);
+            return r.text();
+        });
+    editSkeleton.value = false;
+    clearTimeout(st);
+    editContent.value = r;
+};
+
+const saveEditContent = async () => {
+    if (!editItem.value.fullpath) return;
+    editDialog.value = false;
+    await dufsfetch(
+        editItem.value.fullpath,
+        {
+            method: 'PUT',
+            body: editContent.value,
+        },
+    )
+        .then(r => {
+            if (r.status >= 400) throw new Error(r.statusText);
+            return r.text();
+        });
+    $toast.success(`${editItem.value.name} has been saved.`);
+    await updateFilelist();
 };
 
 onMounted(updateFilelist);

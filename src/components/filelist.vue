@@ -783,7 +783,7 @@ const previewItem = ref({});
 const previewContent = ref('');
 
 const editDialog = ref(false);
-const editWrap = ref(false);
+const editWrap = ref(true);
 /** @type {import('vue').Ref<PathItem>} */
 const editItem = ref({});
 const editContent = ref('');

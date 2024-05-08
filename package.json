@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
-    "blueimp-md5": "^2.19.0",
     "marked": "^12.0.2",
     "marked-highlight": "^2.1.1",
     "prismjs": "^1.29.0",

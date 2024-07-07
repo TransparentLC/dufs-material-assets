@@ -57,7 +57,8 @@
 
 ```js
 // 自定义标题
-window.__CUSTOM_TITLE__ = 'Custom title';
+window.__CUSTOM_DOCUMENT_TITLE__ = 'Index of ${path} - Custom title';
+window.__CUSTOM_PAGE_TITLE__ = 'Custom title';
 
 // 自定义浅色和深色主题
 window.__CUSTOM_THEME__ = {

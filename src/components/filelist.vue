@@ -740,7 +740,7 @@ const additionalPathItem = e => {
 };
 
 const updateFilelist = async () => {
-    document.title = `Index of ${removeSuffix(currentPathWithoutPrefix.value, '/') || '/'} - dufs`;
+    document.title = (window.__CUSTOM_DOCUMENT_TITLE__ || 'Index of ${path} - dufs').replaceAll('${path}', removeSuffix(currentPathWithoutPrefix.value, '/') || '/');
     if (window.__INITIAL_DATA__) {
         filelist.value = window.__INITIAL_DATA__;
         delete window.__INITIAL_DATA__;

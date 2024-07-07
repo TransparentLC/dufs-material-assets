@@ -31,7 +31,7 @@
 import { useTheme } from 'vuetify';
 import { pathPrefix, dufsVersion } from './common.js';
 
-const title = window.__CUSTOM_TITLE__ || (location.host + (pathPrefix === '/' ? '' : pathPrefix));
+const title = window.__CUSTOM_PAGE_TITLE__ || (location.host + (pathPrefix === '/' ? '' : pathPrefix));
 
 const theme = useTheme();
 const matchDark = matchMedia('(prefers-color-scheme:dark)');

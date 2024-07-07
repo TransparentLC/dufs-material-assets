@@ -55,7 +55,10 @@ marked.use(markedHighlight({
         }
     },
 }));
-marked.use({ renderer });
+marked.use({
+    useNewRenderer: true,
+    renderer,
+});
 
 createApp(app)
     .use(router)

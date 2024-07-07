@@ -29,14 +29,14 @@ const mathRenderer = text => text
     .replace(/\$([^\n]+?)\$/g, (_, /** @type {String} */ expression) => `<img class="math" style="vertical-align:middle" src="https://i.upmath.me/svg/${encodeURIComponent(handleExpression(expression))}" alt="${expression}" referrerpolicy="no-referrer">`);
 
 ['listitem', 'paragraph', 'tablecell', 'text'].forEach(type => {
-    renderer[type] = function (...args) {
-        args[0] = mathRenderer(args[0]);
-        return Renderer.prototype[type].apply(this, args);
+    renderer[type] = function (token) {
+        token.text = mathRenderer(token.text);
+        return Renderer.prototype[type].apply(this, [token]);
     };
 });
 
-renderer.code = function (...args) {
-    return Renderer.prototype.code.apply(this, args).replace(/^<pre><code/, '<pre class="line-numbers"><code');
+renderer.code = function (token) {
+    return Renderer.prototype.code.apply(this, [token]).replace(/^<pre><code/, '<pre class="line-numbers"><code');
 };
 
 export default renderer;

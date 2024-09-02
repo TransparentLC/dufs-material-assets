@@ -81,7 +81,7 @@ jobs:
         id: check-tag
         shell: bash
         run: |
-          ver=$(curl https://api.github.com/repos/sigoden/dufs/tags | jq -r .[0].name)
+          ver=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/sigoden/dufs/tags | jq -r .[0].name)
           echo "version=$ver" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v4
         with:

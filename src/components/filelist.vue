@@ -630,6 +630,7 @@ import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
 import prism from 'prismjs';
+import asyncPool from 'tiny-async-pool';
 
 import * as jsmediatags from '../mami-chan/index.js';
 
@@ -912,16 +913,18 @@ const moveFile = async e => {
 };
 
 /**
- * @param {File[]} files
+ * @param {[String, File][]} files
  */
 const uploadFiles = async files => {
-    await Promise.all(files.map(e => dufsfetch(
-        currentPath.value + e.name,
+    for await (const _ of asyncPool(5, files, ([path, file]) => dufsfetch(
+        currentPath.value + path,
         {
             method: 'PUT',
-            body: e,
+            body: file,
         },
-    )));
+    ))) {
+
+    }
     $toast.success(`${files.length} files have been uploaded.`);
     await updateFilelist();
 };
@@ -937,7 +940,7 @@ const uploadFilesClick = async () => {
     }));
     clearTimeout(t);
     if (!files.length) return;
-    await uploadFiles(files);
+    await uploadFiles(files.map(e => [e.name, e]));
 };
 document.body.addEventListener('dragenter', e => e.preventDefault());
 document.body.addEventListener('dragover', e => e.preventDefault());
@@ -946,11 +949,24 @@ document.body.addEventListener('drop', async e => {
     if (!filelist.value.allow_upload) {
         return $toast.warning('File uploading is disabled.');
     };
-    const files = Array.from(e.dataTransfer.files).filter(e => e.size || e.type);
+    /** @type {(items: (FileSystemDirectoryEntry | FileSystemFileEntry)[], arr: [String, File][]) => Promise<[String, File][]>} */
+    const readEntries = async (entries, arr = []) => {
+        for (const entry of entries) {
+            if (entry instanceof FileSystemDirectoryEntry) {
+                /** @type {(FileSystemDirectoryEntry | FileSystemFileEntry)} */
+                const entries = await new Promise((resolve, reject) => entry.createReader().readEntries(resolve, reject));
+                await readEntries(entries, arr);
+            } else if (entry instanceof FileSystemFileEntry) {
+                arr.push(await new Promise((resolve, reject) => entry.file(e => resolve([entry.fullPath.replace(/^\//, ''), e]), reject)));
+            }
+        }
+        return arr;
+    };
+    const files = await readEntries(Array.from(e.dataTransfer.items).map(e => e.webkitGetAsEntry()));
     if (
         !files.length ||
         !(await $dialog.promises.confirm(
-            `Are you sure to upload these files?<br><ul style="list-style-position:inside">${files.map(e => `<li>${e.name} (${formatSize(e.size)})</li>`).join('')}</ul>`,
+            `Are you sure to upload these files?<br><ul style="list-style-position:inside">${files.map(([path, file]) => `<li>${path} (${formatSize(file.size)})</li>`).join('')}</ul>`,
             'Upload files',
             {
                 rawHtml: true,

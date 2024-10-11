@@ -40,6 +40,8 @@
     * 同一目录下音频文件顺序/随机/循环播放
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
 * 自定义页面标题和主题色✨
+* 多语言支持✨
+    * 已支持的语言或添加翻译请参见 [`src/i18n.js`](https://github.com/TransparentLC/dufs-material-assets/blob/master/src/i18n.js)
 
 ## 使用方法
 

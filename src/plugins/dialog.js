@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import dialog from './dialog.vue';
+import i18n from '../i18n.js';
 
 export default {
     /**
@@ -13,6 +14,7 @@ export default {
         el.style.position = 'absolute';
         const vm = createApp(dialog)
             .use(pluginConfig.vuetify)
+            .use(i18n)
             .mount(el);
 
         /**
@@ -55,8 +57,8 @@ export default {
             rows: 1,
             placeholder: '',
             maxLength: null,
-            buttonConfirmText: 'OK',
-            buttonDismissText: 'Cancel',
+            buttonConfirmText: i18n.global.t('dialogButtonConfirmText'),
+            buttonDismissText: i18n.global.t('dialogButtonDismissText'),
             buttonConfirmColor: 'primary-darken-1',
             buttonDismissColor: 'primary-darken-1',
             onClickConfirmButton: () => {},

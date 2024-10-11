@@ -36,6 +36,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import router from './router.js';
 import vuetify from './vuetify.js';
+import i18n from './i18n.js';
 import app from './app.vue';
 import renderer from './marked-renderer.js';
 import dialog from './plugins/dialog.js';
@@ -65,6 +66,7 @@ createApp(app)
     .use(vuetify)
     .use(dialog, { vuetify })
     .use(snackbar, { vuetify })
+    .use(i18n)
     .mount('#app');
 
 /**

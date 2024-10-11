@@ -2,7 +2,7 @@
     <Teleport to="#app-bar-append">
         <v-tooltip
             v-if="filelist.allow_upload"
-            text="Upload files"
+            :text="t('titleUploadFile')"
         >
             <template v-slot:activator="{ props }">
                 <v-btn
@@ -22,7 +22,7 @@
         </v-tooltip>
         <v-tooltip
             v-if="filelist.allow_upload"
-            text="Create folder"
+            :text="t('titleCreateFolder')"
         >
             <template v-slot:activator="{ props }">
                 <v-btn
@@ -35,7 +35,7 @@
         </v-tooltip>
         <v-tooltip
             v-if="filelist.allow_archive"
-            text="Download root folder as a .zip file"
+            :text="t('titleDownloadArchive')"
         >
             <template v-slot:activator="{ props }">
                 <v-btn
@@ -91,7 +91,7 @@
                     color="primary"
                     single-line
                     hide-details
-                    label="Search"
+                    :label="t('headerSearch')"
                     :append-inner-icon="search ? '$mdiCloseCircle' : '$mdiMagnify'"
                     @click:append-inner="search = ''"
                 ></v-text-field>
@@ -118,7 +118,7 @@
                                         : (sortColumn = 'name', sortOrderDesc = false)
                                 "
                             >
-                                Name
+                                {{ t('headerName') }}
                                 <v-icon
                                     v-if="sortColumn === 'name'"
                                     :icon="sortOrderDesc ? '$mdiSortAlphabeticalDescending' : '$mdiSortAlphabeticalAscending'"
@@ -140,7 +140,7 @@
                                         : (sortColumn = 'mtime', sortOrderDesc = false)
                                 "
                             >
-                                Last Modified
+                            {{ t('headerLastModified') }}
                                 <v-icon
                                     v-if="sortColumn === 'mtime'"
                                     :icon="sortOrderDesc ? '$mdiSortClockDescending' : '$mdiSortClockAscending'"
@@ -162,7 +162,7 @@
                                         : (sortColumn = 'size', sortOrderDesc = false)
                                 "
                             >
-                                Size
+                                {{ t('headerSize') }}
                                 <v-icon
                                     v-if="sortColumn === 'size'"
                                     :icon="sortOrderDesc ? '$mdiSortNumericDescending' : '$mdiSortNumericAscending'"
@@ -171,7 +171,7 @@
                                 ></v-icon>
                             </span>
                         </th>
-                        <th class="text-no-wrap text-right">Actions</th>
+                        <th class="text-no-wrap text-right">{{ t('headerActions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -212,7 +212,7 @@
                         <td class="text-no-wrap text-right">
                             <v-tooltip
                                 v-if="(new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg'])).has(p.ext)"
-                                text="View image"
+                                :text="t('actionViewImage')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -226,7 +226,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="(new Set(['mp4', 'webm', 'ogv'])).has(p.ext)"
-                                text="Play video"
+                                :text="t('actionPlayVideo')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -240,7 +240,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="(new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus'])).has(p.ext)"
-                                text="Play audio"
+                                :text="t('actionPlayAudio')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -254,7 +254,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="p.ext === 'pdf'"
-                                text="View file"
+                                :text="t('actionViewFile')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -272,7 +272,7 @@
                                     || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext)
                                     || codeLanguageTable[p.ext]
                                 "
-                                text="View file"
+                                :text="t('actionViewFile')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -295,7 +295,7 @@
                                         || codeLanguageTable[p.ext]
                                     )
                                 "
-                                text="Edit file"
+                                :text="t('actionEditFile')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -309,7 +309,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="filelist.allow_delete"
-                                text="Move to new path"
+                                :text="t('actionMove')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -323,7 +323,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="filelist.allow_delete"
-                                :text="p.is_dir ? 'Delete folder' : 'Delete file'"
+                                :text="t(p.is_dir ? 'actionDeleteFolder' : 'actionDeleteFile')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -337,7 +337,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="p.is_dir && filelist.allow_archive"
-                                text="Download folder as a .zip file"
+                                :text="t('actionDownloadArchive')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -352,7 +352,7 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="!p.is_dir"
-                                text="Download file"
+                                :text="t('actionDownloadFile')"
                             >
                                 <template v-slot:activator="{ props }">
                                     <v-btn
@@ -615,7 +615,7 @@
         :src="filelistPathsAudio.includes(previewItem) ? previewItem.fullpath : undefined"
         :autoplay="!previewAudioPaused"
         :loop="previewAudioRepeat"
-        @error="$toast.error('Failed to load audio')"
+        @error="$toast.error(t('toastFailedLoadAudio'))"
         @play="previewAudioPaused = false"
         @pause="previewAudioPaused = true"
         @ended="previewAudioEnded"
@@ -631,11 +631,12 @@ import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
 import prism from 'prismjs';
 import asyncPool from 'tiny-async-pool';
-
+import { useI18n } from 'petite-vue-i18n';
 import * as jsmediatags from '../mami-chan/index.js';
-
 import { getExt, getIconFromExt, getColorFromExt, formatSize, formatTimestamp, pathPrefix, removePrefix, removeSuffix, debounce, codeLanguageTable } from '../common.js';
+
 const { $dialog, $toast } = getCurrentInstance().appContext.config.globalProperties;
+const { t } = useI18n();
 
 /**
  * @param {RequestInfo | URL} input
@@ -865,7 +866,7 @@ const saveEditContent = async () => {
             if (r.status >= 400) throw new Error(r.statusText);
             return r.text();
         });
-    $toast.success(`${editItem.value.name} has been saved.`);
+    $toast.success(t('toastSaveEdit', [editItem.value.name]));
     await updateFilelist();
 };
 
@@ -879,7 +880,7 @@ watch(readmeItem, updateReadme);
  * @param {PathItem} e
  */
 const deleteFile = async e => {
-    if (!(await $dialog.promises.confirm(`Are you sure to delete ${e.name}?`, e.is_dir ? 'Delete folder' : 'Delete file'))) return;
+    if (!(await $dialog.promises.confirm(t('dialogDeleteConfirm', [e.name]), t(e.is_dir ? 'actionDeleteFolder' : 'actionDeleteFile')))) return;
     await dufsfetch(
         e.fullpath,
         {
@@ -895,7 +896,7 @@ const deleteFile = async e => {
  * @param {PathItem} e
  */
 const moveFile = async e => {
-    const path = await $dialog.promises.prompt('Path', 'Move to new path', {value: e.name});
+    const path = await $dialog.promises.prompt(t('dialogMoveLabel'), t('actionMove'), {value: e.name});
     if (!path) return;
     await dufsfetch(
         e.fullpath,
@@ -908,7 +909,7 @@ const moveFile = async e => {
     ).then(r => {
         if (r.status >= 400) throw new Error(r.statusText);
     });
-    $toast.success(`${e.is_dir ? 'Folder' : 'File'} moved.`);
+    $toast.success(t(e.is_dir ? 'toastMoveFolder' : 'toastMoveFile'));
     await updateFilelist();
 };
 
@@ -925,7 +926,7 @@ const uploadFiles = async files => {
     ))) {
 
     }
-    $toast.success(`${files.length} files have been uploaded.`);
+    $toast.success(t('toastUploadFile', [files.length], files.length));
     await updateFilelist();
 };
 const uploadFilesSelectResolve = ref(() => {});
@@ -947,7 +948,7 @@ document.body.addEventListener('dragover', e => e.preventDefault());
 document.body.addEventListener('drop', async e => {
     e.preventDefault();
     if (!filelist.value.allow_upload) {
-        return $toast.warning('File uploading is disabled.');
+        return $toast.warning(t('toastUploadDisabled'));
     };
     /** @type {(items: (FileSystemDirectoryEntry | FileSystemFileEntry)[], arr: [String, File][]) => Promise<[String, File][]>} */
     const readEntries = async (entries, arr = []) => {
@@ -966,8 +967,8 @@ document.body.addEventListener('drop', async e => {
     if (
         !files.length ||
         !(await $dialog.promises.confirm(
-            `Are you sure to upload these files?<br><ul style="list-style-position:inside">${files.map(([path, file]) => `<li>${path} (${formatSize(file.size)})</li>`).join('')}</ul>`,
-            'Upload files',
+            `<p>${t('dialogUploadBody', [files.length], files.length)}</p><ul style="list-style-position:inside">${files.map(([path, file]) => `<li>${path} (${formatSize(file.size)})</li>`).join('')}</ul>`,
+            t('titleUploadFile'),
             {
                 rawHtml: true,
             }
@@ -977,7 +978,7 @@ document.body.addEventListener('drop', async e => {
 });
 
 const createFolder = async () => {
-    const path = await $dialog.promises.prompt('Folder name', 'Create new folder');
+    const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));
     if (!path) return;
     await dufsfetch(
         currentPath.value + path,
@@ -987,7 +988,7 @@ const createFolder = async () => {
     ).then(r => {
         if (r.status >= 400) throw new Error(r.statusText);
     });
-    $toast.success('New folder created.');
+    $toast.success(t('toastCreateFolder'));
     await updateFilelist();
 };
 
@@ -1068,7 +1069,7 @@ const updateAudioTags = async e => {
         URL.revokeObjectURL(previewAudioCover.value);
         previewAudioCover.value = tags.picture ? URL.createObjectURL(new Blob([(new Uint8Array(tags.picture.data)).buffer], {type: tags.picture.format})) : null;
     } catch (err) {
-        $toast.error(`Failed to read audio metadata: ${err.info || err}`);
+        $toast.error(t('toastFailedLoadAudioMetadata', [err.info || err]));
         previewAudioTitle.value = '';
         previewAudioArtist.value = '';
         previewAudioAlbum.value = '';

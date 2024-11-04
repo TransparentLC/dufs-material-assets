@@ -953,11 +953,11 @@ document.body.addEventListener('drop', async e => {
     /** @type {(items: (FileSystemDirectoryEntry | FileSystemFileEntry)[], arr: [String, File][]) => Promise<[String, File][]>} */
     const readEntries = async (entries, arr = []) => {
         for (const entry of entries) {
-            if (entry instanceof FileSystemDirectoryEntry) {
+            if (entry.isDirectory) {
                 /** @type {(FileSystemDirectoryEntry | FileSystemFileEntry)} */
                 const entries = await new Promise((resolve, reject) => entry.createReader().readEntries(resolve, reject));
                 await readEntries(entries, arr);
-            } else if (entry instanceof FileSystemFileEntry) {
+            } else if (entry.isFile) {
                 arr.push(await new Promise((resolve, reject) => entry.file(e => resolve([entry.fullPath.replace(/^\//, ''), e]), reject)));
             }
         }

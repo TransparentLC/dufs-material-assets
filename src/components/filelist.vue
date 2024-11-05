@@ -208,7 +208,7 @@
                             </div>
                         </td>
                         <td class="text-no-wrap text-right">{{ formatTimestamp(p.mtime) }}</td>
-                        <td class="text-no-wrap text-right">{{ Number.isInteger(p.size) ? formatSize(p.size) : '' }}</td>
+                        <td class="text-no-wrap text-right">{{ p.is_dir ? t('headerSizeSubdirectoryItems', [p.size], p.size) : formatSize(p.size) }}</td>
                         <td class="text-no-wrap text-right">
                             <v-tooltip
                                 v-if="(new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg'])).has(p.ext)"

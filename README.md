@@ -32,8 +32,8 @@
     * 支持渲染 Markdown 文件（使用 [Marked](https://marked.js.org/) 实现）
 * README 文件展示✨
     * 自动在文件列表下方展示当前目录的 `README.md`、`README.txt` 或 `README` 文件
-* 图片查看器✨
-* 视频播放器✨
+* 图片查看器
+* 视频播放器
     * 使用 `<video>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=video%20format)
 * 音乐播放器✨
     * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=audio%20format)

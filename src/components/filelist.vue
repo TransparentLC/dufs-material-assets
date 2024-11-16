@@ -1,25 +1,93 @@
 <template>
     <Teleport to="#app-bar-append">
-        <v-tooltip
-            v-if="filelist.allow_upload"
-            :text="t('titleUploadFile')"
+        <v-menu
+            open-delay="0"
+            open-on-focus
+            open-on-hover
+            :close-on-content-click="false"
         >
-            <template v-slot:activator="{ props }">
-                <v-btn
-                    v-bind="props"
-                    variant="text"
-                    icon="$mdiUpload"
-                    @click="uploadFilesClick"
-                ></v-btn>
-                <input
-                    id="upload"
-                    class="d-none"
-                    type="file"
-                    multiple
-                    @change="e => uploadFilesSelectResolve(e.target.files)"
+            <template v-slot:activator="{ props: menu }">
+                <v-tooltip
+                    v-if="filelist.allow_upload"
+                    :text="t('titleUploadFile')"
                 >
+                    <template v-slot:activator="{ props: tooltip }">
+                        <v-btn
+                            v-bind="mergeProps(menu, tooltip)"
+                            variant="text"
+                            icon="$mdiUpload"
+                            @click="uploadFilesClick"
+                        >
+                            <v-badge
+                                v-if="uploadlist.filter(e => !e.uploaded && !e.aborted && !e.fail).length"
+                                :content="uploadlist.filter(e => !e.uploaded && !e.aborted && !e.fail).length"
+                            >
+                                <v-icon icon="$mdiUpload"></v-icon>
+                            </v-badge>
+                            <v-icon v-else icon="$mdiUpload"></v-icon>
+                        </v-btn>
+                        <input
+                            id="upload"
+                            class="d-none"
+                            type="file"
+                            multiple
+                            @change="e => uploadFilesSelectResolve(e.target.files)"
+                        >
+                    </template>
+                </v-tooltip>
             </template>
-        </v-tooltip>
+            <v-list
+                v-show="uploadlist.length"
+                lines="two"
+                item-props
+                width="480"
+                max-height="540"
+            >
+                <v-list-item v-for="e, i in uploadlist" v-ripple>
+                    <template v-slot:prepend>
+                        <v-avatar :color="getColorFromExt(getExt(e.file.name))">
+                            <v-icon
+                                color="white"
+                                :icon="getIconFromExt(getExt(e.file.name))"
+                                class="flex-shrink-0"
+                            ></v-icon>
+                        </v-avatar>
+                    </template>
+                    <v-list-item-title>
+                        <span :title="e.file.name">{{ e.file.name }}</span>
+                    </v-list-item-title>
+                    <v-list-item-subtitle style="opacity:1">
+                        <span v-if="e.uploaded" class="text-success">{{ t('dialogUploadSucceed') }}</span>
+                        <span v-else-if="e.fail" class="text-error">{{ t(e.fail) }}</span>
+                        <span v-else-if="!e.xhr" style="opacity:var(--v-list-item-subtitle-opacity, var(--v-medium-emphasis-opacity))">{{ t('dialogUploadPending') }}</span>
+                        <template v-else>
+                            <span v-if="display.smAndUp.value" style="opacity:var(--v-list-item-subtitle-opacity, var(--v-medium-emphasis-opacity))">{{ formatSize(e.loaded) }} / {{ formatSize(e.file.size) }} | {{ `${Math.round(e.loaded / e.file.size * 1e4) / 1e2}%` }} | {{ formatSize(Math.round(e.speed)) }}/s</span>
+                            <span v-else style="opacity:var(--v-list-item-subtitle-opacity, var(--v-medium-emphasis-opacity))">{{ formatSize(e.loaded) }} / {{ formatSize(e.file.size) }}</span>
+                            <v-progress-linear
+                                :model-value="e.loaded / e.file.size * 100"
+                                color="primary"
+                                rounded
+                            ></v-progress-linear>
+                        </template>
+                    </v-list-item-subtitle>
+                    <template v-slot:append>
+                        <v-btn
+                            color="grey"
+                            icon="$mdiClose"
+                            variant="text"
+                            class="ml-4"
+                            @click="() => {
+                                if (!e.uploaded) {
+                                    e.aborted = true;
+                                    if (e.xhr) e.xhr.abort();
+                                }
+                                uploadlist.splice(i, 1);
+                            }"
+                        ></v-btn>
+                    </template>
+                </v-list-item>
+            </v-list>
+        </v-menu>
         <v-tooltip
             v-if="filelist.allow_upload"
             :text="t('titleCreateFolder')"
@@ -625,14 +693,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick, getCurrentInstance } from 'vue';
+import { ref, computed, onMounted, watch, nextTick, getCurrentInstance, mergeProps, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
 import prism from 'prismjs';
-import asyncPool from 'tiny-async-pool';
 import { useI18n } from 'petite-vue-i18n';
 import * as jsmediatags from '../mami-chan/index.js';
+import Uploader from '../uploader.js';
 import { getExt, getIconFromExt, getColorFromExt, formatSize, formatTimestamp, pathPrefix, removePrefix, removeSuffix, debounce, codeLanguageTable } from '../common.js';
 
 const { $dialog, $toast } = getCurrentInstance().appContext.config.globalProperties;
@@ -800,7 +868,7 @@ watch(previewDialog, () => {
 const updateReadme = async () => {
     if (!readmeItem.value) return;
     const st = setTimeout(() => readmeSkeleton.value = true, 150);
-    const r = await dufsfetch(readmeItem.value.fullpath)
+    const r = await dufsfetch(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${readmeItem.value.fullpath}`)
         .then(r => {
             if (r.status >= 400) throw new Error(r.statusText);
             return r.text();
@@ -914,34 +982,33 @@ const moveFile = async e => {
 };
 
 /**
- * @param {[String, File][]} files
+ * @type {import('vue').Ref<Uploader[]>}
  */
-const uploadFiles = async files => {
-    for await (const _ of asyncPool(5, files, ([path, file]) => dufsfetch(
-        currentPath.value + path,
-        {
-            method: 'PUT',
-            body: file,
-        },
-    ))) {
+const uploadlist = ref([]);
 
-    }
-    $toast.success(t('toastUploadFile', [files.length], files.length));
-    await updateFilelist();
-};
 const uploadFilesSelectResolve = ref(() => {});
 const uploadFilesClick = async () => {
-    let t;
     /** @type {File[]} */
     const files = Array.from(await new Promise(resolve => {
         document.getElementById('upload').value = null;
         document.getElementById('upload').click();
         uploadFilesSelectResolve.value = resolve;
-        t = setTimeout(() => resolve([]), 5 * 60 * 1000);
     }));
-    clearTimeout(t);
     if (!files.length) return;
-    await uploadFiles(files.map(e => [e.name, e]));
+    files
+        .map(file => {
+            const cp = currentPath.value;
+            return new Uploader(
+                cp + file.name,
+                file,
+                () => currentPath.value === cp && updateFilelist(),
+            );
+        })
+        .forEach(e => {
+            const r = reactive(e);
+            uploadlist.value.push(r);
+            r.upload();
+        });
 };
 document.body.addEventListener('dragenter', e => e.preventDefault());
 document.body.addEventListener('dragover', e => e.preventDefault());
@@ -974,7 +1041,20 @@ document.body.addEventListener('drop', async e => {
             }
         ))
     ) return;
-    await uploadFiles(files);
+    files
+        .map(([path, file]) => {
+            const cp = currentPath.value;
+            return new Uploader(
+                cp + path,
+                file,
+                () => currentPath.value === cp && updateFilelist(),
+            );
+        })
+        .forEach(e => {
+            const r = reactive(e);
+            uploadlist.value.push(r);
+            r.upload();
+        });
 });
 
 const createFolder = async () => {

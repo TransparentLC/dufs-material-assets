@@ -28,7 +28,6 @@ messages.en = {
     toastSaveEdit: '{0} has been saved.',
     toastMoveFolder: 'Folder moved.',
     toastMoveFile: 'File moved.',
-    toastUploadFile: '{0} file has been uploaded. | {0} files have been uploaded.',
     toastUploadDisabled: 'File uploading is disabled.',
     toastCreateFolder: 'New folder created.',
     toastFailedLoadAudioMetadata: 'Failed to read audio metadata: {0}',
@@ -36,6 +35,9 @@ messages.en = {
     dialogMoveLabel: 'Path',
     dialogUploadBody: 'Are you sure to upload this file? | Are you sure to upload these {0} files?',
     dialogCreateFolderLabel: 'Folder name',
+    dialogUploadPending: 'Pending',
+    dialogUploadSucceed: 'Uploaded',
+    dialogUploadError: 'Failed to upload',
 };
 messages['zh-CN'] = {
     dialogButtonConfirmText: '确定',
@@ -63,7 +65,6 @@ messages['zh-CN'] = {
     toastSaveEdit: '已保存 {0}',
     toastMoveFolder: '已移动文件夹',
     toastMoveFile: '已移动文件',
-    toastUploadFile: '已上传 {0} 个文件',
     toastUploadDisabled: '文件上传已禁用',
     toastCreateFolder: '已新建文件夹',
     toastFailedLoadAudioMetadata: '加载音频元数据失败：{0}',
@@ -71,6 +72,9 @@ messages['zh-CN'] = {
     dialogMoveLabel: '路径',
     dialogUploadBody: '确定要上传这个文件吗？ | 确定要上传以下 {0} 个文件吗？',
     dialogCreateFolderLabel: '文件夹名称',
+    dialogUploadPending: '等待上传',
+    dialogUploadSucceed: '上传成功',
+    dialogUploadError: '上传失败',
 };
 messages['zh-HK'] = {
     ...messages['zh-CN'],
@@ -92,7 +96,6 @@ messages['zh-HK'] = {
     toastFailedLoadAudio: '無法加載音頻',
     toastMoveFolder: '已移動文件夾',
     toastMoveFile: '已移動文件',
-    toastUploadFile: '已上傳 {0} 個文件',
     toastUploadDisabled: '文件上傳已禁用',
     toastCreateFolder: '已新建文件夾',
     toastFailedLoadAudioMetadata: '加載音頻元數據失敗：{0}',
@@ -100,6 +103,9 @@ messages['zh-HK'] = {
     dialogMoveLabel: '路徑',
     dialogUploadBody: '確定要上傳這個文件嗎？ | 確定要上傳以下 {0} 個文件嗎？',
     dialogCreateFolderLabel: '文件夾名稱',
+    dialogUploadPending: '等待上傳',
+    dialogUploadSucceed: '等待成功',
+    dialogUploadError: '上傳失敗',
 };
 messages['zh-TW'] = {
     ...messages['zh-HK'],

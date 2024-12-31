@@ -115,6 +115,27 @@
                 ></v-btn>
             </template>
         </v-tooltip>
+        
+        <span v-if="auth && user">
+            <span>{{ user }}</span>
+            <v-btn
+                icon="$mdiLogout"
+                variant="plain"
+                class="mx-1"
+                @click="logout()"></v-btn>
+        </span>
+        <v-btn
+            v-else-if="auth"
+            icon="$mdiLogin"
+            variant="plain"
+            class="mx-1"
+            @click="checkLogin(true)"></v-btn>
+        <v-btn
+            v-else
+            icon="$mdiLogin"
+            variant="plain"
+            class="mx-1"
+            @click="checkLogin(false)"></v-btn>
     </Teleport>
 
     <v-card class="my-4">
@@ -798,6 +819,10 @@ const currentPath = computed(() => route.params.path ? route.params.path.map(e =
  */
 const currentPathWithoutPrefix = computed(() => '/' + removePrefix(currentPath.value, pathPrefix));
 
+const baseUrl = function () {
+    return __IS_PROD__ ? `${location.protocol}//${location.host}` : __DEV_URL__;
+}
+
 /**
  * @param {PathItem} e
  */
@@ -824,7 +849,7 @@ const updateFilelist = async () => {
         // Don't show skeleton if loading time is less than 150ms
         const st = setTimeout(() => filelistSkeleton.value = true, 150);
         // console.time('Load filelist');
-        filelist.value = await dufsfetch(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${currentPath.value}?${sp}`)
+        filelist.value = await dufsfetch(`${baseUrl()}${currentPath.value}?${sp}`)
             .then(r => {
                 if (r.status >= 400) throw new Error(r.statusText);
                 return r.json();
@@ -860,6 +885,8 @@ const editContent = ref('');
 
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
+const auth = ref(false);
+const user = ref('');
 
 watch(previewDialog, () => {
     if (!previewDialog.value) setTimeout(() => previewItem.value = {}, 250);
@@ -868,7 +895,7 @@ watch(previewDialog, () => {
 const updateReadme = async () => {
     if (!readmeItem.value) return;
     const st = setTimeout(() => readmeSkeleton.value = true, 150);
-    const r = await dufsfetch(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${readmeItem.value.fullpath}`)
+    const r = await dufsfetch(`${baseUrl()}${readmeItem.value.fullpath}`)
         .then(r => {
             if (r.status >= 400) throw new Error(r.statusText);
             return r.text();
@@ -920,6 +947,39 @@ const updateEditContent = async () => {
     editContent.value = r;
 };
 
+const checkLogin = async (reload) => {
+    const r = await dufsfetch(baseUrl(), {
+        method: "CHECKAUTH",
+    })
+        .then(r => {
+            if (r.status >= 400) throw new Error(r.statusText);
+            return r.text();
+        });
+    user.value = r;
+    if(reload) window.location.reload();
+};
+
+function logout() {
+    // const r = await dufsfetch('/', {
+    //     method: "LOGOUT",
+    //     username: user.value
+    // })
+    //     .then(r => {
+    //         if (r.status >= 400) throw new Error(r.statusText);
+    //         return r.text();
+    //     });
+    // userName.value = r;
+
+  if (!auth.value) return;
+  const url = baseUrl();
+  const xhr = new XMLHttpRequest();
+  xhr.open("LOGOUT", url, true, user.value);
+  xhr.onload = () => {
+    location.href = url;
+  }
+  xhr.send();
+}
+
 const saveEditContent = async () => {
     if (!editItem.value.fullpath) return;
     editDialog.value = false;
@@ -938,8 +998,13 @@ const saveEditContent = async () => {
     await updateFilelist();
 };
 
-onMounted(updateFilelist);
+onMounted(() => {
+    user.value = window.__INITIAL_DATA__?.user;
+    auth.value = window.__INITIAL_DATA__?.auth;
+    updateFilelist();
+});
 onMounted(updateReadme);
+
 watch(currentPath, updateFilelist);
 watch(search, debounce(updateFilelist, 250));
 watch(readmeItem, updateReadme);
@@ -1136,7 +1201,7 @@ const updateAudioTags = async e => {
          * }}
          */
         const tags = await new Promise(
-            (resolve, reject) => (new jsmediatags.Reader(`${__IS_PROD__ ? `${location.protocol}//${location.host}` : 'http://localhost:5000'}${e.fullpath}`))
+            (resolve, reject) => (new jsmediatags.Reader(`${baseUrl()}${e.fullpath}`))
                 .setTagsToRead(['title', 'artist', 'album', 'picture'])
                 .read({
                     onSuccess: e => resolve(e.tags),

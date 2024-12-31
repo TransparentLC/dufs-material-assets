@@ -73,6 +73,8 @@ import {
     mdiRepeatOff,
     mdiShuffle,
     mdiShuffleDisabled,
+    mdiLogin,
+    mdiLogout,
 } from '@mdi/js';
 
 export default createVuetify({
@@ -150,6 +152,8 @@ export default createVuetify({
             mdiRepeatOff,
             mdiShuffle,
             mdiShuffleDisabled,
+            mdiLogin,
+            mdiLogout,
         },
         sets: {
             mdi,

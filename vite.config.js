@@ -127,7 +127,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/prefix/.+\..+?$': __DEV_URL__,
+            '^/prefix/.+\..+?$': 'http://localhost:5000',
         },
     },
 });

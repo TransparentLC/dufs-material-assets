@@ -115,27 +115,20 @@
                 ></v-btn>
             </template>
         </v-tooltip>
-        
-        <span v-if="auth && user">
-            <span>{{ user }}</span>
-            <v-btn
-                icon="$mdiLogout"
-                variant="plain"
-                class="mx-1"
-                @click="logout()"></v-btn>
-        </span>
-        <v-btn
-            v-else-if="auth"
-            icon="$mdiLogin"
-            variant="plain"
-            class="mx-1"
-            @click="checkLogin(true)"></v-btn>
-        <v-btn
-            v-else
-            icon="$mdiLogin"
-            variant="plain"
-            class="mx-1"
-            @click="checkLogin(false)"></v-btn>
+
+        <v-tooltip
+            v-if="filelist.auth"
+            :text="filelist.user ? t('titleLogout', [filelist.user]) : t('titleLogin')"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    variant="text"
+                    :icon="filelist.user ? '$mdiLogout' : '$mdiLogin'"
+                    @click="filelist.user ? logout() : login()"
+                ></v-btn>
+            </template>
+        </v-tooltip>
     </Teleport>
 
     <v-card class="my-4">
@@ -819,10 +812,6 @@ const currentPath = computed(() => route.params.path ? route.params.path.map(e =
  */
 const currentPathWithoutPrefix = computed(() => '/' + removePrefix(currentPath.value, pathPrefix));
 
-const baseUrl = function () {
-    return __IS_PROD__ ? `${location.protocol}//${location.host}` : __DEV_URL__;
-}
-
 /**
  * @param {PathItem} e
  */
@@ -849,11 +838,7 @@ const updateFilelist = async () => {
         // Don't show skeleton if loading time is less than 150ms
         const st = setTimeout(() => filelistSkeleton.value = true, 150);
         // console.time('Load filelist');
-        filelist.value = await dufsfetch(`${baseUrl()}${currentPath.value}?${sp}`)
-            .then(r => {
-                if (r.status >= 400) throw new Error(r.statusText);
-                return r.json();
-            });
+        filelist.value = await dufsfetch(`${currentPath.value}?${sp}`).then(r => r.json());
         // console.timeEnd('Load filelist');
         filelistSkeleton.value = false;
         clearTimeout(st);
@@ -885,8 +870,6 @@ const editContent = ref('');
 
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
-const auth = ref(false);
-const user = ref('');
 
 watch(previewDialog, () => {
     if (!previewDialog.value) setTimeout(() => previewItem.value = {}, 250);
@@ -895,11 +878,7 @@ watch(previewDialog, () => {
 const updateReadme = async () => {
     if (!readmeItem.value) return;
     const st = setTimeout(() => readmeSkeleton.value = true, 150);
-    const r = await dufsfetch(`${baseUrl()}${readmeItem.value.fullpath}`)
-        .then(r => {
-            if (r.status >= 400) throw new Error(r.statusText);
-            return r.text();
-        });
+    const r = await dufsfetch(`${readmeItem.value.fullpath}`).then(r => r.text());
     readmeSkeleton.value = false;
     clearTimeout(st);
     if (readmeItem.value.ext === 'md') {
@@ -914,11 +893,7 @@ const updateReadme = async () => {
 const updatePreviewContent = async () => {
     if (!previewItem.value.fullpath) return;
     const st = setTimeout(() => previewSkeleton.value = true, 150);
-    const r = await dufsfetch(previewItem.value.fullpath)
-        .then(r => {
-            if (r.status >= 400) throw new Error(r.statusText);
-            return r.text();
-        });
+    const r = await dufsfetch(previewItem.value.fullpath).then(r => r.text());;
     previewSkeleton.value = false;
     clearTimeout(st);
     if (previewItem.value.ext === 'md') {
@@ -937,48 +912,31 @@ const updatePreviewContent = async () => {
 const updateEditContent = async () => {
     if (!editItem.value.fullpath) return;
     const st = setTimeout(() => editSkeleton.value = true, 150);
-    const r = await dufsfetch(editItem.value.fullpath)
-        .then(r => {
-            if (r.status >= 400) throw new Error(r.statusText);
-            return r.text();
-        });
+    const r = await dufsfetch(editItem.value.fullpath).then(r => r.text());
     editSkeleton.value = false;
     clearTimeout(st);
     editContent.value = r;
 };
 
-const checkLogin = async (reload) => {
-    const r = await dufsfetch(baseUrl(), {
-        method: "CHECKAUTH",
-    })
-        .then(r => {
-            if (r.status >= 400) throw new Error(r.statusText);
-            return r.text();
-        });
-    user.value = r;
-    if(reload) window.location.reload();
+// FIXME: Vite的proxy server似乎不能处理非标准HTTP method（直接返回400，甚至没有响应头）
+// 但是这两个应该没有问题
+
+// FIXME: 在Firefox上，弹出登录对话框后点击取消或什么都不填就确认多次，之后不会再弹出登录对话框，除非重启浏览器或Ctrl+F5
+const login = async () => {
+    await dufsfetch(`${currentPath.value}`, { method: 'CHECKAUTH' });
+    await updateFilelist();
 };
 
-function logout() {
-    // const r = await dufsfetch('/', {
-    //     method: "LOGOUT",
-    //     username: user.value
-    // })
-    //     .then(r => {
-    //         if (r.status >= 400) throw new Error(r.statusText);
-    //         return r.text();
-    //     });
-    // userName.value = r;
-
-  if (!auth.value) return;
-  const url = baseUrl();
-  const xhr = new XMLHttpRequest();
-  xhr.open("LOGOUT", url, true, user.value);
-  xhr.onload = () => {
-    location.href = url;
-  }
-  xhr.send();
-}
+const logout = async () => {
+    await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest;
+        xhr.onload = resolve;
+        xhr.onerror = reject;
+        xhr.open('LOGOUT', `${currentPath.value}`, true, filelist.value.user);
+        xhr.send();
+    });
+    await updateFilelist();
+};
 
 const saveEditContent = async () => {
     if (!editItem.value.fullpath) return;
@@ -989,20 +947,12 @@ const saveEditContent = async () => {
             method: 'PUT',
             body: editContent.value,
         },
-    )
-        .then(r => {
-            if (r.status >= 400) throw new Error(r.statusText);
-            return r.text();
-        });
+    ).then(r => r.text());
     $toast.success(t('toastSaveEdit', [editItem.value.name]));
     await updateFilelist();
 };
 
-onMounted(() => {
-    user.value = window.__INITIAL_DATA__?.user;
-    auth.value = window.__INITIAL_DATA__?.auth;
-    updateFilelist();
-});
+onMounted(updateFilelist);
 onMounted(updateReadme);
 
 watch(currentPath, updateFilelist);
@@ -1014,14 +964,7 @@ watch(readmeItem, updateReadme);
  */
 const deleteFile = async e => {
     if (!(await $dialog.promises.confirm(t('dialogDeleteConfirm', [e.name]), t(e.is_dir ? 'actionDeleteFolder' : 'actionDeleteFile')))) return;
-    await dufsfetch(
-        e.fullpath,
-        {
-            method: 'DELETE',
-        }
-    ).then(r => {
-        if (r.status >= 400) throw new Error(r.statusText);
-    });
+    await dufsfetch(e.fullpath, { method: 'DELETE' });
     await updateFilelist();
 };
 
@@ -1039,9 +982,7 @@ const moveFile = async e => {
                 'Destination': encodeURI(currentPath.value + path),
             },
         }
-    ).then(r => {
-        if (r.status >= 400) throw new Error(r.statusText);
-    });
+    );
     $toast.success(t(e.is_dir ? 'toastMoveFolder' : 'toastMoveFile'));
     await updateFilelist();
 };
@@ -1125,14 +1066,7 @@ document.body.addEventListener('drop', async e => {
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));
     if (!path) return;
-    await dufsfetch(
-        currentPath.value + path,
-        {
-            method: 'MKCOL',
-        }
-    ).then(r => {
-        if (r.status >= 400) throw new Error(r.statusText);
-    });
+    await dufsfetch(currentPath.value + path, { method: 'MKCOL' });
     $toast.success(t('toastCreateFolder'));
     await updateFilelist();
 };
@@ -1201,7 +1135,7 @@ const updateAudioTags = async e => {
          * }}
          */
         const tags = await new Promise(
-            (resolve, reject) => (new jsmediatags.Reader(`${baseUrl()}${e.fullpath}`))
+            (resolve, reject) => (new jsmediatags.Reader(`${e.fullpath}`))
                 .setTagsToRead(['title', 'artist', 'album', 'picture'])
                 .read({
                     onSuccess: e => resolve(e.tags),

@@ -7,6 +7,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import fs from 'node:fs';
 
 const __IS_PROD__ = process.env.NODE_ENV === 'production';
+const __DEV_URL__ = 'http://localhost:5000';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -126,7 +127,7 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/prefix/.+\..+?$': 'http://localhost:5000',
+            '^/prefix/.+\..+?$': __DEV_URL__,
         },
     },
 });

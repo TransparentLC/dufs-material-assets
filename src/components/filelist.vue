@@ -1135,7 +1135,7 @@ const updateAudioTags = async e => {
          * }}
          */
         const tags = await new Promise(
-            (resolve, reject) => (new jsmediatags.Reader(`${e.fullpath}`))
+            (resolve, reject) => (new jsmediatags.Reader(`${location.protocol}//${location.host}${e.fullpath}`))
                 .setTagsToRead(['title', 'artist', 'album', 'picture'])
                 .read({
                     onSuccess: e => resolve(e.tags),

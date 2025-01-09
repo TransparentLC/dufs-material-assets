@@ -21,6 +21,7 @@ messages.en = {
     actionDeleteFile: 'Delete file',
     actionDownloadArchive: 'Download folder as a .zip file',
     actionDownloadFile: 'Download file',
+    actionLogout: 'Logout',
     titleUploadFile: 'Upload files',
     titleCreateFolder: 'Create folder',
     titleDownloadArchive: 'Download root folder as a .zip file',
@@ -40,6 +41,7 @@ messages.en = {
     dialogUploadPending: 'Pending',
     dialogUploadSucceed: 'Uploaded',
     dialogUploadError: 'Failed to upload',
+    dialogLogout: 'Are you sure to logout {0}?',
 };
 messages['zh-CN'] = {
     dialogButtonConfirmText: '确定',
@@ -60,6 +62,7 @@ messages['zh-CN'] = {
     actionDeleteFile: '删除文件',
     actionDownloadArchive: '下载为 ZIP 压缩包',
     actionDownloadFile: '下载文件',
+    actionLogout: '注销',
     titleUploadFile: '上传文件',
     titleCreateFolder: '新建文件夹',
     titleDownloadArchive: '下载当前目录为 ZIP 压缩包',
@@ -79,6 +82,7 @@ messages['zh-CN'] = {
     dialogUploadPending: '等待上传',
     dialogUploadSucceed: '上传成功',
     dialogUploadError: '上传失败',
+    dialogLogout: ' {0} 是否要注销？',
 };
 messages['zh-HK'] = {
     ...messages['zh-CN'],
@@ -94,6 +98,7 @@ messages['zh-HK'] = {
     actionDeleteFile: '刪除文件',
     actionDownloadArchive: '下載為 ZIP 壓縮包',
     actionDownloadFile: '下載文件',
+    actionLogout: '登出',
     titleUploadFile: '上傳文件',
     titleCreateFolder: '新建文件夾',
     titleDownloadArchive: '下載當前目錄為 ZIP 壓縮包',
@@ -112,6 +117,7 @@ messages['zh-HK'] = {
     dialogUploadPending: '等待上傳',
     dialogUploadSucceed: '等待成功',
     dialogUploadError: '上傳失敗',
+    dialogLogout: '{0} 是否要登出？',
 };
 messages['zh-TW'] = {
     ...messages['zh-HK'],

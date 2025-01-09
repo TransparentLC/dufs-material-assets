@@ -928,6 +928,7 @@ const login = async () => {
 };
 
 const logout = async () => {
+    if (!(await $dialog.promises.confirm(t('dialogLogout', [filelist.value.user]), t('actionLogout')))) return;
     await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest;
         xhr.onload = resolve;

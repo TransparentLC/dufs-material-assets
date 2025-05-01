@@ -4,12 +4,10 @@
             v-model="active"
             :persistent="persistent"
             scrollable
-            width="auto"
+            :width="width"
+            :max-height="maxHeight"
         >
-            <v-card :style="{
-                width: `${width}px`,
-                maxHeight: `${maxHeight}px`,
-            }">
+            <v-card>
                 <v-card-title v-if="title" class="headline pt-4">{{ title }}</v-card-title>
                 <v-card-text class="px-4 pt-0">
                     <div v-if="rawHtml" v-html="content"></div>

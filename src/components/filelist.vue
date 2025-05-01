@@ -683,7 +683,7 @@
                     <textarea
                         v-model="editContent"
                         :wrap="editWrap ? 'soft' : 'off'"
-                        style="font-family:ui-monospace,'Cascadia Mono','Segoe UI Mono','Liberation Mono',Menlo,Monaco,Consolas,sans-serif;width:100%;height:calc(100vh - 48px - 52px - 16px - 34px);resize:none;border:none;outline:none;font-size:1rem"
+                        style="font-family:ui-monospace,'Cascadia Mono','JetBrains Mono','Segoe UI Mono','Liberation Mono',Menlo,Monaco,Consolas,sans-serif;width:100%;height:calc(100vh - 48px - 52px - 16px - 34px);resize:none;border:none;outline:none;font-size:1rem"
                     ></textarea>
                 </v-card-text>
             </v-skeleton-loader>
@@ -975,12 +975,23 @@ const deleteFile = async e => {
 const moveFile = async e => {
     const path = await $dialog.promises.prompt(t('dialogMoveLabel'), t('actionMove'), {value: e.name});
     if (!path) return;
+    const pathParts = removePrefix(path.startsWith('/') ? (pathPrefix + removePrefix(path, '/')) : (currentPath.value + path), '/').split('/');
+    const pathResolvedParts = [];
+    for (const part of pathParts) {
+        if (part === '.') {
+            continue;
+        } else if (part === '..') {
+            pathResolvedParts.pop();
+        } else {
+            pathResolvedParts.push(part);
+        }
+    }
     await dufsfetch(
         e.fullpath,
         {
             method: 'MOVE',
             headers: {
-                'Destination': encodeURI(currentPath.value + path),
+                'Destination': encodeURI('/' + pathResolvedParts.join('/')),
             },
         }
     );

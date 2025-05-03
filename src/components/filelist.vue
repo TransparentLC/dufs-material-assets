@@ -40,7 +40,7 @@
                 v-show="uploadlist.length"
                 lines="two"
                 item-props
-                width="480"
+                width="min(480px, calc(100vw - 24px))"
                 max-height="540"
             >
                 <v-list-item v-for="e, i in uploadlist" v-ripple>

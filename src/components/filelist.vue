@@ -1,6 +1,8 @@
 <template>
     <Teleport to="#app-bar-append">
         <v-menu
+            activator="#upload-btn"
+            v-model="uploadlistMenu"
             open-delay="0"
             open-on-focus
             open-on-hover
@@ -13,10 +15,14 @@
                 >
                     <template v-slot:activator="{ props: tooltip }">
                         <v-btn
+                            id="upload-btn"
                             v-bind="mergeProps(menu, tooltip)"
                             variant="text"
                             icon="$mdiUpload"
-                            @click="uploadFilesClick"
+                            @mousedown="uploadFilesDown"
+                            @mouseup="uploadFilesUp"
+                            @touchstart="e => e.preventDefault() || uploadFilesDown()"
+                            @touchend="e => e.preventDefault() || uploadFilesUp()"
                         >
                             <v-badge
                                 v-if="uploadlist.filter(e => !e.uploaded && !e.aborted && !e.fail).length"
@@ -1003,7 +1009,6 @@ const moveFile = async e => {
  * @type {import('vue').Ref<Uploader[]>}
  */
 const uploadlist = ref([]);
-
 const uploadFilesSelectResolve = ref(() => {});
 const uploadFilesClick = async () => {
     /** @type {File[]} */
@@ -1074,6 +1079,18 @@ document.body.addEventListener('drop', async e => {
             r.upload();
         });
 });
+const uploadlistMenu = ref(false);
+let uploadlistMenuTimer = null;
+const uploadFilesDown = () => {
+    uploadlistMenuTimer = setTimeout(() => {
+        uploadlistMenu.value = true;
+        uploadlistMenuTimer = null;
+    }, 500);
+};
+const uploadFilesUp = () => {
+    clearTimeout(uploadlistMenuTimer);
+    if (uploadlistMenuTimer !== null) uploadFilesClick();
+};
 
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));

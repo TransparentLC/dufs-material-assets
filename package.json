@@ -18,13 +18,13 @@
     "prismjs": "^1.30.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.1",
-    "vuetify": "^3.8.3"
+    "vuetify": "^3.8.4"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.21",
     "rollup-plugin-visualizer": "^5.14.0",
-    "vite": "^6.3.4",
+    "vite": "^6.3.5",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vuetify": "^2.1.1"
   }

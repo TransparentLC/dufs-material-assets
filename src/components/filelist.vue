@@ -825,7 +825,7 @@ const additionalPathItem = e => {
     e.is_dir = e.path_type === 'Dir' || e.path_type === 'SymlinkDir';
     e.is_symlink = e.path_type === 'SymlinkDir' || e.path_type === 'SymlinkFile';
     e.ext = getExt(e.name).toLowerCase();
-    e.fullpath = currentPath.value + e.name;
+    e.fullpath = currentPath.value + encodeURIComponent(e.name);
     e.filename = e.name.split('/').pop();
 };
 
@@ -1022,7 +1022,7 @@ const uploadFilesClick = async () => {
         .map(file => {
             const cp = currentPath.value;
             return new Uploader(
-                cp + file.name,
+                cp + encodeURIComponent(file.name),
                 file,
                 () => currentPath.value === cp && updateFilelist(),
             );
@@ -1068,7 +1068,7 @@ document.body.addEventListener('drop', async e => {
         .map(([path, file]) => {
             const cp = currentPath.value;
             return new Uploader(
-                cp + path,
+                cp + encodeURIComponent(path),
                 file,
                 () => currentPath.value === cp && updateFilelist(),
             );

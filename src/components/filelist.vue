@@ -997,7 +997,7 @@ const moveFile = async e => {
         {
             method: 'MOVE',
             headers: {
-                'Destination': encodeURI('/' + pathResolvedParts.join('/')),
+                'Destination': '/' + pathResolvedParts.map(encodeURIComponent).join('/'),
             },
         }
     );

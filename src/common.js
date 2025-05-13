@@ -6,8 +6,8 @@ export const pathPrefix = dufsPrefixMatches[1];
 export const dufsVersion = dufsPrefixMatches[2];
 
 /**
- * @link https://github.com/cloudreve/frontend/blob/master/src/config.ts
- * @link https://github.com/cloudreve/frontend/blob/master/src/component/FileManager/TypeIcon.js
+ * @link https://github.com/cloudreve/frontend/blob/b485bf297974cbe4834d2e8e744ae7b7e5b2ad39/src/config.ts
+ * @link https://github.com/cloudreve/frontend/blob/b485bf297974cbe4834d2e8e744ae7b7e5b2ad39/src/component/FileManager/TypeIcon.js
  * @type {Record<String, [String, String]>}
  */
 const extIconColorTable = {
@@ -156,6 +156,13 @@ export const codeLanguageTable = {
     'yaml': 'yml',
     'toml': 'toml',
 };
+
+export const previewableImageExts = new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);
+export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
+export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
+export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore']);
+export const previewableTextFilenames = new Set(['readme', 'license']);
+export const readmeFilenames = new Set(['readme', 'readme.txt', 'readme.md']);
 
 /**
  * @description How can I get file extensions with JavaScript? - Stack Overflow

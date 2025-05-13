@@ -299,7 +299,7 @@
                         <td class="text-no-wrap text-right">{{ p.is_dir ? t('headerSizeSubdirectoryItems', [p.size], p.size) : formatSize(p.size) }}</td>
                         <td class="text-no-wrap text-right">
                             <v-tooltip
-                                v-if="(new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg'])).has(p.ext)"
+                                v-if="previewableImageExts.has(p.ext)"
                                 :text="t('actionViewImage')"
                             >
                                 <template v-slot:activator="{ props }">
@@ -313,7 +313,7 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
-                                v-if="(new Set(['mp4', 'webm', 'ogv'])).has(p.ext)"
+                                v-if="previewableVideoExts.has(p.ext)"
                                 :text="t('actionPlayVideo')"
                             >
                                 <template v-slot:activator="{ props }">
@@ -327,7 +327,7 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
-                                v-if="(new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus'])).has(p.ext)"
+                                v-if="previewableAudioExts.has(p.ext)"
                                 :text="t('actionPlayAudio')"
                             >
                                 <template v-slot:activator="{ props }">
@@ -356,8 +356,8 @@
                             </v-tooltip>
                             <v-tooltip
                                 v-if="
-                                    (new Set(['readme', 'license'])).has(p.filename.toLowerCase())
-                                    || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext)
+                                    previewableTextFilenames.has(p.filename.toLowerCase())
+                                    || previewableTextExts.has(p.ext)
                                     || codeLanguageTable[p.ext]
                                 "
                                 :text="t('actionViewFile')"
@@ -378,8 +378,8 @@
                                     && filelist.allow_delete
                                     && p.size < 1048576
                                     && (
-                                        (new Set(['readme', 'license'])).has(p.filename.toLowerCase())
-                                        || (new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore'])).has(p.ext)
+                                        previewableTextFilenames.has(p.filename.toLowerCase())
+                                        || previewableTextExts.has(p.ext)
                                         || codeLanguageTable[p.ext]
                                     )
                                 "
@@ -721,7 +721,24 @@ import prism from 'prismjs';
 import { useI18n } from 'petite-vue-i18n';
 import * as jsmediatags from '../mami-chan/index.js';
 import Uploader from '../uploader.js';
-import { getExt, getIconFromExt, getColorFromExt, formatSize, formatTimestamp, pathPrefix, removePrefix, removeSuffix, debounce, codeLanguageTable } from '../common.js';
+import {
+    getExt,
+    getIconFromExt,
+    getColorFromExt,
+    formatSize,
+    formatTimestamp,
+    pathPrefix,
+    removePrefix,
+    removeSuffix,
+    debounce,
+    codeLanguageTable,
+    previewableImageExts,
+    previewableVideoExts,
+    previewableAudioExts,
+    previewableTextExts,
+    previewableTextFilenames,
+    readmeFilenames,
+} from '../common.js';
 
 const { $dialog, $toast } = getCurrentInstance().appContext.config.globalProperties;
 const { t } = useI18n();
@@ -802,8 +819,6 @@ const filelistPathsSorted = computed(() => {
             return filelist.value.paths;
     }
 });
-
-const readmeFilenames = new Set(['readme', 'readme.txt', 'readme.md']);
 
 const readmeItem = computed(() => filelist.value.paths.find(e => !e.is_dir && readmeFilenames.has(e.filename.toLowerCase())));
 
@@ -1118,7 +1133,7 @@ const formatAudioTime = t => {
 watch(previewDialog, () => {
     previewAudio.value.pause();
 });
-const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => (new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus'])).has(e.ext)));
+const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => previewableAudioExts.has(e.ext)));
 const previewAudioPrev = e => {
     const index = filelistPathsAudio.value.indexOf(e);
     return filelistPathsAudio.value[index === 0 ? (filelistPathsAudio.value.length - 1) : (index - 1)];

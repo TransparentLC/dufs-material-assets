@@ -40,6 +40,9 @@
     * 同一目录下音频文件顺序/随机/循环播放
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
 * 自定义页面标题和主题色✨
+* 分页展示文件✨
+    * 适用于目录内有上千个文件的情况
+    * 默认不启用，需要自定义分页大小
 * 多语言支持✨
     * 已支持的语言或添加翻译请参见 [`src/i18n.js`](https://github.com/TransparentLC/dufs-material-assets/blob/master/src/i18n.js)
 
@@ -53,7 +56,7 @@
 
 <details>
 
-<summary>自定义页面标题和主题色</summary>
+<summary>自定义页面标题、主题色和分页大小</summary>
 
 按照以下指引修改 `index.html` 的 `<script>` 部分：
 
@@ -73,6 +76,9 @@ window.__CUSTOM_THEME__ = {
         secondary: '#008dcc',
     },
 };
+
+// 自定义分页大小
+window.__CUSTOM_PAGE_SIZE__ = 100;
 
 // 由dufs填充的页面内容，不要修改
 window.__INITIAL_DATA__ = __INDEX_DATA__;

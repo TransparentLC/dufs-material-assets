@@ -263,7 +263,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="p in filelistPathsSorted" v-ripple>
+                    <tr
+                        v-for="p in filelistPathsSorted.slice((filelistPage - 1) * filelistPageSize, filelistPage * filelistPageSize)"
+                        v-ripple
+                    >
                         <td>
                             <div
                                 class="d-flex align-center"
@@ -433,7 +436,7 @@
                                         variant="plain"
                                         icon="$mdiFolderDownload"
                                         density="comfortable"
-                                        :href="currentPath + p.name + '/?zip'"
+                                        :href="currentPath + encodeURIComponent(p.name) + '/?zip'"
                                         :download="p.filename + '.zip'"
                                     ></v-btn>
                                 </template>
@@ -448,7 +451,7 @@
                                         variant="plain"
                                         icon="$mdiDownload"
                                         density="comfortable"
-                                        :href="currentPath + p.name"
+                                        :href="currentPath + encodeURIComponent(p.name)"
                                         :download="p.filename"
                                     ></v-btn>
                                 </template>
@@ -461,19 +464,46 @@
     </v-card>
 
     <v-card v-if="readmeItem" class="my-4">
-        <v-card-title class="text-subtitle-1">
-            <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>{{ readmeItem.filename }}
+        <v-card-title class="d-flex align-center text-subtitle-1">
+            <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>
+            <span class="flex-grow-1">{{ readmeItem.filename }}</span>
+            <v-btn
+                variant="text"
+                density="comfortable"
+                :icon="readmeExpand ? '$mdiChevronUp' : '$mdiChevronDown'"
+                @click="readmeExpand = !readmeExpand"
+            ></v-btn>
         </v-card-title>
-        <v-skeleton-loader
-            :loading="readmeSkeleton"
-            type="article"
-        >
-            <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
-            <v-card-text v-else>
-                <pre style="white-space:pre-wrap;word-break:keep-all"><code>{{ readmeContent }}</code></pre>
-            </v-card-text>
-        </v-skeleton-loader>
+        <v-expand-transition>
+            <v-skeleton-loader
+                v-show="readmeExpand"
+                :loading="readmeSkeleton"
+                type="article"
+            >
+                <v-divider></v-divider>
+                <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
+                <v-card-text v-else>
+                    <pre style="white-space:pre-wrap;word-break:keep-all"><code>{{ readmeContent }}</code></pre>
+                </v-card-text>
+            </v-skeleton-loader>
+        </v-expand-transition>
     </v-card>
+
+    <v-pagination
+        v-if="filelistPageCount > 1"
+        class="my-4"
+        active-color="primary"
+        prev-icon="$mdiChevronLeft"
+        next-icon="$mdiChevronRight"
+        :density="display.xs.value ? 'compact' : (display.width.value < 768 ? 'comfortable' : 'default')"
+        :total-visible="display.xs.value ? 5 : (display.smAndDown.value ? 7 : 9)"
+        v-model="filelistPage"
+        :length="filelistPageCount"
+        @mousedown="filelistPageDown"
+        @mouseup="filelistPageUp"
+        @touchstart="e => e.preventDefault() || filelistPageDown()"
+        @touchend="e => e.preventDefault() || filelistPageUp()"
+    ></v-pagination>
 
     <v-dialog
         v-model="previewDialog"
@@ -603,10 +633,18 @@
                         @click="updateAudioTags((previewItem = previewAudioNext(previewItem)))"
                     ></v-btn>
                     <v-btn
-                        :icon="previewAudioRepeat ? '$mdiRepeat' : '$mdiRepeatOff'"
+                        :icon="{
+                            once: '$mdiRepeatOnce',
+                            on: '$mdiRepeat',
+                            off: '$mdiRepeatOff',
+                        }[previewAudioRepeat]"
                         variant="plain"
                         class="mx-1"
-                        @click="previewAudioRepeat = !previewAudioRepeat"
+                        @click="previewAudioRepeat = {
+                            once: 'on',
+                            on: 'off',
+                            off: 'once',
+                        }[previewAudioRepeat]"
                     ></v-btn>
                 </div>
             </v-card-text>
@@ -702,7 +740,7 @@
         class="d-none"
         :src="filelistPathsAudio.includes(previewItem) ? previewItem.fullpath : undefined"
         :autoplay="!previewAudioPaused"
-        :loop="previewAudioRepeat"
+        :loop="previewAudioRepeat === 'on'"
         @error="$toast.error(t('toastFailedLoadAudio'))"
         @play="previewAudioPaused = false"
         @pause="previewAudioPaused = true"
@@ -713,7 +751,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch, nextTick, getCurrentInstance, mergeProps, reactive } from 'vue';
+import { ref, computed, onMounted, watch, nextTick, getCurrentInstance, mergeProps, reactive, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
@@ -819,6 +857,17 @@ const filelistPathsSorted = computed(() => {
             return filelist.value.paths;
     }
 });
+const filelistPageSize = window.__CUSTOM_PAGE_SIZE__ || Infinity;
+const filelistPageCount = computed(() => Math.ceil(filelistPathsSorted.value.length / filelistPageSize));
+const filelistPage = ref(1);
+let filelistPageTimer = null;
+const filelistPageDown = () => filelistPageTimer = setTimeout(() => filelistPageTimer = null, 500);
+const filelistPageUp = async () => {
+    if (filelistPageTimer === null) {
+        const page = parseInt(await $dialog.promises.prompt(t('dialogPageSkipLabel', [1, filelistPageCount.value]), t('titlePageSkip')));
+        if (!isNaN(page) && 1 <= page && page <= filelistPageCount.value) filelistPage.value = page;
+    };
+};
 
 const readmeItem = computed(() => filelist.value.paths.find(e => !e.is_dir && readmeFilenames.has(e.filename.toLowerCase())));
 
@@ -846,8 +895,9 @@ const additionalPathItem = e => {
 
 const updateFilelist = async () => {
     document.title = (window.__CUSTOM_DOCUMENT_TITLE__ || 'Index of ${path} - dufs').replaceAll('${path}', removeSuffix(currentPathWithoutPrefix.value, '/') || '/');
+    let items;
     if (window.__INITIAL_DATA__) {
-        filelist.value = window.__INITIAL_DATA__;
+        items = window.__INITIAL_DATA__;
         delete window.__INITIAL_DATA__;
     } else {
         const sp = new URLSearchParams([
@@ -859,13 +909,15 @@ const updateFilelist = async () => {
         // Don't show skeleton if loading time is less than 150ms
         const st = setTimeout(() => filelistSkeleton.value = true, 150);
         // console.time('Load filelist');
-        filelist.value = await dufsfetch(`${currentPath.value}?${sp}`).then(r => r.json());
+        items = await dufsfetch(`${currentPath.value}?${sp}`).then(r => r.json());
         // console.timeEnd('Load filelist');
         filelistSkeleton.value = false;
         clearTimeout(st);
     }
-    filelist.value.paths.forEach(additionalPathItem);
+    items.paths.forEach(additionalPathItem);
+    filelist.value = items;
 };
+const updateFilelistResetPage = () => updateFilelist().then(() => filelistPage.value = 1);
 
 const breadcrumb = computed(() => {
     const r = [{title: '/', href: pathPrefix}];
@@ -889,6 +941,7 @@ const editWrap = ref(true);
 const editItem = ref({});
 const editContent = ref('');
 
+const readmeExpand = ref(true);
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
 
@@ -977,8 +1030,8 @@ const saveEditContent = async () => {
 onMounted(updateFilelist);
 onMounted(updateReadme);
 
-watch(currentPath, updateFilelist);
-watch(search, debounce(updateFilelist, 250));
+watch(currentPath, updateFilelistResetPage);
+watch(search, debounce(updateFilelistResetPage, 250));
 watch(readmeItem, updateReadme);
 
 /**
@@ -1117,7 +1170,8 @@ const createFolder = async () => {
 
 const previewAudioPaused = ref(true);
 const previewAudioShuffle = ref(false);
-const previewAudioRepeat = ref(false);
+/** @type {import('vue').Ref<'once' | 'on' | 'off'>} */
+const previewAudioRepeat = ref('once');
 const previewAudioCurrent = ref(0);
 const previewAudioDuration = ref(0);
 const previewAudioCover = ref(null);
@@ -1143,7 +1197,7 @@ const previewAudioNext = e => {
     return filelistPathsAudio.value[index === filelistPathsAudio.value.length - 1 ? 0 : (index + 1)];
 };
 const previewAudioEnded = async () => {
-    if (filelistPathsAudio.value.length === 1) {
+    if (filelistPathsAudio.value.length === 1 || previewAudioRepeat.value === 'once') {
         previewAudioPaused.value = true;
         previewAudio.value.currentTime = 0;
     } else {

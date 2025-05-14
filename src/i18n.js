@@ -27,6 +27,7 @@ messages.en = {
     titleDownloadArchive: 'Download root folder as a .zip file',
     titleLogin: 'Login',
     titleLogout: 'Logout ({0})',
+    titlePageSkip: 'Go to page',
     toastFailedLoadAudio: 'Failed to load audio.',
     toastSaveEdit: '{0} has been saved.',
     toastMoveFolder: 'Folder moved.',
@@ -42,6 +43,7 @@ messages.en = {
     dialogUploadSucceed: 'Uploaded',
     dialogUploadError: 'Failed to upload',
     dialogLogout: 'Are you sure to logout {0}?',
+    dialogPageSkipLabel: 'Page number ({0}-{1})',
 };
 messages['zh-CN'] = {
     dialogButtonConfirmText: '确定',
@@ -68,6 +70,7 @@ messages['zh-CN'] = {
     titleDownloadArchive: '下载当前目录为 ZIP 压缩包',
     titleLogin: '登录',
     titleLogout: '注销（{0}）',
+    titlePageSkip: '翻页',
     toastFailedLoadAudio: '无法加载音频',
     toastSaveEdit: '已保存 {0}',
     toastMoveFolder: '已移动文件夹',
@@ -82,7 +85,8 @@ messages['zh-CN'] = {
     dialogUploadPending: '等待上传',
     dialogUploadSucceed: '上传成功',
     dialogUploadError: '上传失败',
-    dialogLogout: ' {0} 是否要注销？',
+    dialogLogout: '{0} 是否要注销？',
+    dialogPageSkipLabel: '请输入页数（{0}-{1}）',
 };
 messages['zh-HK'] = {
     ...messages['zh-CN'],
@@ -104,6 +108,7 @@ messages['zh-HK'] = {
     titleDownloadArchive: '下載當前目錄為 ZIP 壓縮包',
     titleLogin: '登入',
     titleLogout: '登出（{0}）',
+    titlePageSkip: '翻頁',
     toastFailedLoadAudio: '無法加載音頻',
     toastMoveFolder: '已移動文件夾',
     toastMoveFile: '已移動文件',
@@ -118,6 +123,7 @@ messages['zh-HK'] = {
     dialogUploadSucceed: '等待成功',
     dialogUploadError: '上傳失敗',
     dialogLogout: '{0} 是否要登出？',
+    dialogPageSkipLabel: '請輸入頁數（{0}-{1}）',
 };
 messages['zh-TW'] = {
     ...messages['zh-HK'],

@@ -2,7 +2,10 @@ import { createVuetify } from 'vuetify';
 import { mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import {
+    mdiChevronDown,
+    mdiChevronLeft,
     mdiChevronRight,
+    mdiChevronUp,
     mdiHome,
     mdiFile,
     mdiFileMusic,
@@ -71,6 +74,7 @@ import {
     mdiSkipNext,
     mdiRepeat,
     mdiRepeatOff,
+    mdiRepeatOnce,
     mdiShuffle,
     mdiShuffleDisabled,
     mdiLogin,
@@ -81,7 +85,10 @@ export default createVuetify({
     icons: {
         defaultSet: 'mdi',
         aliases: {
+            mdiChevronDown,
+            mdiChevronLeft,
             mdiChevronRight,
+            mdiChevronUp,
             mdiHome,
             mdiFile,
             mdiFileMusic,
@@ -150,6 +157,7 @@ export default createVuetify({
             mdiSkipNext,
             mdiRepeat,
             mdiRepeatOff,
+            mdiRepeatOnce,
             mdiShuffle,
             mdiShuffleDisabled,
             mdiLogin,

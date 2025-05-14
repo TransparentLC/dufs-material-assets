@@ -2,12 +2,10 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import vuetify from 'vite-plugin-vuetify';
-import autoprefixer from 'autoprefixer';
 import { visualizer } from 'rollup-plugin-visualizer';
 import fs from 'node:fs';
 
 const __IS_PROD__ = process.env.NODE_ENV === 'production';
-const __DEV_URL__ = 'http://localhost:5000';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -69,15 +67,7 @@ export default defineConfig({
         }),
     ],
     css: {
-        postcss: {
-            plugins: [
-                autoprefixer({
-                    overrideBrowserslist: [
-                        '>100%',
-                    ],
-                }),
-            ],
-        },
+        transformer: 'lightningcss',
     },
     build: {
         chunkSizeWarningLimit: Infinity,
@@ -103,6 +93,7 @@ export default defineConfig({
                 comments: false,
             },
         },
+        cssMinify: 'lightningcss',
         rollupOptions: {
             plugins: [
                 visualizer({

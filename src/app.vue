@@ -17,6 +17,10 @@
                     <component v-if="!$route?.meta?.keepAlive" :is="Component"></component>
                 </router-view>
 
+                <!--
+                    感谢你使用 dufs-material-assets！如果我看到有其他人也在使用的话会很开心的！
+                    因此希望你可以保留这个页脚。它不会影响美观，同时也是对我（以及 dufs 的原作者）的鼓励和支持～
+                -->
                 <div class="text-caption text-grey text-center mt-8 mb-4">
                     Powered by
                     <a href="https://github.com/sigoden/dufs" target="_blank" rel="noopener noreferrer" style="color:unset">dufs</a> v{{ dufsVersion }} &

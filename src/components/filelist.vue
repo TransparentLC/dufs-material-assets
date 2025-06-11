@@ -875,7 +875,7 @@ const readmeItem = computed(() => filelist.value.paths.find(e => !e.is_dir && re
  * Start and end with /
  * @type {import('vue').Ref<String>}
  */
-const currentPath = computed(() => route.params.path ? route.params.path.map(e => `/${e}`).join('') : '/');
+const currentPath = computed(() => route.params.path ? route.params.path.map(e => `/${encodeURIComponent(e)}`).join('') : '/');
 /**
  * Start and end with /
  * @type {import('vue').Ref<String>}
@@ -924,7 +924,7 @@ const breadcrumb = computed(() => {
     let h = pathPrefix;
     for (const p of removeSuffix(currentPathWithoutPrefix.value, '/').split('/').slice(1)) {
         h += p + '/';
-        r.push({title: p, href: h});
+        r.push({ title: decodeURIComponent(p), href: h });
     }
     return r;
 });
@@ -1163,7 +1163,7 @@ const uploadFilesUp = () => {
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));
     if (!path) return;
-    await dufsfetch(currentPath.value + path, { method: 'MKCOL' });
+    await dufsfetch(currentPath.value + encodeURIComponent(path), { method: 'MKCOL' });
     $toast.success(t('toastCreateFolder'));
     await updateFilelist();
 };

@@ -6,6 +6,8 @@
 
 使用 Vue 3 + Vuetify 构建，部分设计参考 [Cloudreve](https://github.com/cloudreve/Cloudreve)，添加了一些额外的功能。
 
+如果你是为了部署本地文件共享或 WebDAV 服务（不包括挂载网盘），因为最近的“AList 被商业收购/投毒事件”而选择 dufs 作为替代品，那么你大概也会对这个项目感兴趣～
+
 <picture>
     <source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/f8488128-ad2b-4f3d-950e-10c2a11ac390">
     <img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/094fa2be-afeb-4010-9bec-d014b888b97b">
@@ -53,6 +55,8 @@
 也可以自己构建前端资源。
 
 如果不想单独保存这个项目的前端资源和在每次启动 dufs 时设定 `--assets` 参数，在 Actions 里面也有编译好的、嵌入了这个项目的前端资源（替换了原版的前端资源）的 dufs [二进制文件](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/build-embed.yml)。
+
+[Releases](https://github.com/TransparentLC/dufs-material-assets/releases) 会在 dufs 发布新版本时更新，版本号和 dufs 一致，但不一定是这个项目的最新版本。
 
 <details>
 

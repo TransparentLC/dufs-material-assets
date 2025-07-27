@@ -106,6 +106,13 @@ const extIconColorTable = {
     'pdf': ['$mdiFilePdfBox', '#f44336'],
     'epub': ['$mdiBook', '#81b315'],
 
+    'ttf': ['$mdiFormatFont', '#c1328e'],
+    'ttc': ['$mdiFormatFont', '#c1328e'],
+    'otf': ['$mdiFormatFont', '#c1328e'],
+    'otc': ['$mdiFormatFont', '#c1328e'],
+    'woff': ['$mdiFormatFont', '#c1328e'],
+    'woff2': ['$mdiFormatFont', '#c1328e'],
+
     'torrent': ['$mdiMagnetOn', '#5c6bc0'],
     'exe': ['$mdiWindowRestore', '#1a237e'],
     'apk': ['$mdiAndroid', '#8bc34a'],
@@ -161,6 +168,7 @@ export const previewableImageExts = new Set(['jpg', 'jpeg', 'gif', 'png', 'webp'
 export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
 export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore']);
+export const previewableFontExts = new Set(['ttf', 'ttc', 'otf', 'otc', 'woff', 'woff2']);
 export const previewableTextFilenames = new Set(['readme', 'license']);
 export const readmeFilenames = new Set(['readme', 'readme.txt', 'readme.md']);
 

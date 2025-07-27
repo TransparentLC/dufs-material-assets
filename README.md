@@ -41,6 +41,7 @@
     * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=audio%20format)
     * 同一目录下音频文件顺序/随机/循环播放
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
+* 字体查看器✨
 * 自定义页面标题和主题色✨
 * 分页展示文件✨
     * 适用于目录内有上千个文件的情况
@@ -145,5 +146,13 @@ pnpm run dufs-api
 <summary>音乐播放器</summary>
 
 ![](https://github.com/TransparentLC/dufs-material-assets/assets/47057319/c7852e66-495c-4ec0-86e6-db8a6c316f20)
+
+</details>
+
+<details>
+
+<summary>字体查看器</summary>
+
+![](https://github.com/user-attachments/assets/cb1905f3-bb6d-40cd-ac27-7acbcfeffae9)
 
 </details>

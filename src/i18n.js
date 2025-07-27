@@ -44,6 +44,10 @@ messages.en = {
     dialogUploadError: 'Failed to upload',
     dialogLogout: 'Are you sure to logout {0}?',
     dialogPageSkipLabel: 'Page number ({0}-{1})',
+    fontPreviewText: 'Everyone has the right to freedom of thought, conscience and religion.',
+    fontPreviewTextPlaceholder: 'Type something to preview',
+    fontPreviewSize: 'Font size',
+    fontPreviewWeight: 'Font weight',
 };
 messages['zh-CN'] = {
     dialogButtonConfirmText: '确定',
@@ -87,6 +91,10 @@ messages['zh-CN'] = {
     dialogUploadError: '上传失败',
     dialogLogout: '{0} 是否要注销？',
     dialogPageSkipLabel: '请输入页数（{0}-{1}）',
+    fontPreviewText: '你的心灵是否光芒闪耀？',
+    fontPreviewTextPlaceholder: '输入文字进行预览',
+    fontPreviewSize: '字号',
+    fontPreviewWeight: '字重',
 };
 messages['zh-HK'] = {
     ...messages['zh-CN'],
@@ -124,6 +132,10 @@ messages['zh-HK'] = {
     dialogUploadError: '上傳失敗',
     dialogLogout: '{0} 是否要登出？',
     dialogPageSkipLabel: '請輸入頁數（{0}-{1}）',
+    fontPreviewText: '起身追尋未曾得見的夢想軌道',
+    fontPreviewTextPlaceholder: '輸入文字進行預覽',
+    fontPreviewSize: '字號',
+    fontPreviewWeight: '字重',
 };
 messages['zh-TW'] = {
     ...messages['zh-HK'],

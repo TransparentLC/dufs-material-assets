@@ -376,6 +376,20 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
+                                v-if="previewableFontExts.has(p.ext)"
+                                :text="t('actionViewFile')"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiFileSearch"
+                                        density="comfortable"
+                                        @click="previewDialog = true; previewMode = 'font'; previewItem = p"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
                                 v-if="
                                     filelist.allow_upload
                                     && filelist.allow_delete
@@ -660,6 +674,112 @@
                     style="width:100%;height:calc(100vh - 48px - 52px - 48px)"
                 >
             </v-card-text>
+            <v-card-text
+                v-else-if="previewMode === 'font'"
+                class="py-4"
+                style="max-height:calc(100vh - 48px - 52px - 16px)"
+            >
+                <div
+                    class="text-center mb-4"
+                    :style="{
+                        fontFamily: `${previewFontFamily},Adobe NotDef`,
+                        fontSize: `${previewFontSize}px`,
+                        fontWeight: previewFontWeight,
+                        fontStyle: previewFontItalic ? 'italic' : undefined,
+                    }"
+                >
+                    The quick brown fox jumps over the lazy dog.
+                    <br>
+                    0123456789.:,;'"(!?)+-*/=
+                    <br>
+                    {{ t('fontPreviewText') }}
+                    <br>
+                    <template v-if="previewFontText">{{ previewFontText }}</template>
+                    <span v-else class="text-disabled">{{ t('fontPreviewTextPlaceholder') }}</span>
+                </div>
+                <v-divider></v-divider>
+                <v-text-field
+                    v-model="previewFontText"
+                    :placeholder="t('fontPreviewTextPlaceholder')"
+                    variant="underlined"
+                    color="primary"
+                >
+                    <template v-slot:append-inner>
+                        <v-btn
+                            icon="$mdiFormatItalic"
+                            variant="text"
+                            :color="previewFontItalic ? 'primary' : undefined"
+                            density="compact"
+                            @click="previewFontItalic = !previewFontItalic"
+                        ></v-btn>
+                    </template>
+                </v-text-field>
+                <v-slider
+                    v-model="previewFontSize"
+                    color="primary"
+                    thumb-label
+                    :step="1"
+                    :min="0"
+                    :max="72"
+                >
+                    <template v-slot:thumb-label="{ modelValue }">
+                        <span class="text-white">{{ modelValue }}</span>
+                    </template>
+                    <template v-slot:prepend>{{ t('fontPreviewSize') }}</template>
+                    <template v-slot:append>
+                        <v-text-field
+                            v-model="previewFontSize"
+                            density="compact"
+                            color="primary"
+                            type="number"
+                            variant="outlined"
+                            hide-details
+                            :min="0"
+                            :max="72"
+                            width="5em"
+                        ></v-text-field>
+                    </template>
+                </v-slider>
+                <v-slider
+                    v-model="previewFontWeight"
+                    color="primary"
+                    thumb-label
+                    show-ticks="always"
+                    :tick-size="4"
+                    :step="100"
+                    :min="100"
+                    :max="900"
+                    hide-details
+                >
+                    <template v-slot:thumb-label="{ modelValue }">
+                        <span class="text-white">{{ modelValue }}</span>
+                    </template>
+                    <template v-slot:prepend>{{ t('fontPreviewWeight') }}</template>
+                    <template v-slot:append>
+                        <v-select
+                            v-if="display.smAndUp.value"
+                            v-model="previewFontWeight"
+                            :items="[
+                                { title: '100 (Thin)', value: 100 },
+                                { title: '200 (Extra Light)', value: 200 },
+                                { title: '300 (Light)', value: 300 },
+                                { title: '400 (Regular)', value: 400 },
+                                { title: '500 (Medium)', value: 500 },
+                                { title: '600 (Semi Bold)', value: 600 },
+                                { title: '700 (Bold)', value: 700 },
+                                { title: '800 (Extra Bold)', value: 800 },
+                                { title: '900 (Black)', value: 900 },
+                            ]"
+                            menu-icon="$mdiChevronDown"
+                            color="primary"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                            width="12em"
+                        ></v-select>
+                    </template>
+                </v-slider>
+            </v-card-text>
             <v-skeleton-loader
                 v-else-if="previewMode === 'text'"
                 :loading="previewSkeleton"
@@ -759,6 +879,7 @@ import prism from 'prismjs';
 import { useI18n } from 'petite-vue-i18n';
 import * as jsmediatags from '../mami-chan/index.js';
 import Uploader from '../uploader.js';
+import NotDefFont from '../assets/AND-Regular.woff2?inline';
 import {
     getExt,
     getIconFromExt,
@@ -774,6 +895,7 @@ import {
     previewableVideoExts,
     previewableAudioExts,
     previewableTextExts,
+    previewableFontExts,
     previewableTextFilenames,
     readmeFilenames,
 } from '../common.js';
@@ -1254,5 +1376,17 @@ const updateAudioTags = async e => {
         previewAudioCover.value = '';
     }
 };
+
+const previewFontFamily = `preview-${Math.random().toString(36).substring(2, 10)}`;
+const previewFontText = ref('');
+const previewFontSize = ref(display.smAndUp.value ? (display.mdAndUp.value ? 32 : 24) : 16);
+const previewFontWeight = ref(400);
+const previewFontItalic = ref(false);
+const previewFontStyleElement = document.createElement('style');
+onMounted(() => document.head.appendChild(previewFontStyleElement));
+watch(previewItem, () => {
+    if (previewMode.value !== 'font' || !previewItem.value.fullpath) return;
+    previewFontStyleElement.innerHTML = `@font-face{font-family:${previewFontFamily};src:url(${previewItem.value.fullpath})}@font-face{font-family:"Adobe NotDef";src:url(${NotDefFont})}`;
+});
 
 </script>

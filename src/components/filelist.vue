@@ -1016,7 +1016,7 @@ const additionalPathItem = e => {
 };
 
 const updateFilelist = async () => {
-    document.title = (window.__CUSTOM_DOCUMENT_TITLE__ || 'Index of ${path} - dufs').replaceAll('${path}', removeSuffix(currentPathWithoutPrefix.value, '/') || '/');
+    document.title = (window.__CUSTOM_DOCUMENT_TITLE__ || 'Index of ${path} - dufs').replaceAll('${path}', decodeURIComponent(removeSuffix(currentPathWithoutPrefix.value, '/')) || '/');
     let items;
     if (window.__INITIAL_DATA__) {
         items = window.__INITIAL_DATA__;

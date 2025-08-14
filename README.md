@@ -66,9 +66,12 @@
 按照以下指引修改 `index.html` 的 `<script>` 部分：
 
 ```js
-// 自定义标题
+// 自定义网页标题
 window.__CUSTOM_DOCUMENT_TITLE__ = 'Index of ${path} - Custom title';
+// 自定义左上角显示的标题
 window.__CUSTOM_PAGE_TITLE__ = 'Custom title';
+// 也可以放一个自己喜欢的LOGO
+window.__CUSTOM_PAGE_LOGO__ = 'https://example.com/logo.png';
 
 // 自定义浅色和深色主题
 window.__CUSTOM_THEME__ = {

@@ -1,7 +1,10 @@
 <template>
     <v-app>
         <v-app-bar color="primary">
-            <v-app-bar-title>{{ title }}</v-app-bar-title>
+            <template v-slot:prepend>
+                <img v-if="logo" :src="logo" height="40" style="margin-left:20px">
+            </template>
+            <v-app-bar-title v-if="title">{{ title }}</v-app-bar-title>
 
             <template v-slot:append>
                 <div id="app-bar-append"></div>
@@ -35,7 +38,8 @@
 import { useTheme } from 'vuetify';
 import { pathPrefix, dufsVersion } from './common.js';
 
-const title = window.__CUSTOM_PAGE_TITLE__ || (location.host + decodeURIComponent(pathPrefix === '/' ? '' : pathPrefix));
+const logo = window.__CUSTOM_PAGE_LOGO__;
+const title = window.__CUSTOM_PAGE_TITLE__ === undefined ? (location.host + decodeURIComponent(pathPrefix === '/' ? '' : pathPrefix)) : window.__CUSTOM_PAGE_TITLE__;
 
 const theme = useTheme();
 const matchDark = matchMedia('(prefers-color-scheme:dark)');

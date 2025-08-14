@@ -299,7 +299,7 @@
                             </div>
                         </td>
                         <td class="text-no-wrap text-right">{{ formatTimestamp(p.mtime) }}</td>
-                        <td class="text-no-wrap text-right">{{ p.is_dir ? t('headerSizeSubdirectoryItems', [p.size], p.size) : formatSize(p.size) }}</td>
+                        <td class="text-no-wrap text-right">{{ p.is_dir ? t('headerSizeSubdirectoryItems', [p.size > 999 ? '>999' : p.size], p.size) : formatSize(p.size) }}</td>
                         <td class="text-no-wrap text-right">
                             <v-tooltip
                                 v-if="previewableImageExts.has(p.ext)"
@@ -961,7 +961,7 @@ const sortColumn = ref('');
 const sortOrderDesc = ref(false);
 
 /** @type {import('vue').Ref<DufsData>} */
-const filelist = ref({
+const filelist = shallowRef({
     paths: [],
 });
 

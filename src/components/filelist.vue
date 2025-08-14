@@ -858,7 +858,7 @@
         ref="previewAudio"
         preload="metadata"
         class="d-none"
-        :src="filelistPathsAudio.includes(previewItem) ? previewItem.fullpath : undefined"
+        :src="filelistPathsAudio.map(e => e.fullpath).includes(previewItem.fullpath) ? previewItem.fullpath : undefined"
         :autoplay="!previewAudioPaused"
         :loop="previewAudioRepeat === 'on'"
         @error="$toast.error(t('toastFailedLoadAudio'))"
@@ -1311,11 +1311,11 @@ watch(previewDialog, () => {
 });
 const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => previewableAudioExts.has(e.ext)));
 const previewAudioPrev = e => {
-    const index = filelistPathsAudio.value.indexOf(e);
+    const index = filelistPathsAudio.value.map(e => e.fullpath).indexOf(e.fullpath);
     return filelistPathsAudio.value[index === 0 ? (filelistPathsAudio.value.length - 1) : (index - 1)];
 };
 const previewAudioNext = e => {
-    const index = filelistPathsAudio.value.indexOf(e);
+    const index = filelistPathsAudio.value.map(e => e.fullpath).indexOf(e.fullpath);
     return filelistPathsAudio.value[index === filelistPathsAudio.value.length - 1 ? 0 : (index + 1)];
 };
 const previewAudioEnded = async () => {
@@ -1325,7 +1325,7 @@ const previewAudioEnded = async () => {
     } else {
         let next;
         if (previewAudioShuffle.value) {
-            const p = filelistPathsAudio.value.filter(e => e !== previewItem.value);
+            const p = filelistPathsAudio.value.filter(e => e.fullpath !== previewItem.value.fullpath);
             next = p[Math.floor(Math.random() * p.length)];
         } else {
             next = previewAudioNext(previewItem.value);

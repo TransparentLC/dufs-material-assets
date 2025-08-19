@@ -1119,7 +1119,7 @@ const updateEditContent = async () => {
 
 // FIXME: 在Firefox上，弹出登录对话框后点击取消或什么都不填就确认多次，之后不会再弹出登录对话框，除非重启浏览器或Ctrl+F5
 const login = async () => {
-    await dufsfetch(`${currentPath.value}`, { method: 'CHECKAUTH' });
+    await dufsfetch(`${currentPath.value}?${new URLSearchParams([['login', '']])}`, { method: 'CHECKAUTH' });
     await updateFilelist();
 };
 

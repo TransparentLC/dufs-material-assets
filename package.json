@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
-    "marked": "^16.1.2",
+    "marked": "^16.2.0",
     "marked-highlight": "^2.2.2",
     "petite-vue-i18n": "^11.1.11",
     "prismjs": "^1.30.0",

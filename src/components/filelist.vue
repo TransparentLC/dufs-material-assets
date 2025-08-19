@@ -979,7 +979,7 @@ const filelistPathsSorted = computed(() => {
             return filelist.value.paths;
     }
 });
-const filelistPageSize = window.__CUSTOM_PAGE_SIZE__ || Infinity;
+const filelistPageSize = window.__DUFS_MATERIAL_CONFIG__?.limit || Infinity;
 const filelistPageCount = computed(() => Math.ceil(filelistPathsSorted.value.length / filelistPageSize));
 const filelistPage = ref(1);
 let filelistPageTimer = null;
@@ -1016,7 +1016,7 @@ const additionalPathItem = e => {
 };
 
 const updateFilelist = async () => {
-    document.title = (window.__CUSTOM_DOCUMENT_TITLE__ || 'Index of ${path} - dufs').replaceAll('${path}', decodeURIComponent(removeSuffix(currentPathWithoutPrefix.value, '/')) || '/');
+    document.title = (window.__DUFS_MATERIAL_CONFIG__?.document || 'Index of ${path} - dufs').replaceAll('${path}', decodeURIComponent(removeSuffix(currentPathWithoutPrefix.value, '/')) || '/');
     let items;
     if (window.__INITIAL_DATA__) {
         items = window.__INITIAL_DATA__;

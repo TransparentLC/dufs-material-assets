@@ -61,32 +61,46 @@
 
 <details>
 
-<summary>自定义页面标题、主题色和分页大小</summary>
+<summary>自定义页面标题、主题色、背景图和分页大小</summary>
 
-按照以下指引修改 `index.html` 的 `<script>` 部分：
+按照以下指引修改 `index.html` 的 `<script>` 部分，所有项目都是可选的：
 
 ```js
-// 自定义网页标题
-window.__CUSTOM_DOCUMENT_TITLE__ = 'Index of ${path} - Custom title';
-// 自定义左上角显示的标题
-window.__CUSTOM_PAGE_TITLE__ = 'Custom title';
-// 也可以放一个自己喜欢的LOGO
-window.__CUSTOM_PAGE_LOGO__ = 'https://example.com/logo.png';
-
-// 自定义浅色和深色主题
-window.__CUSTOM_THEME__ = {
-    light: {
-        primary: '#0288d1',
-        secondary: '#00b0ff',
+window.__DUFS_MATERIAL_CONFIG__ = {
+    // 网页标题
+    document: 'Index of ${path} - Custom title',
+    // 左上角显示的标题和 LOGO
+    page: {
+        title: 'Custom title',
+        logo: {
+            light: 'https://example.com/logo-light.png',
+            dark: 'https://example.com/logo-dark.png',
+        },
+        // 也可以在浅色和深色主题下使用同一个 LOGO
+        // logo: 'https://example.com/logo.png',
     },
-    dark: {
-        primary: '#026da7',
-        secondary: '#008dcc',
+    // 背景图片
+    background: {
+        light: 'https://example.com/background-light.webp',
+        dark: 'https://example.com/background-dark.webp',
     },
+    // 也可以在浅色和深色主题下使用同一张背景图片
+    // background: 'https://example.com/background.webp',
+    // 浅色和深色主题
+    // 参见 https://vuetifyjs.com/zh-Hans/features/theme/ 的 colors 部分
+    theme: {
+        light: {
+            primary: '#0288d1',
+            secondary: '#00b0ff',
+        },
+        dark: {
+            primary: '#026da7',
+            secondary: '#008dcc',
+        },
+    },
+    // 分页大小
+    limit: 100,
 };
-
-// 自定义分页大小
-window.__CUSTOM_PAGE_SIZE__ = 100;
 
 // 由dufs填充的页面内容，不要修改
 window.__INITIAL_DATA__ = __INDEX_DATA__;

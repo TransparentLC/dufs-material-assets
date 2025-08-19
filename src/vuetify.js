@@ -185,7 +185,7 @@ export default createVuetify({
                 colors: {
                     primary: '#0288d1',
                     secondary: '#00b0ff',
-                    ...(window.__CUSTOM_THEME__?.light || {}),
+                    ...(window.__DUFS_MATERIAL_CONFIG__?.theme?.light || {}),
                 },
             },
             dark: {
@@ -194,7 +194,7 @@ export default createVuetify({
                     background: '#0f0f0f',
                     primary: '#0288d1',
                     secondary: '#00b0ff',
-                    ...(window.__CUSTOM_THEME__?.dark || {}),
+                    ...(window.__DUFS_MATERIAL_CONFIG__?.theme?.dark || {}),
                 },
             },
         },

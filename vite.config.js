@@ -38,26 +38,6 @@ export default defineConfig({
                     DUFS_EMBED_FILENAME: process.env.DUFS_EMBED_FILENAME,
                     injectScript: `
                         <script>
-                            // window.__CUSTOM_TITLE__ = 'Custom title';
-                            // window.__CUSTOM_THEME__ = {
-                            //     light: {
-                            //         primary: '#0288d1',
-                            //         secondary: '#00b0ff',
-                            //     },
-                            //     dark: {
-                            //         primary: '#026da7',
-                            //         secondary: '#008dcc',
-                            //     },
-                            // };
-                            // window.__CUSTOM_THEME__ = {
-                            //     light: {
-                            //         primary: '#6750a4',
-                            //         secondary: '#b4b0bb',
-                            //         tertiary: '#7d5260',
-                            //         error: '#b3261e',
-                            //         surface: '#fffbfe',
-                            //     },
-                            // };
                             ${__IS_PROD__ ? `window.__INITIAL_DATA__ = JSON.parse(decodeURIComponent(escape(atob("__INDEX_DATA__"))));` : ''}
                             window.__DUFS_PREFIX__ = '${__IS_PROD__ ? '__ASSETS_PREFIX__' : '/prefix/__dufs_v0.0.0__/'}';
                         </script>

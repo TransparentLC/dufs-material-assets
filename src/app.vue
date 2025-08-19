@@ -1,5 +1,10 @@
 <template>
-    <v-app>
+    <v-app :style="background ? {
+        backgroundImage: `url(${background})`,
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundSize: 'cover',
+    } : undefined">
         <v-app-bar color="primary">
             <template v-slot:prepend>
                 <img v-if="logo" :src="logo" height="40" style="margin-left:20px">
@@ -35,16 +40,25 @@
 </template>
 
 <script setup>
+import { ref, computed, watch } from 'vue';
 import { useTheme } from 'vuetify';
 import { pathPrefix, dufsVersion } from './common.js';
 
-const logo = window.__CUSTOM_PAGE_LOGO__;
-const title = window.__CUSTOM_PAGE_TITLE__ === undefined ? (location.host + decodeURIComponent(pathPrefix === '/' ? '' : pathPrefix)) : window.__CUSTOM_PAGE_TITLE__;
+const matchDark = matchMedia('(prefers-color-scheme:dark)');
+const isDark = ref(matchDark.matches);
+matchDark.addEventListener('change', () => isDark.value = matchDark.matches);
+
+const title = window.__DUFS_MATERIAL_CONFIG__?.page?.title === undefined ? (location.host + decodeURIComponent(pathPrefix === '/' ? '' : pathPrefix)) : window.__DUFS_MATERIAL_CONFIG__?.page?.title;
+const logo = computed(() => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.page?.logo;
+    return e && (typeof e === 'string' ? e : (isDark.value ? e.dark : e.light));
+});
+const background = computed(() => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.background;
+    return e && (typeof e === 'string' ? e : (isDark.value ? e.dark : e.light));
+});
 
 const theme = useTheme();
-const matchDark = matchMedia('(prefers-color-scheme:dark)');
-const setTheme = () => theme.global.name.value = matchDark.matches ? 'dark' : 'light';
-setTheme();
-matchDark.addEventListener('change', setTheme);
+watch(isDark, () => theme.global.name.value = isDark.value  ? 'dark' : 'light');
 
 </script>

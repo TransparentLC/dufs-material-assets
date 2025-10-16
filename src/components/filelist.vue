@@ -1036,7 +1036,15 @@ const updateFilelist = async () => {
         // Don't show skeleton if loading time is less than 150ms
         const st = setTimeout(() => filelistSkeleton.value = true, 150);
         // console.time('Load filelist');
-        items = await dufsfetch(`${currentPath.value}?${sp}`).then(r => r.json());
+        items = await dufsfetch(`${currentPath.value}?${sp}`).then(r => {
+            // 使用 render-try-index 时，带有 index.html 的目录不会返回 JSON 而是直接返回 HTML 文件的内容
+            if (!r.headers.get('Content-Type').startsWith('application/json')) {
+                location.href = currentPath.value;
+                return;
+            }
+            return r.json();
+        });
+        if (!items) return;
         // console.timeEnd('Load filelist');
         filelistSkeleton.value = false;
         clearTimeout(st);

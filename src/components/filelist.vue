@@ -1169,7 +1169,7 @@ const deleteFile = async e => {
  * @param {PathItem} e
  */
 const moveFile = async e => {
-    const path = await $dialog.promises.prompt(t('dialogMoveLabel'), t('actionMove'), {value: e.name});
+    const path = await $dialog.promises.prompt(t('dialogMoveLabel'), t('actionMove'), {value: '/' + removePrefix(e.fullpath, pathPrefix)});
     if (!path) return;
     const pathParts = removePrefix(path.startsWith('/') ? (pathPrefix + removePrefix(path, '/')) : (currentPath.value + path), '/').split('/');
     const pathResolvedParts = [];

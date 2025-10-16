@@ -872,7 +872,7 @@
 
 <script setup>
 import { ref, computed, onMounted, watch, nextTick, getCurrentInstance, mergeProps, reactive, shallowRef } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
 import { marked } from 'marked';
 import prism from 'prismjs';
@@ -950,6 +950,7 @@ const dufsfetch = (input, init = {}) => fetch(input, init)
  */
 
 const route = useRoute();
+const router = useRouter();
 const display = useDisplay();
 
 const filelistSkeleton = ref(false);
@@ -1016,6 +1017,10 @@ const additionalPathItem = e => {
 };
 
 const updateFilelist = async () => {
+    // 不允许路径不以/结尾
+    if (!route.path.endsWith('/')) {
+        return await router.replace(route.path + '/');
+    }
     document.title = (window.__DUFS_MATERIAL_CONFIG__?.document || 'Index of ${path} - dufs').replaceAll('${path}', decodeURIComponent(removeSuffix(currentPathWithoutPrefix.value, '/')) || '/');
     let items;
     if (window.__INITIAL_DATA__) {

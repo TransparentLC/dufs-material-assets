@@ -23,6 +23,8 @@
                             @mouseup="uploadFilesUp"
                             @touchstart="e => e.preventDefault() || uploadFilesDown()"
                             @touchend="e => e.preventDefault() || uploadFilesUp()"
+                            style="transition: all 0.2s ease; border-radius: 8px;"
+                            class="mx-1"
                         >
                             <v-badge
                                 v-if="uploadlist.filter(e => !e.uploaded && !e.aborted && !e.fail).length"
@@ -48,6 +50,8 @@
                 item-props
                 width="min(480px, calc(100vw - 24px))"
                 max-height="540"
+                style="border-radius: 8px; background: rgba(var(--v-theme-surface), 0.95); backdrop-filter: blur(10px);"
+                class="elevation-4"
             >
                 <v-list-item v-for="e, i in uploadlist" v-ripple>
                     <template v-slot:prepend>
@@ -95,6 +99,20 @@
             </v-list>
         </v-menu>
         <v-tooltip
+            :text="t('titleRefresh')"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    variant="text"
+                    icon="$mdiRefresh"
+                    @click="refreshFileList"
+                    style="transition: all 0.2s ease; border-radius: 8px;"
+                    class="mx-1"
+                ></v-btn>
+            </template>
+        </v-tooltip>
+        <v-tooltip
             v-if="filelist.allow_upload"
             :text="t('titleCreateFolder')"
         >
@@ -137,7 +155,7 @@
         </v-tooltip>
     </Teleport>
 
-    <v-card class="my-4">
+    <v-card class="my-4 elevation-2" style="border-radius: 12px;">
         <div class="d-flex flex-column flex-sm-row align-sm-center">
             <v-breadcrumbs :items="breadcrumb" class="flex-grow-1 overflow-x-auto py-2 py-sm-4">
                 <template v-slot:divider>
@@ -182,6 +200,8 @@
                     :label="t('headerSearch')"
                     :append-inner-icon="search ? '$mdiCloseCircle' : '$mdiMagnify'"
                     @click:append-inner="search = ''"
+                    style="border-radius: 8px;"
+                    class="elevation-1"
                 ></v-text-field>
             </div>
         </div>
@@ -190,9 +210,9 @@
             :loading="filelistSkeleton"
             type="table-tbody"
         >
-            <v-table class="w-100" :class="{'overflow-x-auto': display.xs.value}" style="font-size:1rem">
+            <v-table class="w-100" :class="{'overflow-x-auto': display.xs.value}" style="font-size:1rem; border-radius: 8px;">
                 <thead>
-                    <tr style="color:rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))">
+                    <tr style="color:rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity)); background: rgba(var(--v-theme-primary), 0.05);">
                         <th class="w-100">
                             <span
                                 style="cursor:pointer"
@@ -266,6 +286,9 @@
                     <tr
                         v-for="p in filelistPathsSorted.slice((filelistPage - 1) * filelistPageSize, filelistPage * filelistPageSize)"
                         v-ripple
+                        style="transition: background-color 0.2s ease;"
+                        @mouseenter="$event.target.style.backgroundColor = 'rgba(var(--v-theme-primary), 0.04)'"
+                        @mouseleave="$event.target.style.backgroundColor = 'transparent'"
                     >
                         <td>
                             <div
@@ -477,8 +500,8 @@
         </v-skeleton-loader>
     </v-card>
 
-    <v-card v-if="readmeItem" class="my-4">
-        <v-card-title class="d-flex align-center text-subtitle-1">
+    <v-card v-if="readmeItem" class="my-4 elevation-2" style="border-radius: 12px;">
+        <v-card-title class="d-flex align-center text-subtitle-1" style="background: linear-gradient(135deg, rgba(var(--v-theme-primary), 0.1), rgba(var(--v-theme-secondary), 0.05)); border-radius: 12px 12px 0 0;">
             <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>
             <span class="flex-grow-1">{{ readmeItem.filename }}</span>
             <v-btn
@@ -517,6 +540,8 @@
         @mouseup="filelistPageUp"
         @touchstart="e => e.preventDefault() || filelistPageDown()"
         @touchend="e => e.preventDefault() || filelistPageUp()"
+        style="border-radius: 8px;"
+        elevation="1"
     ></v-pagination>
 
     <v-dialog
@@ -1058,6 +1083,11 @@ const updateFilelist = async () => {
 };
 const updateFilelistResetPage = () => updateFilelist().then(() => filelistPage.value = 1);
 
+const refreshFileList = async () => {
+    await updateFilelist();
+    $toast.success(t('toastRefreshSuccess'));
+};
+
 const breadcrumb = computed(() => {
     const r = [{title: '/', href: pathPrefix}];
     let h = pathPrefix;
@@ -1231,7 +1261,15 @@ const uploadFilesClick = async () => {
             return new Uploader(
                 cp + encodeURIComponent(file.name),
                 file,
-                () => currentPath.value === cp && updateFilelist(),
+                () => {
+                    if (currentPath.value === cp) {
+                        updateFilelist();
+                        $toast.success(t('toastUploadSuccess', [file.name]));
+                    }
+                },
+                () => {
+                    $toast.error(t('toastUploadError', [file.name]));
+                }
             );
         })
         .forEach(e => {
@@ -1277,7 +1315,15 @@ document.body.addEventListener('drop', async e => {
             return new Uploader(
                 cp + encodeURIComponent(path),
                 file,
-                () => currentPath.value === cp && updateFilelist(),
+                () => {
+                    if (currentPath.value === cp) {
+                        updateFilelist();
+                        $toast.success(t('toastUploadSuccess', [file.name]));
+                    }
+                },
+                () => {
+                    $toast.error(t('toastUploadError', [file.name]));
+                }
             );
         })
         .forEach(e => {

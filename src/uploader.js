@@ -57,6 +57,8 @@ class Uploader {
             if (xhr.readyState !== XMLHttpRequest.DONE) return;
             if (xhr.status >= 400) {
                 this.fail = xhr.statusText;
+                this.onError();
+                semaphore.release();
             } else if (xhr.status >= 200 && xhr.status < 300) {
                 this.uploaded = true;
                 this.onSuccess();

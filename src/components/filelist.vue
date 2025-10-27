@@ -496,17 +496,18 @@
             ></v-btn>
         </v-card-title>
         <v-expand-transition>
-            <v-skeleton-loader
-                v-show="readmeExpand"
-                :loading="readmeSkeleton"
-                type="article"
-            >
-                <v-divider></v-divider>
-                <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
-                <v-card-text v-else>
-                    <pre style="white-space:pre-wrap;word-break:keep-all"><code>{{ readmeContent }}</code></pre>
-                </v-card-text>
-            </v-skeleton-loader>
+            <div v-show="readmeExpand">
+                <v-skeleton-loader
+                    :loading="readmeSkeleton"
+                    type="article"
+                >
+                    <v-divider></v-divider>
+                    <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
+                    <v-card-text v-else>
+                        <pre style="white-space:pre-wrap;word-break:keep-all"><code>{{ readmeContent }}</code></pre>
+                    </v-card-text>
+                </v-skeleton-loader>
+            </div>
         </v-expand-transition>
     </v-card>
 

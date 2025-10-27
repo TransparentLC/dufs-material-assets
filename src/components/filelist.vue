@@ -1113,7 +1113,7 @@ const updateReadme = async () => {
             // javascript - What is the easiest way to replace a url string (in a text) with an anchor tag? - Stack Overflow
             // https://stackoverflow.com/questions/7331192#answer-7331361
             .replace(
-                /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z09+&@#\/%=~_|])/img,
+                /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z0-9+&@#\/%=~_|])/img,
                 '<a href="$1" style="color:rgb(var(--v-theme-primary))">$1</a>',
             );
         readmeRichMode.value = false;

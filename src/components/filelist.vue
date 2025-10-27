@@ -148,9 +148,16 @@
                         variant="text"
                         icon="$mdiHome"
                         density="comfortable"
-                        :to="breadcrumb[0].href"
+                        :to="pathPrefix"
                         :active="false"
                     ></v-btn>
+                    <v-btn
+                        variant="text"
+                        icon="$mdiRefresh"
+                        density="comfortable"
+                        @click="updateFilelist().then(() => $toast.success(t('toastRefreshSuccess')))"
+                    ></v-btn>
+                    <div class="mx-1"></div>
                 </template>
                 <template v-slot:title="{ item }">
                     <v-breadcrumbs-item
@@ -1277,7 +1284,11 @@ document.body.addEventListener('drop', async e => {
             return new Uploader(
                 cp + encodeURIComponent(path),
                 file,
-                () => currentPath.value === cp && updateFilelist(),
+                () => {
+                    if (currentPath.value === cp) updateFilelist();
+                    $toast.success(t('toastUploadSuccess', [file.name]));
+                },
+                err => $toast.error(t(err ? 'toastUploadErrorWithReason' : 'toastUploadError', [file.name, err?.message ?? err])),
             );
         })
         .forEach(e => {

@@ -35,6 +35,10 @@ messages.en = {
     toastUploadDisabled: 'File uploading is disabled.',
     toastCreateFolder: 'New folder created.',
     toastFailedLoadAudioMetadata: 'Failed to read audio metadata: {0}',
+    toastRefreshSuccess: 'File list refreshed.',
+    toastUploadSuccess: 'Uploaded {0}.',
+    toastUploadError: 'Failed to upload {0}.',
+    toastUploadErrorWithReason: 'Failed to upload {0}: {1}',
     dialogDeleteConfirm: 'Are you sure to delete {0}?',
     dialogMoveLabel: 'Path',
     dialogUploadBody: 'Are you sure to upload this file? | Are you sure to upload these {0} files?',
@@ -82,6 +86,10 @@ messages['zh-CN'] = {
     toastUploadDisabled: '文件上传已禁用',
     toastCreateFolder: '已新建文件夹',
     toastFailedLoadAudioMetadata: '加载音频元数据失败：{0}',
+    toastRefreshSuccess: '已刷新文件列表',
+    toastUploadSuccess: '{0} 上传成功',
+    toastUploadError: '{0} 上传失败',
+    toastUploadErrorWithReason: '{0} 上传失败：{1}',
     dialogDeleteConfirm: '确定要删除 {0} 吗？',
     dialogMoveLabel: '路径',
     dialogUploadBody: '确定要上传这个文件吗？ | 确定要上传以下 {0} 个文件吗？',
@@ -96,6 +104,8 @@ messages['zh-CN'] = {
     fontPreviewSize: '字号',
     fontPreviewWeight: '字重',
 };
+// https://zhconvert.org/
+// 在 zh-CN 的基础上执行“香港化”
 messages['zh-HK'] = {
     ...messages['zh-CN'],
     dialogButtonConfirmText: '確定',
@@ -122,13 +132,16 @@ messages['zh-HK'] = {
     toastMoveFile: '已移動文件',
     toastUploadDisabled: '文件上傳已禁用',
     toastCreateFolder: '已新建文件夾',
+    toastUploadSuccess: '{0} 上傳成功',
+    toastUploadError: '{0} 上傳失敗',
+    toastUploadErrorWithReason: '{0} 上傳失敗：',
     toastFailedLoadAudioMetadata: '加載音頻元數據失敗：{0}',
     dialogDeleteConfirm: '確定要刪除 {0} 嗎？',
     dialogMoveLabel: '路徑',
     dialogUploadBody: '確定要上傳這個文件嗎？ | 確定要上傳以下 {0} 個文件嗎？',
     dialogCreateFolderLabel: '文件夾名稱',
     dialogUploadPending: '等待上傳',
-    dialogUploadSucceed: '等待成功',
+    dialogUploadSucceed: '上傳成功',
     dialogUploadError: '上傳失敗',
     dialogLogout: '{0} 是否要登出？',
     dialogPageSkipLabel: '請輸入頁數（{0}-{1}）',
@@ -137,6 +150,8 @@ messages['zh-HK'] = {
     fontPreviewSize: '字號',
     fontPreviewWeight: '字重',
 };
+// https://zhconvert.org/
+// 在 zh-CN 的基础上执行“台湾化”
 messages['zh-TW'] = {
     ...messages['zh-HK'],
     toastFailedLoadAudio: '無法載入音訊',

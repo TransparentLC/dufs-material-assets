@@ -504,7 +504,7 @@
                     <v-divider></v-divider>
                     <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
                     <v-card-text v-else>
-                        <pre style="white-space:pre-wrap;word-break:keep-all"><code>{{ readmeContent }}</code></pre>
+                        <pre style="white-space:pre-wrap;word-break:keep-all"><code v-html="readmeContent"></code></pre>
                     </v-card-text>
                 </v-skeleton-loader>
             </div>
@@ -1106,7 +1106,16 @@ const updateReadme = async () => {
         readmeContent.value = marked.parse(r);
         readmeRichMode.value = true;
     } else {
-        readmeContent.value = r;
+        readmeContent.value = r
+            // Can I escape HTML special chars in JavaScript? - Stack Overflow
+            // https://stackoverflow.com/questions/6234773#follow-up-138256465
+            .replace(/[&<>"']/g, c => `&#${c.charCodeAt(0)};`)
+            // javascript - What is the easiest way to replace a url string (in a text) with an anchor tag? - Stack Overflow
+            // https://stackoverflow.com/questions/7331192#answer-7331361
+            .replace(
+                /(\b(https?|ftp|file):\/\/[\-A-Z0-9+&@#\/%?=~_|!:,.;]*[\-A-Z09+&@#\/%=~_|])/img,
+                '<a href="$1" style="color:rgb(var(--v-theme-primary))">$1</a>',
+            );
         readmeRichMode.value = false;
     }
 };

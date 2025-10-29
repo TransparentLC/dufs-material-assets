@@ -448,6 +448,20 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
+                                v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
+                                :text="t('actionCopyLinkWithToken')"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiLinkBoxVariant"
+                                        density="comfortable"
+                                        @click="copyLinkWithToken(p)"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
                                 v-if="p.is_dir && filelist.allow_archive"
                                 :text="t('actionDownloadArchive')"
                             >
@@ -1227,6 +1241,15 @@ const moveFile = async e => {
     );
     $toast.success(t(e.is_dir ? 'toastMoveFolder' : 'toastMoveFile'));
     await updateFilelist();
+};
+
+/**
+ * @param {PathItem} e
+ */
+const copyLinkWithToken = async e => {
+    const token = await dufsfetch(`${e.fullpath}?${e.is_dir ? 'zip&' : ''}tokengen`).then(r => r.text());
+    await navigator.clipboard.writeText(`${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}token=${token}`);
+    $toast.success(t('toastCopyLinkWithToken', [formatTimestamp(parseInt(token.substring(128, 144), 16))]));
 };
 
 /**

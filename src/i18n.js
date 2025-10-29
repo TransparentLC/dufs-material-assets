@@ -19,6 +19,7 @@ messages.en = {
     actionMove: 'Move to new path',
     actionDeleteFolder: 'Delete folder',
     actionDeleteFile: 'Delete file',
+    actionCopyLinkWithToken: 'Copy download link with token',
     actionDownloadArchive: 'Download folder as a .zip file',
     actionDownloadFile: 'Download file',
     actionLogout: 'Logout',
@@ -39,6 +40,7 @@ messages.en = {
     toastUploadSuccess: 'Uploaded {0}.',
     toastUploadError: 'Failed to upload {0}.',
     toastUploadErrorWithReason: 'Failed to upload {0}: {1}',
+    toastCopyLinkWithToken: 'Download link copied. Valid until {0}.',
     dialogDeleteConfirm: 'Are you sure to delete {0}?',
     dialogMoveLabel: 'Path',
     dialogUploadBody: 'Are you sure to upload this file? | Are you sure to upload these {0} files?',
@@ -70,6 +72,7 @@ messages['zh-CN'] = {
     actionMove: '移动到路径',
     actionDeleteFolder: '删除文件夹',
     actionDeleteFile: '删除文件',
+    actionCopyLinkWithToken: '复制带有 Token 的下载链接',
     actionDownloadArchive: '下载为 ZIP 压缩包',
     actionDownloadFile: '下载文件',
     actionLogout: '注销',
@@ -90,6 +93,7 @@ messages['zh-CN'] = {
     toastUploadSuccess: '{0} 上传成功',
     toastUploadError: '{0} 上传失败',
     toastUploadErrorWithReason: '{0} 上传失败：{1}',
+    toastCopyLinkWithToken: '已复制下载链接，有效期截止至 {0}',
     dialogDeleteConfirm: '确定要删除 {0} 吗？',
     dialogMoveLabel: '路径',
     dialogUploadBody: '确定要上传这个文件吗？ | 确定要上传以下 {0} 个文件吗？',
@@ -118,6 +122,7 @@ messages['zh-HK'] = {
     actionMove: '移動到路徑',
     actionDeleteFolder: '刪除文件夾',
     actionDeleteFile: '刪除文件',
+    actionCopyLinkWithToken: '複製帶有 Token 的下載鏈接',
     actionDownloadArchive: '下載為 ZIP 壓縮包',
     actionDownloadFile: '下載文件',
     actionLogout: '登出',
@@ -136,6 +141,7 @@ messages['zh-HK'] = {
     toastUploadError: '{0} 上傳失敗',
     toastUploadErrorWithReason: '{0} 上傳失敗：',
     toastFailedLoadAudioMetadata: '加載音頻元數據失敗：{0}',
+    toastCopyLinkWithToken: '已複製下載鏈接，有效期截止至 {0}',
     dialogDeleteConfirm: '確定要刪除 {0} 嗎？',
     dialogMoveLabel: '路徑',
     dialogUploadBody: '確定要上傳這個文件嗎？ | 確定要上傳以下 {0} 個文件嗎？',
@@ -154,8 +160,10 @@ messages['zh-HK'] = {
 // 在 zh-CN 的基础上执行“台湾化”
 messages['zh-TW'] = {
     ...messages['zh-HK'],
+    actionCopyLinkWithToken: '複製帶有 Token 的下載連結',
     toastFailedLoadAudio: '無法載入音訊',
     toastFailedLoadAudioMetadata: '載入音訊元數據失敗：{0}',
+    toastCopyLinkWithToken: '已複製下載連結，有效期截止至 {0}',
 };
 
 export default createI18n({

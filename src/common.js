@@ -39,11 +39,13 @@ const extIconColorTable = {
     'jpg': ['$mdiImage', '#d32f2f'],
     'jpeg': ['$mdiImage', '#d32f2f'],
     'psd': ['$mdiImage', '#d32f2f'],
+    'ai': ['$mdiImage', '#d32f2f'],
     'webp': ['$mdiImage', '#d32f2f'],
     'avif': ['$mdiImage', '#d32f2f'],
     'tiff': ['$mdiImage', '#d32f2f'],
     'heif': ['$mdiImage', '#d32f2f'],
     'heic': ['$mdiImage', '#d32f2f'],
+    'jxl': ['$mdiImage', '#d32f2f'],
     'svg': ['$mdiSvg', '#ff9a00'],
 
     'txt': ['$mdiScriptText', '#607d8b'],
@@ -63,6 +65,10 @@ const extIconColorTable = {
     'rar': ['$mdiZipBox', '#f9a825'],
     '7z': ['$mdiZipBox', '#f9a825'],
 
+    'iso': ['$mdiMinidisc', '#5ab2a1'],
+    'mdf': ['$mdiMinidisc', '#5ab2a1'],
+    'mds': ['$mdiMinidisc', '#5ab2a1'],
+
     'c': ['$mdiLanguageC', '#a8b9cc'],
     'h': ['$mdiLanguageC', '#a8b9cc'],
     'cc': ['$mdiLanguageCpp', '#004482'],
@@ -73,9 +79,9 @@ const extIconColorTable = {
     'go': ['$mdiLanguageGo', '#16b3da'],
     'java': ['$mdiLanguageJava', '#da1e21'],
     'js': ['$mdiLanguageJavascript', '#f4d003'],
-    'jsx': ['$mdiLanguageTypescript', '#f4d003'],
+    'jsx': ['$mdiLanguageJavascript', '#f4d003'],
     'cjs': ['$mdiLanguageJavascript', '#f4d003'],
-    'mjs': ['$mdiLanguageTypescript', '#f4d003'],
+    'mjs': ['$mdiLanguageJavascript', '#f4d003'],
     'ts': ['$mdiLanguageTypescript', '#2f74c0'],
     'tsx': ['$mdiLanguageTypescript', '#2f74c0'],
     'php': ['$mdiLanguagePhp', '#777bb3'],
@@ -92,9 +98,11 @@ const extIconColorTable = {
     'gitignore': ['$mdiGit', '#e84d31'],
     'ps1': ['$mdiPowershell', '#256db8'],
     'json': ['$mdiCodeJson', '#cbcb41'],
+    'xml': ['$mdiXml', '#e96329'],
     'sh': ['$mdiScriptText', '#607d8b'],
     'cmd': ['$mdiScriptText', '#607d8b'],
     'bat': ['$mdiScriptText', '#607d8b'],
+    'db': ['$mdiDatabase', '#4479a1'],
     'vue': ['$mdiVuejs', '#8dc149'],
 
     'doc': ['$mdiFileWord', '#538ce5'],
@@ -115,6 +123,7 @@ const extIconColorTable = {
 
     'torrent': ['$mdiMagnetOn', '#5c6bc0'],
     'exe': ['$mdiWindowRestore', '#1a237e'],
+    'msi': ['$mdiWindowRestore', '#1a237e'],
     'apk': ['$mdiAndroid', '#8bc34a'],
 };
 
@@ -151,6 +160,7 @@ export const codeLanguageTable = {
     // 'gitignore': '',
     'ps1': 'powershell',
     'json': 'json',
+    'xml': 'xml',
     'sh': 'sh',
     'cmd': 'sh',
     'bat': 'batch',
@@ -162,6 +172,7 @@ export const codeLanguageTable = {
     'yml': 'yml',
     'yaml': 'yml',
     'toml': 'toml',
+    'svg': 'svg',
 };
 
 export const previewableImageExts = new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);

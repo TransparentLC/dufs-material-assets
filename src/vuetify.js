@@ -13,6 +13,7 @@ import {
     mdiCloseCircle,
     mdiCodeJson,
     mdiContentSave,
+    mdiDatabase,
     mdiDeleteForever,
     mdiDiscPlayer,
     mdiDocker,
@@ -58,6 +59,7 @@ import {
     mdiLogout,
     mdiMagnetOn,
     mdiMagnify,
+    mdiMinidisc,
     mdiMusic,
     mdiPause,
     mdiPlay,
@@ -82,6 +84,7 @@ import {
     mdiVideo,
     mdiVuejs,
     mdiWindowRestore,
+    mdiXml,
     mdiZipBox,
 } from '@mdi/js';
 
@@ -100,6 +103,7 @@ export default createVuetify({
             mdiCloseCircle,
             mdiCodeJson,
             mdiContentSave,
+            mdiDatabase,
             mdiDeleteForever,
             mdiDiscPlayer,
             mdiDocker,
@@ -145,6 +149,7 @@ export default createVuetify({
             mdiLogout,
             mdiMagnetOn,
             mdiMagnify,
+            mdiMinidisc,
             mdiMusic,
             mdiPause,
             mdiPlay,
@@ -169,6 +174,7 @@ export default createVuetify({
             mdiVideo,
             mdiVuejs,
             mdiWindowRestore,
+            mdiXml,
             mdiZipBox,
         },
         sets: {

@@ -62,6 +62,8 @@
 
 [Releases](https://github.com/TransparentLC/dufs-material-assets/releases) 会在 dufs 发布新版本时更新，版本号和 dufs 一致，但不一定是这个项目的最新版本。
 
+如果你使用过 dufs 原版的前端资源，然后切换到这个项目的前端资源重新运行，打开网页时可能会出现“No data”的提示，这是因为你的浏览器仍然在使用缓存的原版前端资源的 `index.js`，清除缓存后刷新即可（例如使用 <kbd>Ctrl+F5</kbd>）。
+
 <details>
 
 <summary>自定义页面标题、主题色、背景图和分页大小</summary>
@@ -105,9 +107,9 @@ window.__DUFS_MATERIAL_CONFIG__ = {
     limit: 100,
 };
 
-// 由dufs填充的页面内容，不要修改
-window.__INITIAL_DATA__ = __INDEX_DATA__;
+// 由 dufs 填充的页面内容，不要修改
 window.__DUFS_PREFIX__ = "__ASSETS_PREFIX__";
+window.__INITIAL_DATA__ = __INDEX_DATA__;
 ```
 
 </details>

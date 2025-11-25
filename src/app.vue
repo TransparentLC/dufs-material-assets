@@ -66,6 +66,7 @@ const glassmorphism = computed(() => {
 });
 
 const theme = useTheme();
-watch(isDark, () => theme.global.name.value = isDark.value  ? 'dark' : 'light');
+theme.global.name.value = isDark.value ? 'dark' : 'light';
+watch(isDark, () => theme.global.name.value = isDark.value ? 'dark' : 'light');
 
 </script>

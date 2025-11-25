@@ -137,7 +137,7 @@
         </v-tooltip>
     </Teleport>
 
-    <v-card class="my-4" :style="glassmorphismFilelist">
+    <v-card class="my-4" :style="glassmorphism.filelist">
         <div class="d-flex flex-column flex-sm-row align-sm-center">
             <v-breadcrumbs :items="breadcrumb" class="flex-grow-1 overflow-x-auto py-2 py-sm-4">
                 <template v-slot:divider>
@@ -196,6 +196,7 @@
         <v-skeleton-loader
             :loading="filelistSkeleton"
             type="table-tbody"
+            style="background-color:transparent"
         >
             <v-table
                 class="w-100"
@@ -502,7 +503,7 @@
         </v-skeleton-loader>
     </v-card>
 
-    <v-card v-if="readmeItem" class="my-4" :style="glassmorphismReadme">
+    <v-card v-if="readmeItem" class="my-4" :style="glassmorphism.readme">
         <v-card-title class="d-flex align-center text-subtitle-1">
             <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>
             <span class="flex-grow-1">{{ readmeItem.filename }}</span>
@@ -518,6 +519,7 @@
                 <v-skeleton-loader
                     :loading="readmeSkeleton"
                     type="article"
+                    style="background-color:transparent"
                 >
                     <v-divider></v-divider>
                     <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
@@ -549,7 +551,7 @@
         v-model="previewDialog"
         width="min(960px, calc(100vw - 32px))"
     >
-        <v-card>
+        <v-card :style="glassmorphism.filelist">
             <v-card-title class="d-flex align-center">
                 <v-icon
                     :color="getColorFromExt(previewItem.ext)"
@@ -811,7 +813,7 @@
                 :loading="previewSkeleton"
                 type="paragraph, subtitle, sentences"
                 class="overflow-y-auto"
-                style="max-height:calc(100vh - 48px - 52px - 16px)"
+                style="max-height:calc(100vh - 48px - 52px - 16px);background-color:transparent"
             >
                 <v-card-text
                     v-if="previewItem.ext === 'md' || codeLanguageTable[previewItem.ext]"
@@ -979,20 +981,13 @@ const route = useRoute();
 const router = useRouter();
 const display = useDisplay();
 
-const glassmorphismFilelist = computed(() => {
-    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.filelist;
-    return e ? {
+const glassmorphism = computed(() => Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.[k];
+    return [k, e ? {
         backdropFilter: `blur(${e.blur}px)`,
         backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-surface)) ${e.alpha * 100}%, transparent) !important`,
-    } : {};
-});
-const glassmorphismReadme = computed(() => {
-    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.readme;
-    return e ? {
-        backdropFilter: `blur(${e.blur}px)`,
-        backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-surface)) ${e.alpha * 100}%, transparent) !important`,
-    } : {};
-});
+    } : {}];
+})));
 
 const filelistSkeleton = ref(false);
 const readmeSkeleton = ref(false);

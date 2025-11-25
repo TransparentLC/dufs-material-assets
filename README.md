@@ -103,19 +103,27 @@ window.__DUFS_MATERIAL_CONFIG__ = {
             secondary: '#008dcc',
         },
     },
-    // 为顶部应用栏或文件列表和 README 的卡片添加毛玻璃效果
+    // 为卡片添加毛玻璃效果
     // 可以设置模糊半径（单位 px）和不透明度（范围 0-1）
     // 建议和背景图片配合使用
     glassmorphism: {
+        // 顶部应用栏
         appbar: {
             blur: 5,
             alpha: .6,
         },
+        // 文件列表
         filelist: {
             blur: 5,
             alpha: .8,
         },
+        // README
         readme: {
+            blur: 5,
+            alpha: .8,
+        },
+        // 预览窗口
+        preview: {
             blur: 5,
             alpha: .8,
         },

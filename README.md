@@ -68,7 +68,7 @@
 
 <summary>自定义页面标题、主题色、背景图和分页大小</summary>
 
-按照以下指引修改 `index.html` 的 `<script>` 部分，所有项目都是可选的：
+按照以下指引修改 `index.html` 的 `<script>` 部分：
 
 ```js
 window.__DUFS_MATERIAL_CONFIG__ = {
@@ -103,13 +103,40 @@ window.__DUFS_MATERIAL_CONFIG__ = {
             secondary: '#008dcc',
         },
     },
+    // 为顶部应用栏或文件列表和 README 的卡片添加毛玻璃效果
+    // 可以设置模糊半径（单位 px）和不透明度（范围 0-1）
+    // 建议和背景图片配合使用
+    glassmorphism: {
+        appbar: {
+            blur: 5,
+            alpha: .6,
+        },
+        filelist: {
+            blur: 5,
+            alpha: .8,
+        },
+        readme: {
+            blur: 5,
+            alpha: .8,
+        },
+    },
     // 分页大小
     limit: 100,
 };
 
 // 由 dufs 填充的页面内容，不要修改
 window.__DUFS_PREFIX__ = "__ASSETS_PREFIX__";
-window.__INITIAL_DATA__ = __INDEX_DATA__;
+window.__INITIAL_DATA__ = JSON.parse(decodeURIComponent(escape(atob("__INDEX_DATA__"))));
+```
+
+`window.__DUFS_MATERIAL_CONFIG__` 的所有项目都是可选的，例如只想自定义 LOGO 的话，这么写就可以了：
+
+```js
+window.__DUFS_MATERIAL_CONFIG__ = {
+    page: {
+        logo: 'https://example.com/logo.png',
+    },
+};
 ```
 
 </details>

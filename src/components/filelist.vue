@@ -137,7 +137,7 @@
         </v-tooltip>
     </Teleport>
 
-    <v-card class="my-4">
+    <v-card class="my-4" :style="glassmorphismFilelist">
         <div class="d-flex flex-column flex-sm-row align-sm-center">
             <v-breadcrumbs :items="breadcrumb" class="flex-grow-1 overflow-x-auto py-2 py-sm-4">
                 <template v-slot:divider>
@@ -197,7 +197,11 @@
             :loading="filelistSkeleton"
             type="table-tbody"
         >
-            <v-table class="w-100" :class="{'overflow-x-auto': display.xs.value}" style="font-size:1rem">
+            <v-table
+                class="w-100"
+                :class="{'overflow-x-auto': display.xs.value}"
+                style="font-size:1rem;background-color:transparent"
+            >
                 <thead>
                     <tr style="color:rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))">
                         <th class="w-100">
@@ -498,7 +502,7 @@
         </v-skeleton-loader>
     </v-card>
 
-    <v-card v-if="readmeItem" class="my-4">
+    <v-card v-if="readmeItem" class="my-4" :style="glassmorphismReadme">
         <v-card-title class="d-flex align-center text-subtitle-1">
             <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>
             <span class="flex-grow-1">{{ readmeItem.filename }}</span>
@@ -974,6 +978,21 @@ const dufsfetch = (input, init = {}) => fetch(input, init)
 const route = useRoute();
 const router = useRouter();
 const display = useDisplay();
+
+const glassmorphismFilelist = computed(() => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.filelist;
+    return e ? {
+        backdropFilter: `blur(${e.blur}px)`,
+        backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-surface)) ${e.alpha * 100}%, transparent) !important`,
+    } : {};
+});
+const glassmorphismReadme = computed(() => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.readme;
+    return e ? {
+        backdropFilter: `blur(${e.blur}px)`,
+        backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-surface)) ${e.alpha * 100}%, transparent) !important`,
+    } : {};
+});
 
 const filelistSkeleton = ref(false);
 const readmeSkeleton = ref(false);

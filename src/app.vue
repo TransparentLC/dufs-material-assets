@@ -5,7 +5,7 @@
         backgroundAttachment: 'fixed',
         backgroundSize: 'cover',
     } : undefined">
-        <v-app-bar color="primary">
+        <v-app-bar color="primary" :style="glassmorphism">
             <template v-slot:prepend>
                 <img v-if="logo" :src="logo" height="40" style="margin-left:20px">
             </template>
@@ -56,6 +56,13 @@ const logo = computed(() => {
 const background = computed(() => {
     const e = window.__DUFS_MATERIAL_CONFIG__?.background;
     return e && (typeof e === 'string' ? e : (isDark.value ? e.dark : e.light));
+});
+const glassmorphism = computed(() => {
+    const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.appbar;
+    return e ? {
+        backdropFilter: `blur(${e.blur}px)`,
+        backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-primary)) ${e.alpha * 100}%, transparent) !important`,
+    } : {};
 });
 
 const theme = useTheme();

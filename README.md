@@ -8,10 +8,15 @@
 
 如果你是为了部署本地文件共享或 WebDAV 服务（不包括挂载网盘），因为最近的“AList 被商业收购/投毒事件”而选择 dufs 作为替代品，那么你大概也会对这个项目感兴趣～
 
-<picture>
-    <source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/f8488128-ad2b-4f3d-950e-10c2a11ac390">
-    <img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/094fa2be-afeb-4010-9bec-d014b888b97b">
-</picture>
+|  |  |  |
+| - | - | - |
+| <picture><source media="(prefers-color-scheme:dark)" srcset="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/f8488128-ad2b-4f3d-950e-10c2a11ac390"><img src="https://github.com/TransparentLC/dufs-material-assets/assets/47057319/094fa2be-afeb-4010-9bec-d014b888b97b"></picture> | <picture><source media="(prefers-color-scheme:dark)" srcset="https://p.sda1.dev/29/85cb90f522dbb8b4eabec7f3f74ec7dd/J8uL.avif"><img src="https://p.sda1.dev/29/8be21ca522b4e72a413803470ccafb11/h5K6.avif"></picture> | <picture><source media="(prefers-color-scheme:dark)" srcset="https://p.sda1.dev/29/2c54e52cef25e1267f3359451499fd8b/hRnv.avif"><img src="https://p.sda1.dev/29/a20f9d52828b74db2ac7baada95276ea/nJFN.avif"></picture> |
+
+* 按照[“自定义界面”](#自定义界面)的介绍进行配置即可实现图 2 的效果
+    * 背景图片来自 Pixabay [#1](https://pixabay.com/photos/mountains-lake-canada-banff-nature-9606525/) [#2](https://pixabay.com/photos/architecture-building-business-city-1868667/)
+* 实现图 3 的效果除了按照[“自定义界面”](#自定义界面)进行配置，还需要编辑这个项目的 HTML 文件，并引入额外编写的 JS 和 CSS 等资源
+    * 图中的主题设计取自“maimai でらっくす Splash”的[官方网站](https://web.archive.org/web/20201231182646/https://maimai.sega.jp/)
+    * 进行这种程度的修改需要基本的前端开发知识
 
 ## 已实现/适配的功能
 
@@ -58,96 +63,11 @@
 
 也可以自己构建前端资源。
 
-如果不想单独保存这个项目的前端资源和在每次启动 dufs 时设定 `--assets` 参数，在 Actions 里面也有编译好的、嵌入了这个项目的前端资源（替换了原版的前端资源）的 dufs [二进制文件](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/build-embed.yml)。
+如果不想单独保存这个项目的前端资源和在每次启动 dufs 时设定 `--assets` 参数，在 Actions 里面也有编译好的、嵌入了这个项目的前端资源（替换了原版的前端资源）的 dufs [二进制文件](https://github.com/TransparentLC/dufs-material-assets/actions/workflows/build-embed.yml)，不过以这种方式使用将无法自定义界面。
 
 [Releases](https://github.com/TransparentLC/dufs-material-assets/releases) 会在 dufs 发布新版本时更新，版本号和 dufs 一致，但不一定是这个项目的最新版本。
 
 如果你使用过 dufs 原版的前端资源，然后切换到这个项目的前端资源重新运行，打开网页时可能会出现“No data”的提示，这是因为你的浏览器仍然在使用缓存的原版前端资源的 `index.js`，清除缓存后刷新即可（例如使用 <kbd>Ctrl+F5</kbd>）。
-
-<details>
-
-<summary>自定义页面标题、主题色、背景图和分页大小</summary>
-
-按照以下指引修改 `index.html` 的 `<script>` 部分：
-
-```js
-window.__DUFS_MATERIAL_CONFIG__ = {
-    // 网页标题
-    document: 'Index of ${path} - Custom title',
-    // 左上角显示的标题和 LOGO
-    page: {
-        title: 'Custom title',
-        logo: {
-            light: 'https://example.com/logo-light.png',
-            dark: 'https://example.com/logo-dark.png',
-        },
-        // 也可以在浅色和深色主题下使用同一个 LOGO
-        // logo: 'https://example.com/logo.png',
-    },
-    // 背景图片
-    background: {
-        light: 'https://example.com/background-light.webp',
-        dark: 'https://example.com/background-dark.webp',
-    },
-    // 也可以在浅色和深色主题下使用同一张背景图片
-    // background: 'https://example.com/background.webp',
-    // 浅色和深色主题
-    // 参见 https://vuetifyjs.com/zh-Hans/features/theme/ 的 colors 部分
-    theme: {
-        light: {
-            primary: '#0288d1',
-            secondary: '#00b0ff',
-        },
-        dark: {
-            primary: '#026da7',
-            secondary: '#008dcc',
-        },
-    },
-    // 为卡片添加毛玻璃效果
-    // 可以设置模糊半径（单位 px）和不透明度（范围 0-1）
-    // 建议和背景图片配合使用
-    glassmorphism: {
-        // 顶部应用栏
-        appbar: {
-            blur: 5,
-            alpha: .6,
-        },
-        // 文件列表
-        filelist: {
-            blur: 5,
-            alpha: .8,
-        },
-        // README
-        readme: {
-            blur: 5,
-            alpha: .8,
-        },
-        // 预览窗口
-        preview: {
-            blur: 5,
-            alpha: .8,
-        },
-    },
-    // 分页大小
-    limit: 100,
-};
-
-// 由 dufs 填充的页面内容，不要修改
-window.__DUFS_PREFIX__ = "__ASSETS_PREFIX__";
-window.__INITIAL_DATA__ = JSON.parse(decodeURIComponent(escape(atob("__INDEX_DATA__"))));
-```
-
-`window.__DUFS_MATERIAL_CONFIG__` 的所有项目都是可选的，例如只想自定义 LOGO 的话，这么写就可以了：
-
-```js
-window.__DUFS_MATERIAL_CONFIG__ = {
-    page: {
-        logo: 'https://example.com/logo.png',
-    },
-};
-```
-
-</details>
 
 <details>
 
@@ -159,8 +79,6 @@ pnpm run dufs-api
 ```
 
 为了方便适配各个功能，`dufs-api` 固定了一些启动 dufs 的参数，与代码中仅在开发模式下会运行的部分对应。
-
-由于 Vite 的 dev server 与 dufs 运行在不同的端口上，dufs 也无法在 HTML 代码的占位符处填充页面内容，开发模式下部分代码的运行效果与实际使用稍微存在一些差异（例如底部的版本号在开发模式下使用 `v0.0.0` 作为模拟；使用访问控制的情况下，实际使用时浏览器会弹出输入用户名和密码的对话框，而在开发模式中不会弹出，此时会使用项目中对于 HTTP 的 Digest 认证的模拟实现）。
 
 </details>
 
@@ -213,3 +131,86 @@ pnpm run dufs-api
 ![](https://github.com/user-attachments/assets/cb1905f3-bb6d-40cd-ac27-7acbcfeffae9)
 
 </details>
+
+## 自定义界面
+
+按照以下指引在 `index.html` 的 `<script>` 部分添加 `window.__DUFS_MATERIAL_CONFIG__`：
+
+```js
+window.__DUFS_MATERIAL_CONFIG__ = {
+    // 网页标题
+    document: 'Index of ${path} - Custom title',
+    // 左上角显示的标题和 LOGO
+    page: {
+        title: 'Custom title',
+        logo: {
+            light: 'https://example.com/logo-light.png',
+            dark: 'https://example.com/logo-dark.png',
+        },
+        // 也可以在浅色和深色主题下使用同一个 LOGO
+        // logo: 'https://example.com/logo.png',
+    },
+    // 背景图片
+    background: {
+        light: 'https://example.com/background-light.webp',
+        dark: 'https://example.com/background-dark.webp',
+    },
+    // 也可以在浅色和深色主题下使用同一张背景图片
+    // background: 'https://example.com/background.webp',
+    // 浅色和深色主题
+    // 参见 https://vuetifyjs.com/zh-Hans/features/theme/ 的 colors 部分
+    theme: {
+        light: {
+            primary: '#0288d1',
+            secondary: '#00b0ff',
+        },
+        dark: {
+            primary: '#026da7',
+            secondary: '#008dcc',
+        },
+    },
+    // 为卡片添加毛玻璃效果
+    // 可以设置模糊半径（单位 px）和不透明度（范围 0-1）
+    // 建议和背景图片配合使用
+    glassmorphism: {
+        // 顶部应用栏
+        appbar: { blur: 5, alpha: .6 },
+        // 文件列表
+        filelist: { blur: 5, alpha: .8 },
+        // README
+        readme: { blur: 5, alpha: .8 },
+        // 预览窗口
+        preview: { blur: 5, alpha: .8 },
+    },
+    // 分页大小
+    limit: 100,
+};
+
+// 由 dufs 填充的页面内容，不要修改
+window.__DUFS_PREFIX__ = "__ASSETS_PREFIX__";
+window.__INITIAL_DATA__ = JSON.parse(decodeURIComponent(escape(atob("__INDEX_DATA__"))));
+```
+
+如果 LOGO 和背景图片需要从本地加载，假设前端资源的目录结构如下：
+
+```plain
+dufs-material-assets
+│  index.html
+│  vite.svg
+│
+└─assets
+        index-xxxxxxxx.js
+        index-xxxxxxxx.css
+```
+
+你可以将图片（假定为 `image.webp`）放在 `assets` 目录下，然后地址填写为 `__ASSETS_PREFIX__assets/image.webp` 即可。dufs 会把 `index.html` 的 `__ASSETS_PREFIX__` 替换成 `/prefix/__dufs_v0.0.0__/` 这样的带有 `--path-prefix` 设定的前缀（如果有的话）和 dufs 版本号的路径，最后会指向 `--assets` 指定的目录里面的内容。
+
+`window.__DUFS_MATERIAL_CONFIG__` 的所有项目都是可选的，例如只想自定义 LOGO 的话，只写这一部分就可以了：
+
+```js
+window.__DUFS_MATERIAL_CONFIG__ = {
+    page: {
+        logo: '__ASSETS_PREFIX__assets/logo.svg',
+    },
+};
+```

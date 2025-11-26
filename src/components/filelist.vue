@@ -551,7 +551,7 @@
         v-model="previewDialog"
         width="min(960px, calc(100vw - 32px))"
     >
-        <v-card :style="glassmorphism.filelist">
+        <v-card :style="glassmorphism.preview">
             <v-card-title class="d-flex align-center">
                 <v-icon
                     :color="getColorFromExt(previewItem.ext)"
@@ -834,6 +834,7 @@
     <v-dialog
         v-model="editDialog"
         width="min(960px, calc(100vw - 32px))"
+        :style="glassmorphism.preview"
     >
         <v-card>
             <v-card-title class="d-flex align-center">

@@ -51,6 +51,7 @@
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
 * 字体查看器✨
 * 自定义页面标题和主题色✨
+* 自定义页脚✨
 * 分页展示文件✨
     * 适用于目录内有上千个文件的情况
     * 默认不启用，需要自定义分页大小
@@ -150,6 +151,9 @@ window.__DUFS_MATERIAL_CONFIG__ = {
         // 也可以在浅色和深色主题下使用同一个 LOGO
         // logo: 'https://example.com/logo.png',
     },
+    // 自定义页脚
+    // 可以使用 Markdown 格式
+    footer: 'Copyright © 2025 **John Doe** ![](https://img.shields.io/badge/any_text-you_like-blue)\\n\\n[京ICP备XXXXXXXX号-X](https://beian.miit.gov.cn/)',
     // 背景图片
     background: {
         light: 'https://example.com/background-light.webp',

@@ -14,17 +14,17 @@
     "@mdi/js": "^7.4.47",
     "marked": "^17.0.1",
     "marked-highlight": "^2.2.3",
-    "petite-vue-i18n": "^11.2.1",
+    "petite-vue-i18n": "^11.2.2",
     "prismjs": "^1.30.0",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3",
-    "vuetify": "^3.11.1"
+    "vuetify": "^3.11.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",
     "lightningcss": "^1.30.2",
     "rollup-plugin-visualizer": "^6.0.5",
-    "vite": "^7.2.4",
+    "vite": "^7.2.6",
     "vite-plugin-html": "^3.2.2",
     "vite-plugin-vuetify": "^2.1.2"
   }

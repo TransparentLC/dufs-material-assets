@@ -982,13 +982,13 @@ const route = useRoute();
 const router = useRouter();
 const display = useDisplay();
 
-const glassmorphism = computed(() => Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
+const glassmorphism = Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
     const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.[k];
     return [k, e ? {
         backdropFilter: `blur(${e.blur}px)`,
         backgroundColor: `color-mix(in srgb, rgb(var(--v-theme-surface)) ${e.alpha * 100}%, transparent) !important`,
     } : {}];
-})));
+}));
 
 const filelistSkeleton = ref(false);
 const readmeSkeleton = ref(false);

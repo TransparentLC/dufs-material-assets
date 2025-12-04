@@ -30,8 +30,7 @@ const mathRenderer = text => text
 
 ['listitem', 'paragraph', 'tablecell', 'text'].forEach(type => {
     renderer[type] = function (token) {
-        token.text = mathRenderer(token.text);
-        return Renderer.prototype[type].apply(this, [token]);
+        return mathRenderer(Renderer.prototype[type].apply(this, [token]));
     };
 });
 

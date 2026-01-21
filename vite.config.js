@@ -39,7 +39,7 @@ export default defineConfig({
                     injectScript: `
                         <script>
                             window.__DUFS_PREFIX__ = '${__IS_PROD__ ? '__ASSETS_PREFIX__' : '/prefix/__dufs_v0.0.0__/'}';
-                            ${__IS_PROD__ ? `window.__INITIAL_DATA__ = JSON.parse(decodeURIComponent(escape(atob("__INDEX_DATA__"))));` : ''}
+                            ${__IS_PROD__ ? `window.__INITIAL_DATA__ = JSON.parse((e => Uint8Array.fromBase64 ? (new TextDecoder).decode(Uint8Array.fromBase64(e)) : decodeURIComponent(escape(atob(e))))("__INDEX_DATA__"));` : ''}
                         </script>
                     `,
                 },

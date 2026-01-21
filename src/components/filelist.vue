@@ -1392,9 +1392,6 @@ const formatAudioTime = t => {
     t = t || 0;
     return `${Math.floor(t / 60).toString().padStart(2, 0)}:${(Math.round(t) % 60).toString().padStart(2, 0)}`;
 };
-watch(previewDialog, () => {
-    previewAudio.value.pause();
-});
 const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => previewableAudioExts.has(e.ext)));
 const previewAudioPrev = e => {
     const index = filelistPathsAudio.value.map(e => e.fullpath).indexOf(e.fullpath);
@@ -1423,6 +1420,25 @@ const previewAudioEnded = async () => {
         previewAudio.value.play();
     }
 };
+watch(previewDialog, () => {
+    previewAudio.value.pause();
+    if (navigator.mediaSession) {
+        navigator.mediaSession.metadata = null;
+    }
+});
+
+if (navigator.mediaSession) {
+    watch([previewAudioTitle, previewAudioArtist, previewAudioAlbum, previewAudioCover], () => {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: previewAudioTitle.value,
+            artist: previewAudioArtist.value,
+            album: previewAudioAlbum.value,
+            artwork: [{ src: previewAudioCover.value }],
+        });
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', () => updateAudioTags((previewItem.value = previewAudioPrev(previewItem.value))));
+    navigator.mediaSession.setActionHandler('nexttrack', () => updateAudioTags((previewItem.value = previewAudioNext(previewItem.value))));
+}
 
 /**
  * @param {PathItem} e

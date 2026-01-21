@@ -1263,7 +1263,17 @@ const moveFile = async e => {
  */
 const copyLinkWithToken = async e => {
     const token = await dufsfetch(`${e.fullpath}?${e.is_dir ? 'zip&' : ''}tokengen`).then(r => r.text());
-    await navigator.clipboard.writeText(`${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}token=${token}`);
+    const link = `${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}token=${token}`;
+    if (navigator.clipboard) {
+        await navigator.clipboard.writeText(link);
+    } else {
+        const el = document.createElement('textarea');
+        el.value = link;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+    }
     $toast.success(t('toastCopyLinkWithToken', [formatTimestamp(parseInt(token.substring(128, 144), 16))]));
 };
 

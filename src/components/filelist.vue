@@ -107,6 +107,24 @@
                 ></v-btn>
             </template>
         </v-tooltip>
+        <!--
+            原版的新建文件能不能加上 · Issue #34 · TransparentLC/dufs-material-assets
+            https://github.com/TransparentLC/dufs-material-assets/issues/34
+            TODO: Issue 提出者 star 后或 star 总数达到 128 后实装
+        -->
+        <v-tooltip
+            v-if="filelist.allow_upload && false"
+            :text="t('titleCreateFile')"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    variant="text"
+                    icon="$mdiFileDocumentPlus"
+                    @click="createFile"
+                ></v-btn>
+            </template>
+        </v-tooltip>
         <v-tooltip
             v-if="filelist.allow_archive"
             :text="t('titleDownloadArchive')"
@@ -1371,8 +1389,33 @@ const uploadFilesUp = () => {
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));
     if (!path) return;
-    await dufsfetch(currentPath.value + encodeURIComponent(path), { method: 'MKCOL' });
-    $toast.success(t('toastCreateFolder'));
+    const url = currentPath.value + encodeURIComponent(path);
+    if (await dufsfetch(url + '/?json').then(r => r.json()).then((/** @type {DufsData} */ r) => r.dir_exists)) {
+        return $toast.warning(t('toastCreateFolderExists', [path]));
+    }
+    await dufsfetch(url, { method: 'MKCOL' });
+    $toast.success(t('toastCreateFolder', [path]));
+    await updateFilelist();
+};
+
+const createFile = async () => {
+    const path = await $dialog.promises.prompt(t('dialogCreateFileLabel'), t('titleCreateFile'));
+    if (!path) return;
+    const url = currentPath.value + encodeURIComponent(path);
+    try {
+        const status = await fetch(url, { method: 'HEAD' }).then(r => r.status);
+        if (status === 200) {
+            return $toast.warning(t('toastCreateFileExists', [path]));
+        } else if (status !== 404) {
+            const e = new Error(r.statusText);
+            e.status = r.status;
+            throw e;
+        }
+    } catch (e) {
+        $toast.error(e.toString());
+    }
+    await dufsfetch(url, { method: 'PUT' });
+    $toast.success(t('toastCreateFile', [path]));
     await updateFilelist();
 };
 

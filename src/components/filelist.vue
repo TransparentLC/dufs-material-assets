@@ -95,6 +95,20 @@
             </v-list>
         </v-menu>
         <v-tooltip
+            v-if="filelist.allow_archive"
+            :text="t('titleDownloadArchive')"
+        >
+            <template v-slot:activator="{ props }">
+                <v-btn
+                    v-bind="props"
+                    variant="text"
+                    icon="$mdiFolderDownload"
+                    :href="currentPath + '?zip'"
+                    download
+                ></v-btn>
+            </template>
+        </v-tooltip>
+        <v-tooltip
             v-if="filelist.allow_upload"
             :text="t('titleCreateFolder')"
         >
@@ -107,13 +121,8 @@
                 ></v-btn>
             </template>
         </v-tooltip>
-        <!--
-            原版的新建文件能不能加上 · Issue #34 · TransparentLC/dufs-material-assets
-            https://github.com/TransparentLC/dufs-material-assets/issues/34
-            TODO: Issue 提出者 star 后或 star 总数达到 128 后实装
-        -->
         <v-tooltip
-            v-if="filelist.allow_upload && false"
+            v-if="filelist.allow_upload"
             :text="t('titleCreateFile')"
         >
             <template v-slot:activator="{ props }">
@@ -122,20 +131,6 @@
                     variant="text"
                     icon="$mdiFileDocumentPlus"
                     @click="createFile"
-                ></v-btn>
-            </template>
-        </v-tooltip>
-        <v-tooltip
-            v-if="filelist.allow_archive"
-            :text="t('titleDownloadArchive')"
-        >
-            <template v-slot:activator="{ props }">
-                <v-btn
-                    v-bind="props"
-                    variant="text"
-                    icon="$mdiFolderDownload"
-                    :href="currentPath + '?zip'"
-                    download
                 ></v-btn>
             </template>
         </v-tooltip>

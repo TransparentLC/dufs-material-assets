@@ -18,7 +18,7 @@
     "prismjs": "^1.30.0",
     "vue": "^3.5.29",
     "vue-router": "^5.0.3",
-    "vuetify": "^3.12.2"
+    "vuetify": "^4.0.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.4",

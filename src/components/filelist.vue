@@ -152,7 +152,7 @@
 
     <v-card class="my-4" :style="glassmorphism.filelist">
         <div class="d-flex flex-column flex-sm-row align-sm-center">
-            <v-breadcrumbs :items="breadcrumb" class="flex-grow-1 overflow-x-auto py-2 py-sm-4">
+            <v-breadcrumbs :items="breadcrumb" class="flex-grow-1 overflow-x-auto my-0 py-2 py-sm-4">
                 <template v-slot:divider>
                     <v-icon icon="$mdiChevronRight"></v-icon>
                 </template>
@@ -517,7 +517,7 @@
     </v-card>
 
     <v-card v-if="readmeItem" class="my-4" :style="glassmorphism.readme">
-        <v-card-title class="d-flex align-center text-subtitle-1">
+        <v-card-title class="d-flex align-center text-body-large">
             <v-icon icon="$mdiBookOpenVariant" size="small" class="mr-2"></v-icon>
             <span class="flex-grow-1">{{ readmeItem.filename }}</span>
             <v-btn
@@ -635,16 +635,16 @@
                     </template>
                 </v-img>
                 <div class="my-4 text-center">
-                    <div class="text-h5">{{ previewAudioTitle || removeSuffix(previewItem.name, `.${previewItem.ext}`) }}</div>
+                    <div class="text-headline-medium">{{ previewAudioTitle || removeSuffix(previewItem.name, `.${previewItem.ext}`) }}</div>
                     <div
                         v-if="previewAudioArtist"
-                        class="text-subtitle-1 text-truncate"
+                        class="text-body-large text-truncate"
                         style="max-width:calc(min(960px, calc(100vw - 32px)) - 48px)"
                         :title="previewAudioArtist"
                     >{{ previewAudioArtist }}</div>
                     <div
                         v-if="previewAudioAlbum"
-                        class="text-subtitle-1 text-truncate"
+                        class="text-body-large text-truncate"
                         style="max-width:calc(min(960px, calc(100vw - 32px)) - 48px)"
                         :title="previewAudioAlbum"
                     >{{ previewAudioAlbum }}</div>

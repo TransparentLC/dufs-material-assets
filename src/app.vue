@@ -31,7 +31,7 @@
             感谢你使用 dufs-material-assets！如果我看到有其他人也在使用的话会很开心的！
             因此希望你可以保留页脚的项目链接，它不会影响美观，同时也是对我（以及 dufs 的原作者）的鼓励和支持～
         -->
-        <footer class="text-caption text-grey text-center mb-8" v-html="footer"></footer>
+        <footer class="text-body-small text-grey text-center mb-8" v-html="footer"></footer>
     </v-app>
 </template>
 

@@ -535,9 +535,9 @@
                     style="background-color:transparent"
                 >
                     <v-divider></v-divider>
-                    <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100"></v-card-text>
+                    <v-card-text v-if="readmeRichMode" v-html="readmeContent" class="markdown-body w-100 py-0"></v-card-text>
                     <v-card-text v-else>
-                        <pre style="white-space:pre-wrap;word-break:keep-all"><code v-html="readmeContent"></code></pre>
+                        <pre class="my-0" style="white-space:pre-wrap;word-break:keep-all"><code v-html="readmeContent"></code></pre>
                     </v-card-text>
                 </v-skeleton-loader>
             </div>

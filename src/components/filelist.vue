@@ -575,6 +575,12 @@
                     {{ previewItem.filename }}
                     <span class="d-none d-sm-inline">({{ formatSize(previewItem.size) }})</span>
                 </span>
+                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'"  variant="plain" icon width="32" height="32" @click="navigateMedia(-1)">
+                    <v-icon icon="$mdiChevronLeft" size="32"></v-icon>
+                </v-btn>
+                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'" variant="plain" icon  width="32" height="32" @click="navigateMedia(1)">
+                    <v-icon icon="$mdiChevronRight" size="32"></v-icon>
+                </v-btn>
                 <v-btn
                     variant="plain"
                     icon="$mdiDownload"
@@ -595,35 +601,26 @@
                 class="py-4 d-flex justify-center align-center"
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
-                <v-btn variant="plain" icon class="mx-2" width="64" height="64" @click="navigateMedia(-1)">
-                    <v-icon icon="$mdiMenuLeft" size="64"></v-icon>
-                </v-btn>
-                
                 <img
                     :src="previewItem.fullpath"
                     :alt="previewItem.filename"
                     class="d-block mx-auto rounded"
                     style="max-width:100%;max-height:calc(100vh - 48px - 52px - 48px)"
                 >
-                
-                <v-btn variant="plain" icon class="mx-2" width="64" height="64" @click="navigateMedia(1)">
-                    <v-icon icon="$mdiMenuRight" size="64"></v-icon>
-                </v-btn>
             </v-card-text>
             <v-card-text
                 v-else-if="previewMode === 'video'"
                 class="py-4 d-flex justify-center align-center"
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
-                <v-btn variant="plain" icon class="mx-2" width="64" height="64" @click="navigateMedia(-1)">
-                    <v-icon icon="$mdiMenuLeft" size="64"></v-icon>
-                </v-btn>
-                <div 
-                    ref="$container" 
-                    style="width: 100%; height: calc(100vh - 48px - 52px - 48px);" />
-                <v-btn variant="plain" icon class="mx-2" width="64" height="64" @click="navigateMedia(1)">
-                    <v-icon icon="$mdiMenuRight" size="64"></v-icon>
-                </v-btn>
+                <video
+                    :src="previewItem.fullpath"
+                    controls
+                    autoplay
+                    preload="metadata"
+                    class="d-block mx-auto rounded"
+                    style="max-width:100%;max-height:calc(100vh - 48px - 52px - 48px)"
+                ></video>
             </v-card-text>
             <v-card-text
                 v-else-if="previewMode === 'audio'"
@@ -950,7 +947,6 @@ import {
     previewableTextFilenames,
     readmeFilenames,
 } from '../common.js';
-import Artplayer from "artplayer";
 
 const { $dialog, $toast } = getCurrentInstance().appContext.config.globalProperties;
 const { t } = useI18n();
@@ -1495,62 +1491,6 @@ if (navigator.mediaSession) {
     navigator.mediaSession.setActionHandler('previoustrack', () => updateAudioTags((previewItem.value = previewAudioPrev(previewItem.value))));
     navigator.mediaSession.setActionHandler('nexttrack', () => updateAudioTags((previewItem.value = previewAudioNext(previewItem.value))));
 }
-
-const art = shallowRef(null);
-const $container = ref(null);
-
-watch(previewMode, async (newMode) => {
-  if (newMode === "video") {
-    await nextTick();
-    if (art.value) {
-      art.value.destroy(false);
-    }
-    art.value = new Artplayer({
-      container: $container.value,
-      url: previewItem.value.fullpath,
-      title: previewItem.value.name,
-      volume: 0.5,
-      autoplay: true,
-      pip: true,
-      autoSize: true,
-      setting: true,
-      loop: false,
-      playbackRate: true,
-      aspectRatio: true,
-      fullscreen: true,
-      fullscreenWeb: true,
-      miniProgressBar: true,
-      mutex: true,
-      theme: "#23ade5",
-      lang: navigator.language.toLowerCase(),
-      icons: {
-        loading: '<img src="/artplayer/ploading.gif">',
-        state: '<img width="150" height="150" src="/artplayer/state.svg">',
-        indicator:
-          '<img width="16" height="16" src="/artplayer/indicator.svg">',
-      },
-    });
-  } else {
-    if (art.value) {
-      art.value.destroy(false);
-      art.value = null;
-    }
-  }
-});
-
-watch(previewDialog, (newVal) => {
-  if (!newVal) {
-    if (art.value) {
-      art.value.destroy(false);
-      art.value = null;
-    }
-    
-    setTimeout(() => {
-      previewItem.value = {};
-      previewMode.value = '';
-    }, 250);
-  }
-});
 
 /**
  * @param {Number} step - 1 to Next, to Prev

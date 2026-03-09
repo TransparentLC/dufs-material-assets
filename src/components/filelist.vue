@@ -575,12 +575,20 @@
                     {{ previewItem.filename }}
                     <span class="d-none d-sm-inline">({{ formatSize(previewItem.size) }})</span>
                 </span>
-                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'"  variant="plain" icon width="32" height="32" @click="navigateMedia(-1)">
-                    <v-icon icon="$mdiChevronLeft" size="32"></v-icon>
-                </v-btn>
-                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'" variant="plain" icon  width="32" height="32" @click="navigateMedia(1)">
-                    <v-icon icon="$mdiChevronRight" size="32"></v-icon>
-                </v-btn>
+                <v-btn
+                    v-if="previewMode === 'image'|| previewMode === 'video'"
+                    variant="plain"
+                    icon="$mdiChevronLeft"
+                    density="comfortable"
+                    @click="navigateMedia(-1)"
+                ></v-btn>
+                <v-btn
+                    v-if="previewMode === 'image'|| previewMode === 'video'"
+                    variant="plain"
+                    icon="$mdiChevronRight"
+                    density="comfortable"
+                    @click="navigateMedia(1)"
+                ></v-btn>
                 <v-btn
                     variant="plain"
                     icon="$mdiDownload"
@@ -1440,7 +1448,7 @@ const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => 
 
 const previewableMedia = computed(() => {
     if (!filelist.value.paths) return [];
-    return filelist.value.paths.filter(p => 
+    return filelist.value.paths.filter(p =>
         previewableImageExts.has(p.ext) || previewableVideoExts.has(p.ext)
     );
 });
@@ -1500,7 +1508,7 @@ const navigateMedia = (step) => {
     if (list.length <= 1) return;
 
     const currentIndex = list.findIndex(item => item.fullpath === previewItem.value.fullpath);
-    
+
     let newIndex = currentIndex + step;
     if (newIndex >= list.length) newIndex = 0;
     if (newIndex < 0) newIndex = list.length - 1;
@@ -1508,7 +1516,7 @@ const navigateMedia = (step) => {
     const newItem = list[newIndex];
 
     previewItem.value = newItem;
-    
+
     if (previewableImageExts.has(newItem.ext)) {
         previewMode.value = 'image';
     } else if (previewableVideoExts.has(newItem.ext)) {

@@ -598,7 +598,7 @@
             <v-divider></v-divider>
             <v-card-text
                 v-if="previewMode === 'image'"
-                class="py-4 d-flex justify-center align-center"
+                class="py-4"
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
                 <img
@@ -610,7 +610,7 @@
             </v-card-text>
             <v-card-text
                 v-else-if="previewMode === 'video'"
-                class="py-4 d-flex justify-center align-center"
+                class="py-4"
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
                 <video

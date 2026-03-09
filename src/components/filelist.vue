@@ -575,6 +575,12 @@
                     {{ previewItem.filename }}
                     <span class="d-none d-sm-inline">({{ formatSize(previewItem.size) }})</span>
                 </span>
+                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'"  variant="plain" icon width="32" height="32" @click="navigateMedia(-1)">
+                    <v-icon icon="$mdiChevronLeft" size="32"></v-icon>
+                </v-btn>
+                <v-btn v-if="previewMode === 'image'|| previewMode === 'video'" variant="plain" icon  width="32" height="32" @click="navigateMedia(1)">
+                    <v-icon icon="$mdiChevronRight" size="32"></v-icon>
+                </v-btn>
                 <v-btn
                     variant="plain"
                     icon="$mdiDownload"
@@ -1431,6 +1437,14 @@ const formatAudioTime = t => {
     return `${Math.floor(t / 60).toString().padStart(2, 0)}:${(Math.round(t) % 60).toString().padStart(2, 0)}`;
 };
 const filelistPathsAudio = computed(() => filelistPathsSorted.value.filter(e => previewableAudioExts.has(e.ext)));
+
+const previewableMedia = computed(() => {
+    if (!filelist.value.paths) return [];
+    return filelist.value.paths.filter(p => 
+        previewableImageExts.has(p.ext) || previewableVideoExts.has(p.ext)
+    );
+});
+
 const previewAudioPrev = e => {
     const index = filelistPathsAudio.value.map(e => e.fullpath).indexOf(e.fullpath);
     return filelistPathsAudio.value[index === 0 ? (filelistPathsAudio.value.length - 1) : (index - 1)];
@@ -1477,6 +1491,30 @@ if (navigator.mediaSession) {
     navigator.mediaSession.setActionHandler('previoustrack', () => updateAudioTags((previewItem.value = previewAudioPrev(previewItem.value))));
     navigator.mediaSession.setActionHandler('nexttrack', () => updateAudioTags((previewItem.value = previewAudioNext(previewItem.value))));
 }
+
+/**
+ * @param {Number} step - 1 to Next, to Prev
+ */
+const navigateMedia = (step) => {
+    const list = previewableMedia.value;
+    if (list.length <= 1) return;
+
+    const currentIndex = list.findIndex(item => item.fullpath === previewItem.value.fullpath);
+    
+    let newIndex = currentIndex + step;
+    if (newIndex >= list.length) newIndex = 0;
+    if (newIndex < 0) newIndex = list.length - 1;
+
+    const newItem = list[newIndex];
+
+    previewItem.value = newItem;
+    
+    if (previewableImageExts.has(newItem.ext)) {
+        previewMode.value = 'image';
+    } else if (previewableVideoExts.has(newItem.ext)) {
+        previewMode.value = 'video';
+    }
+};
 
 /**
  * @param {PathItem} e

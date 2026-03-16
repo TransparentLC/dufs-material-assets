@@ -12,17 +12,17 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
-    "marked": "^17.0.3",
+    "marked": "^17.0.4",
     "marked-highlight": "^2.2.3",
-    "petite-vue-i18n": "^11.2.8",
+    "petite-vue-i18n": "^11.3.0",
     "prismjs": "^1.30.0",
-    "vue": "^3.5.29",
+    "vue": "^3.5.30",
     "vue-router": "^5.0.3",
-    "vuetify": "^4.0.1"
+    "vuetify": "^4.0.2"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.4",
-    "lightningcss": "^1.31.1",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "lightningcss": "^1.32.0",
     "rollup-plugin-visualizer": "^7.0.1",
     "vite": "^7.3.1",
     "vite-plugin-html": "^3.2.2",

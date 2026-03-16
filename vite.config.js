@@ -51,28 +51,7 @@ export default defineConfig({
     },
     build: {
         chunkSizeWarningLimit: Infinity,
-        minify: 'terser',
-        terserOptions: {
-            compress: {
-                arguments: true,
-                ecma: 2020,
-                module: true,
-                unsafe_math: true,
-                unsafe_methods: true,
-                unsafe_proto: true,
-                unsafe_regexp: true,
-                unsafe_symbols: true,
-                unsafe_undefined: true,
-                passes: 2,
-            },
-            mangle: {
-                module: true,
-            },
-            format: {
-                ecma: 2020,
-                comments: false,
-            },
-        },
+        minify: 'oxc',
         cssMinify: 'lightningcss',
         rollupOptions: {
             plugins: [

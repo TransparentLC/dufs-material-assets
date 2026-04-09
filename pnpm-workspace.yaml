@@ -1,0 +1,2 @@
+patchedDependencies:
+  is-local-address: patches/is-local-address.patch

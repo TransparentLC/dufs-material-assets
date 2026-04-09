@@ -383,6 +383,48 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
+                                v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
+                                :text="t('actionViewOffice')"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiFileSearch"
+                                        density="comfortable"
+                                        @click="previewDialog = true; previewMode = 'office'; previewItem = p"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
+                                v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
+                                :text="t('actionViewDrawio')"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiFileSearch"
+                                        density="comfortable"
+                                        @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
+                                v-if="previewablePhotopeaExts.has(p.ext) && !isLocal && externalViewer"
+                                :text="t('actionViewPhotopea')"
+                            >
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiLayersSearch"
+                                        density="comfortable"
+                                        @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
+                                    ></v-btn>
+                                </template>
+                            </v-tooltip>
+                            <v-tooltip
                                 v-if="
                                     previewableTextFilenames.has(p.filename.toLowerCase())
                                     || previewableTextExts.has(p.ext)
@@ -576,14 +618,30 @@
                     <span class="d-none d-sm-inline">({{ formatSize(previewItem.size) }})</span>
                 </span>
                 <v-btn
-                    v-if="previewMode === 'image'|| previewMode === 'video'"
+                    v-if="externalViewer && (
+                        previewMode === 'office' ||
+                        previewMode === 'drawio' ||
+                        previewMode === 'photopea' ||
+                        previewMode === 'image'
+                    ) && !isLocal && (previewMode === 'image' || previewExternalEditSrc)"
+                    variant="plain"
+                    icon="$mdiSquareEditOutline"
+                    density="comfortable"
+                    @click="
+                        previewMode === 'image'
+                            ? (getLinkWithToken(previewItem).then(link => open(`https://www.photopea.com/#${encodeURIComponent(JSON.stringify({ files: [link] }))}`)))
+                            : open(previewExternalEditSrc)
+                    "
+                ></v-btn>
+                <v-btn
+                    v-if="previewMode === 'image' || previewMode === 'video'"
                     variant="plain"
                     icon="$mdiChevronLeft"
                     density="comfortable"
                     @click="navigateMedia(-1)"
                 ></v-btn>
                 <v-btn
-                    v-if="previewMode === 'image'|| previewMode === 'video'"
+                    v-if="previewMode === 'image' || previewMode === 'video'"
                     variant="plain"
                     icon="$mdiChevronRight"
                     density="comfortable"
@@ -728,6 +786,18 @@
                     class="rounded"
                     style="width:100%;height:calc(100vh - 48px - 52px - 48px)"
                 >
+            </v-card-text>
+            <v-card-text
+                v-else-if="previewMode === 'office' || previewMode === 'drawio' || previewMode === 'photopea'"
+                class="py-4"
+                style="max-height:calc(100vh - 48px - 52px - 16px)"
+            >
+                <iframe
+                    :src="previewExternalViewSrc"
+                    class="rounded"
+                    style="width:100%;height:calc(100vh - 48px - 52px - 48px)"
+                    frameborder="0"
+                ></iframe>
             </v-card-text>
             <v-card-text
                 v-else-if="previewMode === 'font'"
@@ -930,6 +1000,7 @@
 import { ref, computed, onMounted, watch, nextTick, getCurrentInstance, mergeProps, reactive, shallowRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useDisplay } from 'vuetify';
+import isLocalAddress from 'is-local-address';
 import { marked } from 'marked';
 import prism from 'prismjs';
 import { useI18n } from 'petite-vue-i18n';
@@ -952,6 +1023,9 @@ import {
     previewableAudioExts,
     previewableTextExts,
     previewableFontExts,
+    previewableOfficeExts,
+    previewableDrawioExts,
+    previewablePhotopeaExts,
     previewableTextFilenames,
     readmeFilenames,
 } from '../common.js';
@@ -1008,6 +1082,10 @@ const dufsfetch = (input, init = {}) => fetch(input, init)
 const route = useRoute();
 const router = useRouter();
 const display = useDisplay();
+
+const isLocal = isLocalAddress(location.hostname);
+const externalViewer = window.__DUFS_MATERIAL_CONFIG__?.externalViewer;
+const open = url => window.open(url);
 
 const glassmorphism = Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
     const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.[k];
@@ -1288,9 +1366,16 @@ const moveFile = async e => {
 /**
  * @param {PathItem} e
  */
+const getLinkWithToken = async e => {
+    const token = filelist.value.user ? (await dufsfetch(`${e.fullpath}?${e.is_dir ? 'zip&' : ''}tokengen`).then(r => r.text())) : '';
+    return `${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}${token ? `token=${token}` : ''}`;
+};
+
+/**
+ * @param {PathItem} e
+ */
 const copyLinkWithToken = async e => {
-    const token = await dufsfetch(`${e.fullpath}?${e.is_dir ? 'zip&' : ''}tokengen`).then(r => r.text());
-    const link = `${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}token=${token}`;
+    const link = await getLinkWithToken(e);
     if (navigator.clipboard) {
         await navigator.clipboard.writeText(link);
     } else {
@@ -1301,7 +1386,7 @@ const copyLinkWithToken = async e => {
         document.execCommand('copy');
         document.body.removeChild(el);
     }
-    $toast.success(t('toastCopyLinkWithToken', [formatTimestamp(parseInt(token.substring(128, 144), 16))]));
+    $toast.success(t('toastCopyLinkWithToken', [formatTimestamp(parseInt((new URL(link)).searchParams.get('token').substring(128, 144), 16))]));
 };
 
 /**
@@ -1573,6 +1658,37 @@ onMounted(() => document.head.appendChild(previewFontStyleElement));
 watch(previewItem, () => {
     if (previewMode.value !== 'font' || !previewItem.value.fullpath) return;
     previewFontStyleElement.innerHTML = `@font-face{font-family:${previewFontFamily};src:url(${previewItem.value.fullpath})}@font-face{font-family:"Adobe NotDef";src:url(${NotDefFont})}`;
+});
+
+const previewExternalViewSrc = ref('');
+const previewExternalEditSrc = ref('');
+watch(previewItem, async () => {
+    if (!externalViewer || !['office', 'drawio', 'photopea'].includes(previewMode.value) || !previewItem.value.fullpath) return;
+    previewExternalViewSrc.value = '';
+    previewExternalEditSrc.value = '';
+    const link = await getLinkWithToken(previewItem.value);
+    switch (previewMode.value) {
+        case 'office':
+            previewExternalViewSrc.value = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(link)}`;
+            break;
+        case 'drawio':
+            previewExternalViewSrc.value = `https://app.diagrams.net/?lightbox=1#U${encodeURIComponent(link)}`;
+            previewExternalEditSrc.value = `https://app.diagrams.net/#U${encodeURIComponent(link)}`;
+            break;
+        case 'photopea':
+            // https://www.photopea.com/api/
+            previewExternalViewSrc.value = `https://www.photopea.com/#${encodeURIComponent(JSON.stringify({
+                files: [link],
+                environment: {
+                    vmode: 2,
+                    intro: false,
+                },
+            }))}`;
+            previewExternalEditSrc.value = `https://www.photopea.com/#${encodeURIComponent(JSON.stringify({
+                files: [link],
+            }))}`;
+            break;
+    }
 });
 
 </script>

@@ -1,0 +1,8 @@
+diff --git a/src/index.js b/src/index.js
+index ccae791b1d0ba6dd87c3c5c7ba8392c05ccb1da6..02feff0eaccafafa6c764f219091910cd935dd7c 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -1,2 +1,2 @@
+ 'use strict'
+-module.exports = hostname => require('./ipv4')(hostname) || require('./ipv6')(hostname)
++module.exports = hostname => hostname === 'localhost' || require('./ipv4')(hostname) || require('./ipv6')(hostname)

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@mdi/js": "^7.4.47",
+    "is-local-address": "^2.3.3",
     "marked": "^18.0.0",
     "marked-highlight": "^2.2.4",
     "petite-vue-i18n": "^11.3.2",

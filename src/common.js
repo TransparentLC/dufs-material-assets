@@ -38,15 +38,30 @@ const extIconColorTable = {
     'gif': ['$mdiImage', '#d32f2f'],
     'jpg': ['$mdiImage', '#d32f2f'],
     'jpeg': ['$mdiImage', '#d32f2f'],
-    'psd': ['$mdiImage', '#d32f2f'],
-    'ai': ['$mdiImage', '#d32f2f'],
     'webp': ['$mdiImage', '#d32f2f'],
     'avif': ['$mdiImage', '#d32f2f'],
     'tiff': ['$mdiImage', '#d32f2f'],
     'heif': ['$mdiImage', '#d32f2f'],
     'heic': ['$mdiImage', '#d32f2f'],
     'jxl': ['$mdiImage', '#d32f2f'],
+    'dds': ['$mdiImage', '#d32f2f'],
+    'tga': ['$mdiImage', '#d32f2f'],
+    'ico': ['$mdiImage', '#d32f2f'],
+    'icns': ['$mdiImage', '#d32f2f'],
     'svg': ['$mdiSvg', '#ff9a00'],
+    'psd': ['$mdiImageMultiple', '#31a8ff'],
+    'ai': ['$mdiVectorPolygon', '#ff9a00'],
+    'dng': ['$mdiFilm', '#530066'],
+    'nef': ['$mdiFilm', '#530066'],
+    'cr2': ['$mdiFilm', '#530066'],
+    'cr3': ['$mdiFilm', '#530066'],
+    'arw': ['$mdiFilm', '#530066'],
+    'rw2': ['$mdiFilm', '#530066'],
+    'raf': ['$mdiFilm', '#530066'],
+    'orf': ['$mdiFilm', '#530066'],
+    'gpr': ['$mdiFilm', '#530066'],
+    '3fr': ['$mdiFilm', '#530066'],
+    'fff': ['$mdiFilm', '#530066'],
 
     'txt': ['$mdiScriptText', '#607d8b'],
     'md': ['$mdiScriptText', '#607d8b'],
@@ -107,10 +122,21 @@ const extIconColorTable = {
 
     'doc': ['$mdiFileWord', '#538ce5'],
     'docx': ['$mdiFileWord', '#538ce5'],
+    'docm': ['$mdiFileWord', '#538ce5'],
+    'dotm': ['$mdiFileWord', '#538ce5'],
+    'dotx': ['$mdiFileWord', '#538ce5'],
     'xls': ['$mdiFileExcel', '#4caf50'],
     'xlsx': ['$mdiFileExcel', '#4caf50'],
+    'xlsb': ['$mdiFileExcel', '#4caf50'],
+    'xlsm': ['$mdiFileExcel', '#4caf50'],
     'ppt': ['$mdiFilePowerpoint', '#ef633f'],
     'pptx': ['$mdiFilePowerpoint', '#ef633f'],
+    'pps': ['$mdiFilePowerpoint', '#ef633f'],
+    'ppsx': ['$mdiFilePowerpoint', '#ef633f'],
+    'pptm': ['$mdiFilePowerpoint', '#ef633f'],
+    'potm': ['$mdiFilePowerpoint', '#ef633f'],
+    'ppam': ['$mdiFilePowerpoint', '#ef633f'],
+    'potx': ['$mdiFilePowerpoint', '#ef633f'],
     'pdf': ['$mdiFilePdfBox', '#f44336'],
     'epub': ['$mdiBook', '#81b315'],
 
@@ -125,6 +151,12 @@ const extIconColorTable = {
     'exe': ['$mdiWindowRestore', '#1a237e'],
     'msi': ['$mdiWindowRestore', '#1a237e'],
     'apk': ['$mdiAndroid', '#8bc34a'],
+
+    'drawio': ['$mdiGraph', '#f08705'],
+    'vsdx': ['$mdiGraph', '#f08705'],
+    'vdx': ['$mdiGraph', '#f08705'],
+    'gliffy': ['$mdiGraph', '#f08705'],
+    'lucid': ['$mdiGraph', '#f08705'],
 };
 
 /**
@@ -175,11 +207,14 @@ export const codeLanguageTable = {
     'svg': 'svg',
 };
 
-export const previewableImageExts = new Set(['jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);
+export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);
 export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
 export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore']);
 export const previewableFontExts = new Set(['ttf', 'ttc', 'otf', 'otc', 'woff', 'woff2']);
+export const previewableOfficeExts = new Set(['doc', 'docx', 'docm', 'dotm', 'dotx', 'xlsx', 'xlsb', 'xls', 'xlsm', 'pptx', 'ppsx', 'ppt', 'pps', 'pptm', 'potm', 'ppam', 'potx', 'ppsm']);
+export const previewableDrawioExts = new Set(['drawio', 'vsdx', 'vdx', 'gliffy', 'lucid']);
+export const previewablePhotopeaExts = new Set(['psd', 'ai', 'xd', 'fig', 'sketch', 'indd', 'ico', 'dds', 'tga', 'tiff', 'heif', 'heic', 'jxl']);
 export const previewableTextFilenames = new Set(['readme', 'license']);
 export const readmeFilenames = new Set(['readme', 'readme.txt', 'readme.md']);
 

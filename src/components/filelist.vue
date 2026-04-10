@@ -1368,7 +1368,10 @@ const moveFile = async e => {
  */
 const getLinkWithToken = async e => {
     const token = filelist.value.user ? (await dufsfetch(`${e.fullpath}?${e.is_dir ? 'zip&' : ''}tokengen`).then(r => r.text())) : '';
-    return `${location.protocol}//${location.host}${e.fullpath}?${e.is_dir ? 'zip&' : ''}${token ? `token=${token}` : ''}`;
+    const link = new URL(`${location.protocol}//${location.host}${e.fullpath}`);
+    if (e.is_dir) link.searchParams.set('zip', '');
+    if (token) link.searchParams.set('token', token);
+    return link.toString();
 };
 
 /**

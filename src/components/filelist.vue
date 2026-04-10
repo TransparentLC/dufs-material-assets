@@ -411,7 +411,7 @@
                                 </template>
                             </v-tooltip>
                             <v-tooltip
-                                v-if="previewablePhotopeaExts.has(p.ext) && !isLocal && externalViewer"
+                                v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
                                 :text="t('actionViewPhotopea')"
                             >
                                 <template v-slot:activator="{ props }">
@@ -619,11 +619,10 @@
                 </span>
                 <v-btn
                     v-if="externalViewer && (
-                        previewMode === 'office' ||
-                        previewMode === 'drawio' ||
-                        previewMode === 'photopea' ||
+                        ((previewMode === 'office' || previewMode === 'drawio') && !isLocal && previewExternalEditSrc) ||
+                        (previewMode === 'photopea' && previewExternalEditSrc) ||
                         previewMode === 'image'
-                    ) && !isLocal && (previewMode === 'image' || previewExternalEditSrc)"
+                    )"
                     variant="plain"
                     icon="$mdiSquareEditOutline"
                     density="comfortable"

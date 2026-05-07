@@ -1481,6 +1481,12 @@ const uploadFilesUp = () => {
     clearTimeout(uploadlistMenuTimer);
     if (uploadlistMenuTimer !== null) uploadFilesClick();
 };
+addEventListener('beforeunload', e => {
+    if (uploadlist.value.some(t => !t.uploaded && !t.fail)) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
 
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));

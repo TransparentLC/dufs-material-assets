@@ -7,13 +7,13 @@ jobs:
   build-assets:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
         with:
           version: latest
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: latest
           check-latest: true
@@ -24,7 +24,7 @@ jobs:
           pnpm install
           DUFS_EMBED_FILENAME=1 pnpm run build
       - name: Upload assets
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dufs-material-assets-embed
           path: dist
@@ -83,7 +83,7 @@ jobs:
         run: |
           ver=$(curl --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/sigoden/dufs/tags | jq -r .[0].name)
           echo "version=$ver" >> $GITHUB_OUTPUT
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: sigoden/dufs
           ref: ${{ steps.check-tag.outputs.version }}
@@ -110,7 +110,7 @@ jobs:
           cargo -V
           rustc -V
       - name: Download assets
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: dufs-material-assets-embed
           path: dufs-material-assets-embed
@@ -131,7 +131,7 @@ jobs:
             echo "executable=target/${{ matrix.target }}/release/dufs" >> $GITHUB_OUTPUT
           fi
       - name: Upload executable
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dufs-mod-${{ steps.check-tag.outputs.version }}-${{ matrix.target }}
           path: ${{ steps.build.outputs.executable }}

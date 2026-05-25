@@ -1,0 +1,143 @@
+diff --git a/lib/subsrt.js b/lib/subsrt.js
+index d502746f44708f3050c886a0504d22c8a992a3f8..af2733ad44d9c95c84746a6b8d7b0489a874a2a8 100644
+--- a/lib/subsrt.js
++++ b/lib/subsrt.js
+@@ -1,7 +1,15 @@
+ 'use strict';
+ 
++const vttHandler = require('./format/vtt.js');
++const assHandler = require('./format/ass.js');
++const srtHandler = require('./format/srt.js');
++
+ var subsrt = {
+-  format: { }
++  format: {
++    vtt: vttHandler,
++    ass: assHandler,
++    srt: srtHandler,
++  },
+ };
+ 
+ function clone(obj) {
+@@ -11,15 +19,15 @@ function clone(obj) {
+ /******************************************************************************************
+  * Loads the subtitle format parsers and builders
+  ******************************************************************************************/
+-(function init() {
+-  //Load in the predefined order
+-  var formats = [ "vtt", "lrc", "smi", "ssa", "ass", "sub", "srt", "sbv", "json" ];
+-  for (var i = 0; i < formats.length; i++) {
+-    var f = formats[i];
+-    var handler = require('./format/' + f + '.js');
+-    subsrt.format[handler.name] = handler;
+-  }
+-})();
++// (function init() {
++//   //Load in the predefined order
++//   var formats = [ "vtt", "lrc", "smi", "ssa", "ass", "sub", "srt", "sbv", "json" ];
++//   for (var i = 0; i < formats.length; i++) {
++//     var f = formats[i];
++//     var handler = require('./format/' + f + '.js');
++//     subsrt.format[handler.name] = handler;
++//   }
++// })();
+ 
+ /******************************************************************************************
+  * Gets a list of supported subtitle formats.
+@@ -62,17 +70,17 @@ subsrt.parse = function(content, options) {
+   if (!format || format.trim().length == 0) {
+     throw new Error("Cannot determine subtitle format!");
+   }
+-  
++
+   var handler = subsrt.format[format];
+   if (typeof handler == "undefined") {
+     throw new Error("Unsupported subtitle format: " + format);
+   }
+-  
++
+   var func = handler.parse;
+   if (typeof func != "function") {
+     throw new Error("Subtitle format does not support 'parse' op: " + format);
+   }
+-  
++
+   return func(content, options);
+ };
+ 
+@@ -85,17 +93,17 @@ subsrt.build = function(captions, options) {
+   if (!format || format.trim().length == 0) {
+     throw new Error("Cannot determine subtitle format!");
+   }
+-  
++
+   var handler = subsrt.format[format];
+   if (typeof handler == "undefined") {
+     throw new Error("Unsupported subtitle format: " + format);
+   }
+-  
++
+   var func = handler.build;
+   if (typeof func != "function") {
+     throw new Error("Subtitle format does not support 'build' op: " + format);
+   }
+-  
++
+   return func(captions, options);
+ };
+ 
+@@ -107,22 +115,22 @@ subsrt.convert = function(content, options) {
+     options = { to: options };
+   }
+   options = options || { };
+-  
++
+   var opt = clone(options);
+   delete opt.format;
+-  
++
+   if (opt.from) {
+     opt.format = opt.from;
+   }
+-  
++
+   var captions = subsrt.parse(content, opt);
+   if (opt.resync) {
+     captions = subsrt.resync(captions, opt.resync);
+   }
+-  
++
+   opt.format = opt.to || options.format;
+   var result = subsrt.build(captions, opt);
+-  
++
+   return result;
+ };
+ 
+@@ -131,7 +139,7 @@ subsrt.convert = function(content, options) {
+  ******************************************************************************************/
+ subsrt.resync = function(captions, options) {
+   options = options || { };
+-  
++
+   var func, ratio, frame, offset;
+   if (typeof options == "function") {
+     func = options; //User's function to handle time shift
+@@ -153,7 +161,7 @@ subsrt.resync = function(captions, options) {
+   else {
+     throw new Error("Argument 'options' not defined!");
+   }
+-  
++
+   var resynced = [ ];
+   for (var i = 0; i < captions.length; i++) {
+     var caption = clone(captions[i]);
+@@ -177,7 +185,7 @@ subsrt.resync = function(captions, options) {
+     }
+     resynced.push(caption);
+   }
+-  
++
+   return resynced;
+ };
+ 

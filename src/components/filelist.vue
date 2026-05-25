@@ -350,7 +350,7 @@
                                         variant="plain"
                                         icon="$mdiVideo"
                                         density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'video'; previewItem = p"
+                                        @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
                                     ></v-btn>
                                 </template>
                             </v-tooltip>
@@ -679,13 +679,22 @@
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
                 <video
-                    :src="previewItem.fullpath"
                     controls
                     autoplay
                     preload="metadata"
                     class="d-block mx-auto rounded"
                     style="max-width:100%;max-height:calc(100vh - 48px - 52px - 48px)"
-                ></video>
+                >
+                    <source :src="previewItem.fullpath">
+                    <track
+                        v-for="e, i in previewVideoSubtitles"
+                        kind="subtitles"
+                        :label="e.label ?? `#${i} (${e.format})`"
+                        :srclang="e.label"
+                        :src="e.fullpath"
+                        :default="i === 0"
+                    >
+                </video>
             </v-card-text>
             <v-card-text
                 v-else-if="previewMode === 'audio'"
@@ -1003,6 +1012,7 @@ import isLocalAddress from 'is-local-address';
 import { marked } from 'marked';
 import prism from 'prismjs';
 import { useI18n } from 'petite-vue-i18n';
+import subsrt from 'subsrt';
 import * as jsmediatags from '../mami-chan/index.js';
 import Uploader from '../uploader.js';
 import NotDefFont from '../assets/AND-Regular.woff2?inline';
@@ -1616,6 +1626,54 @@ const navigateMedia = (step) => {
         previewMode.value = 'video';
     }
 };
+
+/** @type {import('vue').Ref<{ fullpath: string, label: string, format: string }[]>} */
+const previewVideoSubtitles = ref([]);
+
+/**
+ * @param {PathItem} e
+ */
+const updateVideoSubtitles = async e => {
+    const filenameWithoutExt = removeSuffix(e.filename, '.' + getExt(e.filename));
+    const subtitleFiles = await Promise.all(
+        filelist.value.paths
+            .reduce((a, c) => {
+                if (!c.is_dir) {
+                    const m = removePrefix(c.filename, filenameWithoutExt).match(/^(?:\.(.+?))?\.(vtt|srt|ass)$/i);
+                    if (m) {
+                        a.push({
+                            fullpath: c.fullpath,
+                            label: m[1],
+                            format: m[2].toLowerCase(),
+                        });
+                    }
+                }
+                return a;
+            }, [])
+            .map(async (/** @type {{ fullpath: string, label: string, format: string }} */ e) => ({
+                fullpath: (e.format === 'vtt'
+                    ? e.fullpath
+                    : URL.createObjectURL(new Blob(
+                        [subsrt.convert(
+                            await dufsfetch(e.fullpath).then(r => r.text()),
+                            { format: 'vtt' },
+                        )],
+                        { type: 'text/vtt' },
+                    ))
+                ),
+                label: e.label,
+                format: e.format,
+            }))
+    );
+    previewVideoSubtitles.value.length = 0;
+    previewVideoSubtitles.value.push(...subtitleFiles);
+};
+watch(previewDialog, () => {
+    if (!previewDialog.value) {
+        previewVideoSubtitles.value.forEach(e => e.fullpath.startsWith('blob:') && URL.revokeObjectURL(e.fullpath));
+        previewVideoSubtitles.value.length = 0;
+    }
+});
 
 /**
  * @param {PathItem} e

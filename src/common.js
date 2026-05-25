@@ -152,6 +152,10 @@ const extIconColorTable = {
     'msi': ['$mdiWindowRestore', '#1a237e'],
     'apk': ['$mdiAndroid', '#8bc34a'],
 
+    'vtt': ['$mdiSubtitles', '#5d2f86'],
+    'srt': ['$mdiSubtitles', '#5d2f86'],
+    'ass': ['$mdiSubtitles', '#5d2f86'],
+
     'drawio': ['$mdiGraph', '#f08705'],
     'vsdx': ['$mdiGraph', '#f08705'],
     'vdx': ['$mdiGraph', '#f08705'],
@@ -210,7 +214,7 @@ export const codeLanguageTable = {
 export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);
 export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
-export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore']);
+export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore', 'vtt', 'srt', 'ass']);
 export const previewableFontExts = new Set(['ttf', 'ttc', 'otf', 'otc', 'woff', 'woff2']);
 export const previewableOfficeExts = new Set(['doc', 'docx', 'docm', 'dotm', 'dotx', 'xlsx', 'xlsb', 'xls', 'xlsm', 'pptx', 'ppsx', 'ppt', 'pps', 'pptm', 'potm', 'ppam', 'potx', 'ppsm']);
 export const previewableDrawioExts = new Set(['drawio', 'vsdx', 'vdx', 'gliffy', 'lucid']);

@@ -55,6 +55,8 @@
     * 默认不启用，有需要的话请在正确配置 dufs 后通过[“自定义界面”](#自定义界面)启用
 * 视频播放器
     * 使用 `<video>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=video%20format)
+    * 支持显示同目录下同名的 WebVTT、SRT、ASS 字幕（使用 [subsrt](https://www.npmjs.com/package/subsrt) 转换为 WebVTT 后使用 `<track>` 标签显示，因此无法支持样式）
+    * 例如对于视频文件 `example.mp4`，会自动加载 `example.{vtt,srt,ass}` 和 `example.*.{vtt,srt,ass}`。
 * 音乐播放器✨
     * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=audio%20format)
     * 同一目录下音频文件顺序/随机/循环播放

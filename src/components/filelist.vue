@@ -1590,42 +1590,6 @@ watch(previewDialog, () => {
     }
 });
 
-if (navigator.mediaSession) {
-    watch([previewAudioTitle, previewAudioArtist, previewAudioAlbum, previewAudioCover], () => {
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: previewAudioTitle.value,
-            artist: previewAudioArtist.value,
-            album: previewAudioAlbum.value,
-            artwork: [{ src: previewAudioCover.value }],
-        });
-    });
-    navigator.mediaSession.setActionHandler('previoustrack', () => updateAudioTags((previewItem.value = previewAudioPrev(previewItem.value))));
-    navigator.mediaSession.setActionHandler('nexttrack', () => updateAudioTags((previewItem.value = previewAudioNext(previewItem.value))));
-}
-
-/**
- * @param {Number} step - 1 to Next, to Prev
- */
-const navigateMedia = (step) => {
-    const list = previewableMedia.value;
-    if (list.length <= 1) return;
-
-    const currentIndex = list.findIndex(item => item.fullpath === previewItem.value.fullpath);
-
-    let newIndex = currentIndex + step;
-    if (newIndex >= list.length) newIndex = 0;
-    if (newIndex < 0) newIndex = list.length - 1;
-
-    const newItem = list[newIndex];
-
-    previewItem.value = newItem;
-
-    if (previewableImageExts.has(newItem.ext)) {
-        previewMode.value = 'image';
-    } else if (previewableVideoExts.has(newItem.ext)) {
-        previewMode.value = 'video';
-    }
-};
 
 /** @type {import('vue').Ref<{ fullpath: string, label: string, format: string }[]>} */
 const previewVideoSubtitles = ref([]);
@@ -1674,6 +1638,44 @@ watch(previewDialog, () => {
         previewVideoSubtitles.value.length = 0;
     }
 });
+
+if (navigator.mediaSession) {
+    watch([previewAudioTitle, previewAudioArtist, previewAudioAlbum, previewAudioCover], () => {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: previewAudioTitle.value,
+            artist: previewAudioArtist.value,
+            album: previewAudioAlbum.value,
+            artwork: [{ src: previewAudioCover.value }],
+        });
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', () => updateAudioTags((previewItem.value = previewAudioPrev(previewItem.value))));
+    navigator.mediaSession.setActionHandler('nexttrack', () => updateAudioTags((previewItem.value = previewAudioNext(previewItem.value))));
+}
+
+/**
+ * @param {Number} step - 1 to Next, to Prev
+ */
+const navigateMedia = (step) => {
+    const list = previewableMedia.value;
+    if (list.length <= 1) return;
+
+    const currentIndex = list.findIndex(item => item.fullpath === previewItem.value.fullpath);
+
+    let newIndex = currentIndex + step;
+    if (newIndex >= list.length) newIndex = 0;
+    if (newIndex < 0) newIndex = list.length - 1;
+
+    const newItem = list[newIndex];
+
+    previewItem.value = newItem;
+
+    if (previewableImageExts.has(newItem.ext)) {
+        previewMode.value = 'image';
+    } else if (previewableVideoExts.has(newItem.ext)) {
+        previewMode.value = 'video';
+        updateVideoSubtitles(newItem);
+    }
+};
 
 /**
  * @param {PathItem} e

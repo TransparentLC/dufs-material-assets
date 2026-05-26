@@ -679,13 +679,13 @@
                 style="max-height:calc(100vh - 48px - 52px - 16px)"
             >
                 <video
+                    :src="previewItem.fullpath"
                     controls
                     autoplay
                     preload="metadata"
                     class="d-block mx-auto rounded"
                     style="max-width:100%;max-height:calc(100vh - 48px - 52px - 48px)"
                 >
-                    <source :src="previewItem.fullpath">
                     <track
                         v-for="e, i in previewVideoSubtitles"
                         kind="subtitles"

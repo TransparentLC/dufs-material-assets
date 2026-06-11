@@ -1464,7 +1464,7 @@ document.body.addEventListener('drop', async e => {
         .map(([path, file]) => {
             const cp = currentPath.value;
             return new Uploader(
-                cp + encodeURIComponent(path),
+                cp + encodeURIComponent(path).replaceAll('%2F', '/'),
                 file,
                 () => {
                     if (currentPath.value === cp) updateFilelist();
@@ -1501,7 +1501,7 @@ addEventListener('beforeunload', e => {
 const createFolder = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFolderLabel'), t('titleCreateFolder'));
     if (!path) return;
-    const url = currentPath.value + encodeURIComponent(path);
+    const url = currentPath.value + encodeURIComponent(path).replaceAll('%2F', '/');
     if (await dufsfetch(url + '/?json').then(r => r.json()).then((/** @type {DufsData} */ r) => r.dir_exists)) {
         return $toast.warning(t('toastCreateFolderExists', [path]));
     }
@@ -1513,7 +1513,7 @@ const createFolder = async () => {
 const createFile = async () => {
     const path = await $dialog.promises.prompt(t('dialogCreateFileLabel'), t('titleCreateFile'));
     if (!path) return;
-    const url = currentPath.value + encodeURIComponent(path);
+    const url = currentPath.value + encodeURIComponent(path).replaceAll('%2F', '/');
     try {
         const status = await fetch(url, { method: 'HEAD' }).then(r => r.status);
         if (status === 200) {

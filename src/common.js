@@ -211,7 +211,12 @@ export const codeLanguageTable = {
     'svg': 'svg',
 };
 
-export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg']);
+export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg', ...(await new Promise(resolve => {
+    const image = new Image;
+    image.onload = () => resolve(image.width);
+    image.onerror = () => resolve(false);
+    image.src = 'data:image/jxl;base64,/wp/QCQIBgEAFABLEiRhAA';
+}) ? ['jxl'] : [])]);
 export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
 export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore', 'vtt', 'srt', 'ass']);

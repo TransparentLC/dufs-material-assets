@@ -1441,8 +1441,14 @@ document.body.addEventListener('drop', async e => {
         for (const entry of entries) {
             if (entry.isDirectory) {
                 /** @type {(FileSystemDirectoryEntry | FileSystemFileEntry)} */
-                const entries = await new Promise((resolve, reject) => entry.createReader().readEntries(resolve, reject));
-                await readEntries(entries, arr);
+                const reader = entry.createReader();
+                let batch;
+                do {
+                    batch = await new Promise((resolve, reject) =>
+                        reader.readEntries(resolve, reject)
+                    );
+                    await readEntries(batch, arr);
+                } while (batch.length > 0);
             } else if (entry.isFile) {
                 arr.push(await new Promise((resolve, reject) => entry.file(e => resolve([entry.fullPath.replace(/^\//, ''), e]), reject)));
             }

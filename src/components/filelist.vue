@@ -217,7 +217,7 @@
                 style="font-size:1rem;background-color:transparent"
             >
                 <thead>
-                    <tr style="color:rgba(var(--v-theme-on-surface), var(--v-medium-emphasis-opacity))">
+                    <tr class="text-medium-emphasis">
                         <th class="w-100">
                             <span
                                 style="cursor:pointer"
@@ -555,6 +555,13 @@
                     </tr>
                 </tbody>
             </v-table>
+            <div
+                v-if="!filelistPathsSorted.length"
+                class="d-flex flex-column justify-center align-center px-4 py-16 text-disabled"
+            >
+                <v-icon icon="$mdiPackageVariant" size="72"></v-icon>
+                <span class="mt-4">{{ t('toastEmpty') }}</span>
+            </div>
         </v-skeleton-loader>
     </v-card>
 
@@ -805,6 +812,7 @@
                     class="rounded"
                     style="width:100%;height:calc(100vh - 48px - 52px - 48px)"
                     frameborder="0"
+                    allow="local-network-access"
                 ></iframe>
             </v-card-text>
             <v-card-text
@@ -1589,7 +1597,6 @@ watch(previewDialog, () => {
         navigator.mediaSession.metadata = null;
     }
 });
-
 
 /** @type {import('vue').Ref<{ fullpath: string, label: string, format: string }[]>} */
 const previewVideoSubtitles = ref([]);

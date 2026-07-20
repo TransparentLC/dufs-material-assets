@@ -1256,14 +1256,17 @@ new Promise(resolve => {
             previewablePhotopeaExts.add('jxl');
             return;
         }
-        watch(previewItem, () => {
+        const unwatchHandle = watch(previewItem, () => {
             if (previewMode.value === 'image' && previewItem.value.ext === 'jxl') {
                 /* @vite-ignore */
                 import(
                     typeof window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill === 'string'
                         ? window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill
                         : 'https://cdn.jsdelivr.net/npm/jxl-rs-polyfill/dist/jxl-polyfill.min.js'
-                ).then(({ JXLPolyfill }) => (new JXLPolyfill).start());
+                ).then(({ JXLPolyfill }) => {
+                    (new JXLPolyfill).start();
+                    unwatchHandle();
+                });
             }
         });
     };

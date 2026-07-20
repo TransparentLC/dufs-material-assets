@@ -1247,6 +1247,29 @@ watch(previewDialog, () => {
     if (!previewDialog.value) setTimeout(() => previewItem.value = {}, 250);
 });
 
+new Promise(resolve => {
+    const image = new Image;
+    image.onload = () => {};
+    image.onerror = () => {
+        if (!window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill) {
+            previewableImageExts.delete('jxl');
+            previewablePhotopeaExts.add('jxl');
+            return;
+        }
+        watch(previewItem, () => {
+            if (previewMode.value === 'image' && previewItem.value.ext === 'jxl') {
+                /* @vite-ignore */
+                import(
+                    typeof window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill === 'string'
+                        ? window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill
+                        : 'https://cdn.jsdelivr.net/npm/jxl-rs-polyfill/dist/jxl-polyfill.min.js'
+                ).then(({ JXLPolyfill }) => (new JXLPolyfill).start());
+            }
+        });
+    };
+    image.src = 'data:image/jxl;base64,/wp/QCQIBgEAFABLEiRhAA';
+});
+
 const updateReadme = async () => {
     if (!readmeItem.value) return;
     const st = setTimeout(() => readmeSkeleton.value = true, 150);
@@ -1449,8 +1472,14 @@ document.body.addEventListener('drop', async e => {
         for (const entry of entries) {
             if (entry.isDirectory) {
                 /** @type {(FileSystemDirectoryEntry | FileSystemFileEntry)} */
-                const entries = await new Promise((resolve, reject) => entry.createReader().readEntries(resolve, reject));
-                await readEntries(entries, arr);
+                const reader = entry.createReader();
+                let batch;
+                do {
+                    batch = await new Promise((resolve, reject) =>
+                        reader.readEntries(resolve, reject)
+                    );
+                    await readEntries(batch, arr);
+                } while (batch.length > 0);
             } else if (entry.isFile) {
                 arr.push(await new Promise((resolve, reject) => entry.file(e => resolve([entry.fullPath.replace(/^\//, ''), e]), reject)));
             }

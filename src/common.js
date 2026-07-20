@@ -211,19 +211,14 @@ export const codeLanguageTable = {
     'svg': 'svg',
 };
 
-export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'svg', ...(await new Promise(resolve => {
-    const image = new Image;
-    image.onload = () => resolve(image.width);
-    image.onerror = () => resolve(false);
-    image.src = 'data:image/jxl;base64,/wp/QCQIBgEAFABLEiRhAA';
-}) ? ['jxl'] : [])]);
+export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'jxl', 'svg']);
 export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
 export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore', 'vtt', 'srt', 'ass']);
 export const previewableFontExts = new Set(['ttf', 'ttc', 'otf', 'otc', 'woff', 'woff2']);
 export const previewableOfficeExts = new Set(['doc', 'docx', 'docm', 'dotm', 'dotx', 'xlsx', 'xlsb', 'xls', 'xlsm', 'pptx', 'ppsx', 'ppt', 'pps', 'pptm', 'potm', 'ppam', 'potx', 'ppsm']);
 export const previewableDrawioExts = new Set(['drawio', 'vsdx', 'vdx', 'gliffy', 'lucid']);
-export const previewablePhotopeaExts = new Set(['psd', 'ai', 'xd', 'fig', 'sketch', 'indd', 'ico', 'dds', 'tga', 'tiff', 'heif', 'heic', 'jxl']);
+export const previewablePhotopeaExts = new Set(['psd', 'ai', 'xd', 'fig', 'sketch', 'indd', 'ico', 'dds', 'tga', 'tiff', 'heif', 'heic']);
 export const previewableTextFilenames = new Set(['readme', 'license']);
 export const readmeFilenames = new Set(['readme', 'readme.txt', 'readme.md']);
 

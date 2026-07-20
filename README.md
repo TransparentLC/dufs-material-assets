@@ -49,16 +49,17 @@
     * 部署的 dufs 实例需要可以在公网访问才能预览 Office 文档和 draw&period;io 图表，预览时文件会被服务提供者获取并缓存
     * 默认不启用，有需要的话请在正确配置 dufs 后通过[“自定义界面”](#自定义界面)启用
 * 图片查看器✨
+    * 支持加载 [jxl-rs-polyfill](https://github.com/hjanuschka/jxl-rs-polyfill) 在没有原生支持（[Can I Use...](https://caniuse.com/jpegxl)）的浏览器上查看 JPEG XL 图片
     * 支持[一键打开 Photopea](https://github.com/photopea/photopea/issues/966) 编辑图片
-    * 也可以使用 Photopea 查看浏览器不支持的 PSD、AI、JPEG XL 等格式的图片（JPEG XL 被浏览器支持后将改为直接使用浏览器查看）
+    * 也可以使用 Photopea 查看浏览器不支持的 PSD、AI、JPEG XL 等格式的图片
     * 需要配置好 CORS（启动 dufs 时设置 `--enable-cors` 或通过 nginx 等反向代理时添加 `Access-Control-Allow-Origin: https://www.photopea.com`），因为是本地获取文件后使用 Photopea 打开所以无需公网访问
     * 默认不启用，有需要的话请在正确配置 dufs 后通过[“自定义界面”](#自定义界面)启用
 * 视频播放器
-    * 使用 `<video>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=video%20format)
+    * 使用 `<video>` 标签实现，支持的封装和编码可以参见 [Can I Use...](https://caniuse.com/?search=video%20format)
     * 支持显示同目录下同名的 WebVTT、SRT、ASS 字幕（使用 [subsrt](https://www.npmjs.com/package/subsrt) 转换为 WebVTT 后使用 `<track>` 标签显示，因此无法支持样式）
     * 例如对于视频文件 `example.mp4`，会自动加载 `example.{vtt,srt,ass}` 和 `example.*.{vtt,srt,ass}`。
 * 音乐播放器✨
-    * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [caniuse](https://caniuse.com/?search=audio%20format)
+    * 使用 `<audio>` 标签实现，支持的封装和编码可以参见 [Can I Use...](https://caniuse.com/?search=audio%20format)
     * 同一目录下音频文件顺序/随机/循环播放
     * 解析并展示标题、艺术家、专辑名称、封面图等元数据（使用 [jsmediatags](https://www.npmjs.com/package/jsmediatags) 实现）
 * 字体查看器✨
@@ -203,6 +204,13 @@ window.__DUFS_MATERIAL_CONFIG__ = {
     // 是否允许使用第三方服务查看文件（Microsoft Office Online、draw.io、Photopea）
     // 部署时需要满足对应条件，否则即使启用了也无法查看
     externalViewer: false,
+    // 是否启用 polyfill 以支持查看 JPEG XL 格式的图片
+    // 如果浏览器原生支持 JPEG XL（参见 https://caniuse.com/jpegxl）则不会有影响
+    // 如果没有原生支持，启用后查看 JPEG XL 图片时会自动加载 polyfill（https://github.com/hjanuschka/jxl-rs-polyfill）
+    // 未启用但是设置了 externalViewer 的话，也可以使用 Photopea 查看
+    // 默认从 https://cdn.jsdelivr.net/npm/jxl-rs-polyfill/dist/jxl-polyfill.min.js 加载 polyfill
+    // 也可以自行保存 jxl-polyfill.js、jxl_wasm.js、jxl_wasm_bg.wasm 后在这里填写 jxl-polyfill.js 的 URL
+    jxlPolyfill: false,
 };
 
 // 由 dufs 填充的页面内容，不要修改

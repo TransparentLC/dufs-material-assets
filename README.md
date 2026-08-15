@@ -214,6 +214,9 @@ window.__DUFS_MATERIAL_CONFIG__ = {
     // 点击文件名时，如果是可以预览的文件类型则显示预览而不是下载文件
     // 仍然可以点击右边和预览对话框的下载按钮下载，以及在文件名上右键复制链接
     preferPreview: false,
+    // 预览代码时，如果总行数或单行长度超过阈值则不进行代码高亮
+    codeHighlightMaxLines: 0,
+    codeHighlightMaxLineLength: 0,
 };
 
 // 由 dufs 填充的页面内容，不要修改

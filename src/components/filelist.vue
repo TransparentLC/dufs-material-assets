@@ -1104,6 +1104,8 @@ const display = useDisplay();
 const isLocal = isLocalAddress(location.hostname);
 const externalViewer = window.__DUFS_MATERIAL_CONFIG__?.externalViewer;
 const preferPreview = window.__DUFS_MATERIAL_CONFIG__?.preferPreview;
+const codeHighlightMaxLines = window.__DUFS_MATERIAL_CONFIG__?.codeHighlightMaxLines;
+const codeHighlightMaxLineLength = window.__DUFS_MATERIAL_CONFIG__?.codeHighlightMaxLineLength;
 const open = url => window.open(url);
 
 const glassmorphism = Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
@@ -1308,7 +1310,12 @@ const updatePreviewContent = async () => {
     if (previewItem.value.ext === 'md') {
         previewContent.value = marked.parse(r);
     } else {
-        const lang = codeLanguageTable[previewItem.value.ext];
+        const lineLengths = r.split('\n').map(e => e.trim().length);
+        const skipHighlight = (
+            (codeHighlightMaxLines && lineLengths.length > codeHighlightMaxLines) ||
+            (codeHighlightMaxLineLength && Math.max.apply(null, lineLengths) > codeHighlightMaxLineLength)
+        );
+        const lang = skipHighlight ? 'plain' : codeLanguageTable[previewItem.value.ext];
         if (lang && prism.languages[lang]) {
             previewContent.value = `<pre class="line-numbers language-${lang} w-100" style="background:none"><code class="language-${lang}">${prism.highlight(r, prism.languages[lang], lang)}</code></pre>`;
             nextTick(() => prism.highlightAll());

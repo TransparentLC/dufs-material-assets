@@ -313,6 +313,7 @@
                                     :href="p.fullpath"
                                     class="text-decoration-none"
                                     style="color:inherit;overflow-wrap:anywhere"
+                                    @click="e => filenameClickPreview(p, e)"
                                 >{{ p.name }}</a>
                                 <v-icon
                                     v-if="p.is_symlink"
@@ -1102,6 +1103,7 @@ const display = useDisplay();
 
 const isLocal = isLocalAddress(location.hostname);
 const externalViewer = window.__DUFS_MATERIAL_CONFIG__?.externalViewer;
+const preferPreview = window.__DUFS_MATERIAL_CONFIG__?.preferPreview;
 const open = url => window.open(url);
 
 const glassmorphism = Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
@@ -1797,5 +1799,53 @@ watch(previewItem, async () => {
             break;
     }
 });
+
+/**
+ * @param {PathItem} p
+ * @param {[PointerEvent]} e
+ */
+const filenameClickPreview = (p, e) => {
+    if (!preferPreview) return;
+    previewItem.value = null;
+    if (previewableImageExts.has(p.ext)) {
+        previewMode.value = 'image';
+        previewItem.value = p;
+    } else if (previewableVideoExts.has(p.ext)) {
+        previewMode.value = 'video';
+        previewItem.value = p;
+        updateVideoSubtitles(p);
+    } else if (previewableAudioExts.has(p.ext)) {
+        previewMode.value = 'audio';
+        previewItem.value = p;
+        updateAudioTags(p);
+        previewAudioDuration.value = 0;
+    } else if (p.ext === 'pdf') {
+        previewMode.value = 'pdf';
+        previewItem.value = p;
+    } else if (previewableTextFilenames.has(p.filename.toLowerCase()) || previewableTextExts.has(p.ext) || codeLanguageTable[p.ext]) {
+        previewMode.value = 'text';
+        previewItem.value = p;
+        previewContent.value = '';
+        updatePreviewContent();
+    } else if (reviewableFontExts.has(p.ext)) {
+        previewMode.value = 'font';
+        previewItem.value = p;
+    } else if (externalViewer) {
+        if (previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal) {
+            previewMode.value = 'office';
+            previewItem.value = p;
+        } else if (previewableDrawioExts.has(p.ext) && !isLocal) {
+            previewMode.value = 'drawio';
+            previewItem.value = p;
+        } else if (previewablePhotopeaExts.has(p.ext)) {
+            previewMode.value = 'photopea';
+            previewItem.value = p;
+        }
+    }
+    if (previewItem.value) {
+        previewDialog.value = true;
+        if (e) e.preventDefault();
+    }
+};
 
 </script>

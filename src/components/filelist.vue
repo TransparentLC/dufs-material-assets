@@ -159,16 +159,16 @@
                 <template v-slot:prepend>
                     <v-btn
                         variant="text"
+                        icon="$mdiRefresh"
+                        density="comfortable"
+                        @click="updateFilelist().then(() => $toast.success(t('toastRefreshSuccess')))"
+                    ></v-btn>
+                    <v-btn
+                        variant="text"
                         icon="$mdiHome"
                         density="comfortable"
                         :to="pathPrefix"
                         :active="false"
-                    ></v-btn>
-                    <v-btn
-                        variant="text"
-                        icon="$mdiRefresh"
-                        density="comfortable"
-                        @click="updateFilelist().then(() => $toast.success(t('toastRefreshSuccess')))"
                     ></v-btn>
                     <div class="mx-1"></div>
                 </template>
@@ -1222,7 +1222,7 @@ const updateFilelist = async () => {
 const updateFilelistResetPage = () => updateFilelist().then(() => filelistPage.value = 1);
 
 const breadcrumb = computed(() => {
-    const r = [{title: '/', href: pathPrefix}];
+    const r = [];
     let h = pathPrefix;
     for (const p of removeSuffix(currentPathWithoutPrefix.value, '/').split('/').slice(1)) {
         h += p + '/';

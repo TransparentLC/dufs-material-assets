@@ -159,16 +159,24 @@
                 <template v-slot:prepend>
                     <v-btn
                         variant="text"
-                        icon="$mdiRefresh"
-                        density="comfortable"
-                        @click="updateFilelist().then(() => $toast.success(t('toastRefreshSuccess')))"
-                    ></v-btn>
-                    <v-btn
-                        variant="text"
                         icon="$mdiHome"
                         density="comfortable"
                         :to="pathPrefix"
                         :active="false"
+                    ></v-btn>
+                    <v-btn
+                        variant="text"
+                        icon="$mdiTrayArrowUp"
+                        density="comfortable"
+                        :to="breadcrumb.length > 1 ? breadcrumb[breadcrumb.length - 2].href : pathPrefix"
+                        :disabled="!breadcrumb.length"
+                        :active="false"
+                    ></v-btn>
+                    <v-btn
+                        variant="text"
+                        icon="$mdiRefresh"
+                        density="comfortable"
+                        @click="updateFilelist().then(() => $toast.success(t('toastRefreshSuccess')))"
                     ></v-btn>
                     <div class="mx-1"></div>
                 </template>
@@ -1228,6 +1236,7 @@ const breadcrumb = computed(() => {
         h += p + '/';
         r.push({ title: decodeURIComponent(p), href: h });
     }
+    console.log('breadcrumb', r);
     return r;
 });
 

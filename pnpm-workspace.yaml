@@ -1,5 +1,4 @@
 allowBuilds:
   esbuild: true
 patchedDependencies:
-  is-local-address: patches/is-local-address.patch
   subsrt: patches/subsrt.patch

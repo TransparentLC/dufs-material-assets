@@ -75,7 +75,7 @@ Object.assign(footerRenderer, {
 const footer = marked.parse(`${window.__DUFS_MATERIAL_CONFIG__?.footer || ''}\n\nPowered by [dufs](https://github.com/sigoden/dufs) v${dufsVersion} & [dufs-material-assets](https://github.com/TransparentLC/dufs-material-assets)`, { renderer: footerRenderer });
 
 const theme = useTheme();
-theme.global.name.value = isDark.value ? 'dark' : 'light';
-watch(isDark, () => theme.global.name.value = isDark.value ? 'dark' : 'light');
+theme.change(isDark.value ? 'dark' : 'light');
+watch(isDark, () => theme.change(isDark.value ? 'dark' : 'light'));
 
 </script>

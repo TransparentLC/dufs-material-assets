@@ -1236,7 +1236,6 @@ const breadcrumb = computed(() => {
         h += p + '/';
         r.push({ title: decodeURIComponent(p), href: h });
     }
-    console.log('breadcrumb', r);
     return r;
 });
 

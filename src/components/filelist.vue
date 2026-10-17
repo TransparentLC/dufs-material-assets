@@ -465,71 +465,7 @@
                                     ></v-btn>
                                 </template>
                             </v-tooltip>
-                            <v-tooltip
-                                v-if="
-                                    filelist.allow_upload
-                                    && filelist.allow_delete
-                                    && p.size < 1048576
-                                    && (
-                                        previewableTextFilenames.has(p.filename.toLowerCase())
-                                        || previewableTextExts.has(p.ext)
-                                        || codeLanguageTable[p.ext]
-                                    )
-                                "
-                                :text="t('actionEditFile')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileDocumentEdit"
-                                        density="comfortable"
-                                        @click="editDialog = true; editItem = p; editContent = ''; updateEditContent()"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="filelist.allow_delete"
-                                :text="t('actionMove')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileMove"
-                                        density="comfortable"
-                                        @click="moveFile(p)"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="filelist.allow_delete"
-                                :text="t(p.is_dir ? 'actionDeleteFolder' : 'actionDeleteFile')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiDeleteForever"
-                                        density="comfortable"
-                                        @click="deleteFile(p)"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
-                                :text="t('actionCopyLinkWithToken')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiLinkBoxVariant"
-                                        density="comfortable"
-                                        @click="copyLinkWithToken(p)"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
+
                             <v-tooltip
                                 v-if="p.is_dir && filelist.allow_archive"
                                 :text="t('actionDownloadArchive')"
@@ -560,6 +496,127 @@
                                     ></v-btn>
                                 </template>
                             </v-tooltip>
+
+                            <v-menu>
+                                <template v-slot:activator="{ props }">
+                                    <v-btn
+                                        v-bind="props"
+                                        variant="plain"
+                                        icon="$mdiDotsHorizontal"
+                                        density="comfortable"
+                                    ></v-btn>
+                                </template>
+                                <v-list density="compact">
+                                    <v-list-item
+                                        v-if="!p.is_dir"
+                                        :title="t('actionDownloadFile')"
+                                        prepend-icon="$mdiDownload"
+                                        :href="currentPath + encodeURIComponent(p.name)"
+                                        :download="p.filename"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="p.is_dir && filelist.allow_archive"
+                                        :title="t('actionDownloadArchive')"
+                                        prepend-icon="$mdiFolderDownload"
+                                        :href="currentPath + encodeURIComponent(p.name) + '/?zip'"
+                                        :download="p.filename + '.zip'"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
+                                        :title="t('actionCopyLinkWithToken')"
+                                        prepend-icon="$mdiLinkVariant"
+                                        @click="copyLinkWithToken(p)"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableImageExts.has(p.ext)"
+                                        :title="t('actionPlayVideo')"
+                                        prepend-icon="$mdiImageSearch"
+                                        @click="previewDialog = true; previewMode = 'image'; previewItem = p"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableVideoExts.has(p.ext)"
+                                        :title="t('actionPlayVideo')"
+                                        prepend-icon="$mdiVideo"
+                                        @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableAudioExts.has(p.ext)"
+                                        :title="t('actionPlayAudio')"
+                                        prepend-icon="$mdiDiscPlayer"
+                                        @click="previewDialog = true; previewMode = 'audio'; previewItem = p; updateAudioTags(p); previewAudioDuration = 0"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="p.ext === 'pdf'"
+                                        :title="t('actionViewFile')"
+                                        prepend-icon="$mdiFileSearch"
+                                        @click="previewDialog = true; previewMode = 'pdf'; previewItem = p"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
+                                        :title="t('actionViewOffice')"
+                                        prepend-icon="$mdiFileSearch"
+                                        @click="previewDialog = true; previewMode = 'office'; previewItem = p"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
+                                        :title="t('actionViewDrawio')"
+                                        prepend-icon="$mdiFileSearch"
+                                        @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
+                                        :title="t('actionViewPhotopea')"
+                                        prepend-icon="$mdiLayersSearch"
+                                        @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="
+                                            previewableTextFilenames.has(p.filename.toLowerCase())
+                                            || previewableTextExts.has(p.ext)
+                                            || codeLanguageTable[p.ext]
+                                        "
+                                        :title="t('actionViewFile')"
+                                        prepend-icon="$mdiFileSearch"
+                                        @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="previewableFontExts.has(p.ext)"
+                                        :title="t('actionViewFile')"
+                                        prepend-icon="$mdiFileSearch"
+                                        @click="previewDialog = true; previewMode = 'font'; previewItem = p"
+                                    ></v-list-item>
+
+                                    <v-divider v-if="filelist.allow_delete"></v-divider>
+
+                                    <v-list-item
+                                        v-if="
+                                            filelist.allow_upload
+                                            && filelist.allow_delete
+                                            && p.size < 1048576
+                                            && (
+                                                previewableTextFilenames.has(p.filename.toLowerCase())
+                                                || previewableTextExts.has(p.ext)
+                                                || codeLanguageTable[p.ext]
+                                            )
+                                        "
+                                        :title="t('actionEditFile')"
+                                        prepend-icon="$mdiFileDocumentEdit"
+                                        @click="editDialog = true; editItem = p; editContent = ''; updateEditContent()"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="filelist.allow_delete"
+                                        :title="t('actionMove')"
+                                        prepend-icon="$mdiFileMove"
+                                        @click="moveFile(p)"
+                                    ></v-list-item>
+                                    <v-list-item
+                                        v-if="filelist.allow_delete"
+                                        :title="t(p.is_dir ? 'actionDeleteFolder' : 'actionDeleteFile')"
+                                        prepend-icon="$mdiDeleteForever"
+                                        @click="deleteFile(p)"
+                                    ></v-list-item>
+                                </v-list>
+                            </v-menu>
                         </td>
                     </tr>
                 </tbody>
@@ -1089,6 +1146,7 @@ const dufsfetch = (input, init = {}) => fetch(input, init)
  *      ext: String,
  *      fullpath: String,
  *      filename: String,
+ *      menu
  * }} PathItem
  * @typedef {{
  *      allow_archive: Boolean,

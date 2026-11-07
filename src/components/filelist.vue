@@ -298,6 +298,7 @@
                 <tbody>
                     <tr
                         v-for="p in filelistPathsSorted.slice((filelistPage - 1) * filelistPageSize, filelistPage * filelistPageSize)"
+                        :key="p.fullpath"
                         v-ripple
                     >
                         <td>
@@ -669,10 +670,7 @@
         :total-visible="display.xs.value ? 5 : (display.smAndDown.value ? 7 : 9)"
         v-model="filelistPage"
         :length="filelistPageCount"
-        @mousedown="filelistPageDown"
-        @mouseup="filelistPageUp"
-        @touchstart="e => e.preventDefault() || filelistPageDown()"
-        @touchend="e => e.preventDefault() || filelistPageUp()"
+        @dblclick="filelistDoubleClick"
     ></v-pagination>
 
     <v-dialog
@@ -1212,13 +1210,12 @@ const filelistPathsSorted = computed(() => {
 const filelistPageSize = window.__DUFS_MATERIAL_CONFIG__?.limit || Infinity;
 const filelistPageCount = computed(() => Math.ceil(filelistPathsSorted.value.length / filelistPageSize));
 const filelistPage = ref(1);
-let filelistPageTimer = null;
-const filelistPageDown = () => filelistPageTimer = setTimeout(() => filelistPageTimer = null, 500);
-const filelistPageUp = async () => {
-    if (filelistPageTimer === null) {
-        const page = parseInt(await $dialog.promises.prompt(t('dialogPageSkipLabel', [1, filelistPageCount.value]), t('titlePageSkip')));
-        if (!isNaN(page) && 1 <= page && page <= filelistPageCount.value) filelistPage.value = page;
-    };
+/**
+ * @param {MouseEvent} e
+ */
+const filelistDoubleClick = async e => {
+    const page = parseInt(await $dialog.promises.prompt(t('dialogPageSkipLabel', [1, filelistPageCount.value]), t('titlePageSkip'), { persistent: true }));
+    if (!isNaN(page) && 1 <= page && page <= filelistPageCount.value) filelistPage.value = page;
 };
 
 const readmeItem = computed(() => filelist.value.paths.find(e => !e.is_dir && readmeFilenames.has(e.filename.toLowerCase())));

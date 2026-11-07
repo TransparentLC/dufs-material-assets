@@ -22,6 +22,7 @@ const extIconColorTable = {
     'weba': ['$mdiFileMusic', '#651fff'],
 
     'mp4': ['$mdiFileVideo', '#d50000'],
+    'm4v': ['$mdiFileVideo', '#d50000'],
     'flv': ['$mdiFileVideo', '#d50000'],
     'wmv': ['$mdiFileVideo', '#d50000'],
     'rm': ['$mdiFileVideo', '#d50000'],
@@ -212,7 +213,7 @@ export const codeLanguageTable = {
 };
 
 export const previewableImageExts = new Set(['bmp', 'jpg', 'jpeg', 'gif', 'png', 'webp', 'avif', 'jxl', 'svg']);
-export const previewableVideoExts = new Set(['mp4', 'webm', 'ogv']);
+export const previewableVideoExts = new Set(['mp4', 'm4v', 'mkv', 'webm', 'ogv']);
 export const previewableAudioExts = new Set(['mp3', 'm4a', 'ogg', 'weba', 'oga', 'flac', 'opus']);
 export const previewableTextExts = new Set(['txt', 'log', 'conf', 'ini', 'md', 'gitignore', 'vtt', 'srt', 'ass']);
 export const previewableFontExts = new Set(['ttf', 'ttc', 'otf', 'otc', 'woff', 'woff2']);

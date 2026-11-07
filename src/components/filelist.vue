@@ -498,7 +498,7 @@
                                 </template>
                             </v-tooltip>
 
-                            <v-menu>
+                            <v-menu v-if="!p.is_dir || (p.is_dir && filelist.allow_archive)">
                                 <template v-slot:activator="{ props }">
                                     <v-btn
                                         v-bind="props"
@@ -528,64 +528,66 @@
                                         prepend-icon="$mdiLinkVariant"
                                         @click="copyLinkWithToken(p)"
                                     ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableImageExts.has(p.ext)"
-                                        :title="t('actionPlayVideo')"
-                                        prepend-icon="$mdiImageSearch"
-                                        @click="previewDialog = true; previewMode = 'image'; previewItem = p"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableVideoExts.has(p.ext)"
-                                        :title="t('actionPlayVideo')"
-                                        prepend-icon="$mdiVideo"
-                                        @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableAudioExts.has(p.ext)"
-                                        :title="t('actionPlayAudio')"
-                                        prepend-icon="$mdiDiscPlayer"
-                                        @click="previewDialog = true; previewMode = 'audio'; previewItem = p; updateAudioTags(p); previewAudioDuration = 0"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="p.ext === 'pdf'"
-                                        :title="t('actionViewFile')"
-                                        prepend-icon="$mdiFileSearch"
-                                        @click="previewDialog = true; previewMode = 'pdf'; previewItem = p"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
-                                        :title="t('actionViewOffice')"
-                                        prepend-icon="$mdiFileSearch"
-                                        @click="previewDialog = true; previewMode = 'office'; previewItem = p"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
-                                        :title="t('actionViewDrawio')"
-                                        prepend-icon="$mdiFileSearch"
-                                        @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
-                                        :title="t('actionViewPhotopea')"
-                                        prepend-icon="$mdiLayersSearch"
-                                        @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="
-                                            previewableTextFilenames.has(p.filename.toLowerCase())
-                                            || previewableTextExts.has(p.ext)
-                                            || codeLanguageTable[p.ext]
-                                        "
-                                        :title="t('actionViewFile')"
-                                        prepend-icon="$mdiFileSearch"
-                                        @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
-                                    ></v-list-item>
-                                    <v-list-item
-                                        v-if="previewableFontExts.has(p.ext)"
-                                        :title="t('actionViewFile')"
-                                        prepend-icon="$mdiFileSearch"
-                                        @click="previewDialog = true; previewMode = 'font'; previewItem = p"
-                                    ></v-list-item>
+                                    <template v-if="!p.is_dir">
+                                        <v-list-item
+                                            v-if="previewableImageExts.has(p.ext)"
+                                            :title="t('actionPlayVideo')"
+                                            prepend-icon="$mdiImageSearch"
+                                            @click="previewDialog = true; previewMode = 'image'; previewItem = p"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewableVideoExts.has(p.ext)"
+                                            :title="t('actionPlayVideo')"
+                                            prepend-icon="$mdiVideo"
+                                            @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewableAudioExts.has(p.ext)"
+                                            :title="t('actionPlayAudio')"
+                                            prepend-icon="$mdiDiscPlayer"
+                                            @click="previewDialog = true; previewMode = 'audio'; previewItem = p; updateAudioTags(p); previewAudioDuration = 0"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="p.ext === 'pdf'"
+                                            :title="t('actionViewFile')"
+                                            prepend-icon="$mdiFileSearch"
+                                            @click="previewDialog = true; previewMode = 'pdf'; previewItem = p"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
+                                            :title="t('actionViewOffice')"
+                                            prepend-icon="$mdiFileSearch"
+                                            @click="previewDialog = true; previewMode = 'office'; previewItem = p"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
+                                            :title="t('actionViewDrawio')"
+                                            prepend-icon="$mdiFileSearch"
+                                            @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
+                                            :title="t('actionViewPhotopea')"
+                                            prepend-icon="$mdiLayersSearch"
+                                            @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="
+                                                previewableTextFilenames.has(p.filename.toLowerCase())
+                                                || previewableTextExts.has(p.ext)
+                                                || codeLanguageTable[p.ext]
+                                            "
+                                            :title="t('actionViewFile')"
+                                            prepend-icon="$mdiFileSearch"
+                                            @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
+                                        ></v-list-item>
+                                        <v-list-item
+                                            v-if="previewableFontExts.has(p.ext)"
+                                            :title="t('actionViewFile')"
+                                            prepend-icon="$mdiFileSearch"
+                                            @click="previewDialog = true; previewMode = 'font'; previewItem = p"
+                                        ></v-list-item>
+                                    </template>
 
                                     <v-divider v-if="filelist.allow_delete"></v-divider>
 
@@ -1325,8 +1327,8 @@ new Promise(resolve => {
         }
         const unwatchHandle = watch(previewItem, () => {
             if (previewMode.value === 'image' && previewItem.value.ext === 'jxl') {
-                /* @vite-ignore */
                 import(
+                    /* @vite-ignore */
                     typeof window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill === 'string'
                         ? window.__DUFS_MATERIAL_CONFIG__?.jxlPolyfill
                         : 'https://cdn.jsdelivr.net/npm/jxl-rs-polyfill/dist/jxl-polyfill.min.js'

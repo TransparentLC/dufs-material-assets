@@ -1087,7 +1087,7 @@
                     variant="plain"
                     icon="$mdiClose"
                     density="comfortable"
-                    @click="aria2Item = false"
+                    @click="aria2Dialog = false"
                 ></v-btn>
             </v-card-title>
             <v-divider></v-divider>
@@ -1619,7 +1619,7 @@ const checkAria2Version = async () => {
             method: 'POST',
             body: JSON.stringify({
                 jsonrpc: '2.0',
-                id: Date.now().toString(),
+                id: `dufs-material-assets-${Date.now()}`,
                 method: 'aria2.getVersion',
                 params,
             }),
@@ -1654,7 +1654,7 @@ const triggerAria2Download = async () => {
             method: 'POST',
             body: JSON.stringify({
                 jsonrpc: '2.0',
-                id: Date.now().toString(),
+                id: `dufs-material-assets-${Date.now()}`,
                 method: 'aria2.addUri',
                 params,
             }),

@@ -528,6 +528,12 @@
                                         prepend-icon="$mdiLinkVariant"
                                         @click="copyLinkWithToken(p)"
                                     ></v-list-item>
+                                    <v-list-item
+                                        v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
+                                        :title="t('actionAria2')"
+                                        prepend-icon="$mdiDownloadNetworkOutline"
+                                        @click="aria2Dialog = true; aria2Item = p; aria2Filename = p.filename"
+                                    ></v-list-item>
                                     <template v-if="!p.is_dir">
                                         <v-list-item
                                             v-if="previewableImageExts.has(p.ext)"
@@ -1062,6 +1068,86 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog
+        v-model="aria2Dialog"
+        width="min(540px, calc(100vw - 32px))"
+        :style="glassmorphism.preview"
+    >
+        <v-card>
+            <v-card-title class="d-flex align-center">
+                <v-icon
+                    color="primary"
+                    icon="$mdiDownloadNetworkOutline"
+                    class="mr-2 flex-shrink-0"
+                ></v-icon>
+                <span class="flex-grow-1 text-truncate" :title="t('dialogAria2', [aria2Item.filename])">
+                    {{ t('dialogAria2', [aria2Item.filename]) }}
+                </span>
+                <v-btn
+                    variant="plain"
+                    icon="$mdiClose"
+                    density="comfortable"
+                    @click="aria2Item = false"
+                ></v-btn>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-text-field
+                    class="mb-4"
+                    v-model="aria2Config.endpoint"
+                    hide-details
+                    clearable
+                    color="primary"
+                    :label="t('aria2Endpoint')"
+                    placeholder="http://example.com:6800/jsonrpc"
+                    :rules="[() => urlCanParse(aria2Config.endpoint)]"
+                ></v-text-field>
+                <v-text-field
+                    class="mb-4"
+                    v-model="aria2Config.token"
+                    hide-details
+                    clearable
+                    color="primary"
+                    :label="t('aria2Token')"
+                    type="password"
+                ></v-text-field>
+                <v-text-field
+                    class="mb-4"
+                    v-model="aria2Config.dir"
+                    hide-details
+                    clearable
+                    color="primary"
+                    :label="t('aria2Dir')"
+                ></v-text-field>
+                <v-text-field
+                    class="mb-4"
+                    v-model="aria2Filename"
+                    hide-details
+                    clearable
+                    color="primary"
+                    :label="t('aria2Filename')"
+                ></v-text-field>
+                <v-row>
+                    <v-col cols="6">
+                        <v-btn
+                            block
+                            @click="checkAria2Version"
+                            :disabled="!urlCanParse(aria2Config.endpoint)"
+                        >{{ t('dialogAria2Check') }}</v-btn>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-btn
+                            block
+                            color="primary"
+                            @click="triggerAria2Download"
+                            :disabled="!urlCanParse(aria2Config.endpoint)"
+                        >{{ t('dialogAria2Download') }}</v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+
     <audio
         ref="previewAudio"
         preload="metadata"
@@ -1173,6 +1259,7 @@ const preferPreview = window.__DUFS_MATERIAL_CONFIG__?.preferPreview;
 const codeHighlightMaxLines = window.__DUFS_MATERIAL_CONFIG__?.codeHighlightMaxLines;
 const codeHighlightMaxLineLength = window.__DUFS_MATERIAL_CONFIG__?.codeHighlightMaxLineLength;
 const open = url => window.open(url);
+const urlCanParse = URL.canParse;
 
 const glassmorphism = Object.fromEntries(['filelist', 'readme', 'preview'].map(k => {
     const e = window.__DUFS_MATERIAL_CONFIG__?.glassmorphism?.[k];
@@ -1312,11 +1399,24 @@ const readmeExpand = ref(true);
 const readmeRichMode = ref(false);
 const readmeContent = ref('');
 
+const aria2Dialog = ref(false);
+/** @type {import('vue').Ref<PathItem>} */
+const aria2Item = ref({});
+const aria2Filename = ref('');
+const aria2Config = reactive(localStorage.aria2Config ? JSON.parse(localStorage.aria2Config) : {
+    endpoint: 'http://localhost:6800/jsonrpc',
+    token: '',
+    dir: '',
+});
+watch(aria2Config, () => {
+    localStorage.setItem('aria2Config', JSON.stringify(aria2Config));
+});
+
 watch(previewDialog, () => {
     if (!previewDialog.value) setTimeout(() => previewItem.value = {}, 250);
 });
 
-new Promise(resolve => {
+(() => {
     const image = new Image;
     image.onload = () => {};
     image.onerror = () => {
@@ -1340,7 +1440,7 @@ new Promise(resolve => {
         });
     };
     image.src = 'data:image/jxl;base64,/wp/QCQIBgEAFABLEiRhAA';
-});
+})();
 
 const updateReadme = async () => {
     if (!readmeItem.value) return;
@@ -1509,6 +1609,68 @@ const copyLinkWithToken = async e => {
     $toast.success(t('toastCopyLinkWithToken', [formatTimestamp(parseInt((new URL(link)).searchParams.get('token').substring(128, 144), 16))]));
 };
 
+const checkAria2Version = async () => {
+    try {
+        const params = [];
+        if (aria2Config.token) {
+            params.unshift(`token:${aria2Config.token}`);
+        }
+        await fetch(aria2Config.endpoint, {
+            method: 'POST',
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: Date.now().toString(),
+                method: 'aria2.getVersion',
+                params,
+            }),
+        })
+            .then(r => r.json())
+            .then(r => {
+                if (r.error) {
+                    throw new Error(r.error.message);
+                }
+                $toast.success(t('toastAria2Check', [r.result.version]));
+            });
+    } catch (err) {
+        $toast.error(t('toastAria2ErrorWithReason', [err.toString()]));
+    }
+};
+
+const triggerAria2Download = async () => {
+    try {
+        aria2Dialog.value = false;
+        const link = await getLinkWithToken(aria2Item.value);
+        const params = [[link], {}];
+        if (aria2Config.dir) {
+            params[1].dir = aria2Config.dir;
+        }
+        if (aria2Filename.value) {
+            params[1].out = aria2Filename.value;
+        }
+        if (aria2Config.token) {
+            params.unshift(`token:${aria2Config.token}`);
+        }
+        await fetch(aria2Config.endpoint, {
+            method: 'POST',
+            body: JSON.stringify({
+                jsonrpc: '2.0',
+                id: Date.now().toString(),
+                method: 'aria2.addUri',
+                params,
+            }),
+        })
+            .then(r => r.json())
+            .then(r => {
+                if (r.error) {
+                    throw new Error(r.error.message);
+                }
+            });
+        $toast.success(t('toastAria2Success'));
+    } catch (err) {
+        $toast.error(t('toastAria2ErrorWithReason', [err.toString()]));
+    }
+};
+
 /**
  * @type {import('vue').Ref<Uploader[]>}
  */
@@ -1637,8 +1799,8 @@ const createFile = async () => {
             e.status = r.status;
             throw e;
         }
-    } catch (e) {
-        $toast.error(e.toString());
+    } catch (err) {
+        $toast.error(err.toString());
     }
     await dufsfetch(url, { method: 'PUT' });
     $toast.success(t('toastCreateFile', [path]));

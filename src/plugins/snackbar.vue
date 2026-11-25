@@ -8,6 +8,8 @@
             :left="left"
             :right="right"
             :timeout="timeout"
+            :timer="timer"
+            :timer-color="timerColor"
         >
             {{ content }}
             <template #actions>
@@ -32,6 +34,8 @@ const top = ref(false);
 const left = ref(false);
 const right = ref(false);
 const timeout = ref(0);
+const timer = ref(false);
+const timerColor = ref('');
 const color = ref('');
 const buttonColor = ref('');
 const content = ref('');
@@ -47,6 +51,8 @@ defineExpose({
     left,
     right,
     timeout,
+    timer,
+    timerColor,
     color,
     buttonColor,
     content,

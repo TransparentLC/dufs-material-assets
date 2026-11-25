@@ -23,6 +23,8 @@ export default {
          *  left: Boolean,
          *  right: Boolean,
          *  timeout: Number,
+         *  timer: Boolean | 'top' | 'bottom',
+         *  timerColor: String,
          *  color: String
          *  buttonColor: String,
          *  content: String,
@@ -39,6 +41,8 @@ export default {
             left: false,
             right: false,
             timeout: 5000,
+            timer: 'bottom',
+            timerColor: undefined,
             color: null,
             buttonColor: 'primary-lighten-2',
             content: null,
@@ -47,18 +51,16 @@ export default {
             onClose: () => {},
         };
 
+        let timeoutTimer;
+
         /** @type {SnackbarConfig[]} */
         const queue = [];
         const activateToast = () => {
             if (!queue.length || vm.active) return;
             Object.assign(vm, queue.shift());
+            timeoutTimer = setTimeout(vm.onClose, vm.timeout);
             vm.active = true;
         };
-        vm.$watch('active', newval => {
-            if (newval) return;
-            vm.onClose();
-            setTimeout(activateToast, 150);
-        });
 
         /**
          * @param {String} content
@@ -69,6 +71,17 @@ export default {
                 ...defaultConfig,
                 ...config,
                 content,
+                onClickButton: () => {
+                    if (config.onClickButton) config.onClickButton();
+                    if (config.onClose) config.onClose();
+                    setTimeout(activateToast, 200);
+                    clearTimeout(timeoutTimer);
+                },
+                onClose: () => {
+                    if (config.onClose) config.onClose();
+                    setTimeout(activateToast, 200);
+                    clearTimeout(timeoutTimer);
+                },
             });
             activateToast();
         };
@@ -81,6 +94,7 @@ export default {
             $toast[color] = (content, config = {}) => $toast(content, {
                 color,
                 buttonColor: 'white',
+                timerColor: 'white',
                 ...config,
             });
         }

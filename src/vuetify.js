@@ -1,5 +1,5 @@
 import { createVuetify } from 'vuetify';
-import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
+import { mdi } from 'vuetify/iconsets/mdi-svg';
 import 'vuetify/styles';
 import {
     mdiAndroid,
@@ -20,6 +20,8 @@ import {
     mdiDotsHorizontal,
     mdiDownload,
     mdiDownloadNetworkOutline,
+    mdiEye,
+    mdiEyeOff,
     mdiFile,
     mdiFileDocumentEdit,
     mdiFileDocumentPlus,
@@ -103,7 +105,9 @@ export default createVuetify({
     icons: {
         defaultSet: 'mdi',
         aliases: {
-            ...aliases,
+            // import { aliases } from 'vuetify/iconsets/mdi-svg';
+            clear: mdiCloseCircle,
+
             mdiAndroid,
             mdiBook,
             mdiBookOpenVariant,
@@ -122,6 +126,8 @@ export default createVuetify({
             mdiDotsHorizontal,
             mdiDownload,
             mdiDownloadNetworkOutline,
+            mdiEye,
+            mdiEyeOff,
             mdiFile,
             mdiFileDocumentEdit,
             mdiFileDocumentPlus,

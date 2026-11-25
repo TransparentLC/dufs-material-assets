@@ -74,6 +74,11 @@ messages.en = {
     aria2Token: 'aria2 RPC token',
     aria2Dir: 'Download dir (leave blank for default)',
     aria2Filename: 'Filename',
+    aria2HelpSummary: 'What is this?',
+    aria2Help0Prefix: '',
+    aria2Help0Suffix: ' is a cross-platform and lightweight download utility. You can setup it and add download task via its RPC endpoint remotely.',
+    aria2Help1Prefix: 'You must enable CORS on the RPC endpoint to use this feature, such as by enabling ',
+    aria2Help1Suffix: ' in aria2\'s config.',
 };
 messages['zh-CN'] = {
     dialogButtonConfirmText: '确定',
@@ -147,6 +152,11 @@ messages['zh-CN'] = {
     aria2Token: 'aria2 RPC 密钥',
     aria2Dir: '下载路径（留空则使用默认路径）',
     aria2Filename: '自定义文件名',
+    aria2HelpSummary: '这是什么？',
+    aria2Help0Prefix: '',
+    aria2Help0Suffix: ' 是一个跨平台的轻量级下载工具，部署后可以通过 RPC 接口远程添加下载任务。',
+    aria2Help1Prefix: '使用本功能需要允许 CORS 跨域，例如在 aria2 设定中启用 ',
+    aria2Help1Suffix: '。',
 };
 // https://zhconvert.org/
 // 在 zh-CN 的基础上执行“香港化”
@@ -209,6 +219,11 @@ messages['zh-HK'] = {
     aria2Token: 'aria2 RPC 密鑰',
     aria2Dir: '下載路徑（留空則使用默認路徑）',
     aria2Filename: '自定義文件名',
+    aria2HelpSummary: '這是甚麼？',
+    aria2Help0Prefix: '',
+    aria2Help0Suffix: ' 是一個跨平台的輕量級下載工具，部署後可以通過 RPC 接口遠程添加下載任務。',
+    aria2Help1Prefix: '使用本功能需要允許 CORS 跨域，例如在 aria2 設定中啟用 ',
+    aria2Help1Suffix: '。',
 };
 // https://zhconvert.org/
 // 在 zh-CN 的基础上执行“台湾化”
@@ -220,6 +235,7 @@ messages['zh-TW'] = {
     toastCopyLinkWithToken: '已複製下載連結，有效期截止至 {0}',
     aria2Token: 'aria2 RPC 金鑰',
     aria2Filename: '自訂檔案名',
+    aria2Help0Suffix: ' 是一個跨平台的輕量級下載工具，部署後可以通過 RPC 介面遠程添加下載任務。',
 };
 
 messages['vi'] = {
@@ -294,6 +310,11 @@ messages['vi'] = {
     // aria2Token: 'TODO',
     // aria2Dir: 'TODO',
     // aria2Filename: 'TODO',
+    // aria2HelpSummary: 'TODO',
+    // aria2Help0Prefix: 'TODO',
+    // aria2Help0Suffix: 'TODO',
+    // aria2Help1Prefix: 'TODO',
+    // aria2Help1Suffix: 'TODO',
 };
 
 export default createI18n({

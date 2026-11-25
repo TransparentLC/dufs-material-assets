@@ -336,136 +336,138 @@
                         <td class="text-no-wrap text-right">{{ formatTimestamp(p.mtime) }}</td>
                         <td class="text-no-wrap text-right">{{ p.is_dir ? t('headerSizeSubdirectoryItems', [p.size > 999 ? '>999' : p.size], p.size) : formatSize(p.size) }}</td>
                         <td class="text-no-wrap text-right">
-                            <v-tooltip
-                                v-if="previewableImageExts.has(p.ext)"
-                                :text="t('actionViewImage')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiImageSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'image'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewableVideoExts.has(p.ext)"
-                                :text="t('actionPlayVideo')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiVideo"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewableAudioExts.has(p.ext)"
-                                :text="t('actionPlayAudio')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiDiscPlayer"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'audio'; previewItem = p; updateAudioTags(p); previewAudioDuration = 0"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="p.ext === 'pdf'"
-                                :text="t('actionViewFile')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'pdf'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
-                                :text="t('actionViewOffice')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'office'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
-                                :text="t('actionViewDrawio')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
-                                :text="t('actionViewPhotopea')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiLayersSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="
-                                    previewableTextFilenames.has(p.filename.toLowerCase())
-                                    || previewableTextExts.has(p.ext)
-                                    || codeLanguageTable[p.ext]
-                                "
-                                :text="t('actionViewFile')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
-                            <v-tooltip
-                                v-if="previewableFontExts.has(p.ext)"
-                                :text="t('actionViewFile')"
-                            >
-                                <template v-slot:activator="{ props }">
-                                    <v-btn
-                                        v-bind="props"
-                                        variant="plain"
-                                        icon="$mdiFileSearch"
-                                        density="comfortable"
-                                        @click="previewDialog = true; previewMode = 'font'; previewItem = p"
-                                    ></v-btn>
-                                </template>
-                            </v-tooltip>
+                            <template v-if="!p.is_dir">
+                                <v-tooltip
+                                    v-if="previewableImageExts.has(p.ext)"
+                                    :text="t('actionViewImage')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiImageSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'image'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewableVideoExts.has(p.ext)"
+                                    :text="t('actionPlayVideo')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiVideo"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'video'; previewItem = p; updateVideoSubtitles(p)"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewableAudioExts.has(p.ext)"
+                                    :text="t('actionPlayAudio')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiDiscPlayer"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'audio'; previewItem = p; updateAudioTags(p); previewAudioDuration = 0"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="p.ext === 'pdf'"
+                                    :text="t('actionViewFile')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiFileSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'pdf'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewableOfficeExts.has(p.ext) && p.size <= 10485760 && !isLocal && externalViewer"
+                                    :text="t('actionViewOffice')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiFileSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'office'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewableDrawioExts.has(p.ext) && !isLocal && externalViewer"
+                                    :text="t('actionViewDrawio')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiFileSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'drawio'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewablePhotopeaExts.has(p.ext) && externalViewer"
+                                    :text="t('actionViewPhotopea')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiLayersSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'photopea'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="
+                                        previewableTextFilenames.has(p.filename.toLowerCase())
+                                        || previewableTextExts.has(p.ext)
+                                        || codeLanguageTable[p.ext]
+                                    "
+                                    :text="t('actionViewFile')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiFileSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'text'; previewItem = p; previewContent = ''; updatePreviewContent()"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                                <v-tooltip
+                                    v-if="previewableFontExts.has(p.ext)"
+                                    :text="t('actionViewFile')"
+                                >
+                                    <template v-slot:activator="{ props }">
+                                        <v-btn
+                                            v-bind="props"
+                                            variant="plain"
+                                            icon="$mdiFileSearch"
+                                            density="comfortable"
+                                            @click="previewDialog = true; previewMode = 'font'; previewItem = p"
+                                        ></v-btn>
+                                    </template>
+                                </v-tooltip>
+                            </template>
 
                             <v-tooltip
                                 v-if="p.is_dir && filelist.allow_archive"
@@ -532,7 +534,7 @@
                                         v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
                                         :title="t('actionAria2')"
                                         prepend-icon="$mdiDownloadNetworkOutline"
-                                        @click="aria2Dialog = true; aria2Item = p; aria2Filename = p.filename"
+                                        @click="aria2Dialog = true; aria2Item = p; aria2Filename = p.filename + (p.is_dir ? '.zip' : '')"
                                     ></v-list-item>
                                     <template v-if="!p.is_dir">
                                         <v-list-item
@@ -1080,8 +1082,8 @@
                     icon="$mdiDownloadNetworkOutline"
                     class="mr-2 flex-shrink-0"
                 ></v-icon>
-                <span class="flex-grow-1 text-truncate" :title="t('dialogAria2', [aria2Item.filename])">
-                    {{ t('dialogAria2', [aria2Item.filename]) }}
+                <span class="flex-grow-1 text-truncate" :title="t('dialogAria2', [aria2Item.filename  + (aria2Item.is_dir ? '.zip' : '')])">
+                    {{ t('dialogAria2', [aria2Item.filename  + (aria2Item.is_dir ? '.zip' : '')]) }}
                 </span>
                 <v-btn
                     variant="plain"
@@ -1106,10 +1108,11 @@
                     class="mb-4"
                     v-model="aria2Config.token"
                     hide-details
-                    clearable
                     color="primary"
                     :label="t('aria2Token')"
-                    type="password"
+                    :type="aria2TokenVisible ? 'text' : 'password'"
+                    :append-inner-icon="aria2TokenVisible ? '$mdiEyeOff' : '$mdiEye'"
+                    @click:append-inner="aria2TokenVisible = !aria2TokenVisible"
                 ></v-text-field>
                 <v-text-field
                     class="mb-4"
@@ -1127,6 +1130,11 @@
                     color="primary"
                     :label="t('aria2Filename')"
                 ></v-text-field>
+                <details class="mb-4 text-body-small text-grey">
+                    <summary>{{ t('aria2HelpSummary') }}</summary>
+                    <p>{{ t('aria2Help0Prefix') }}<a style="color:rgb(var(--v-theme-primary))" href="https://aria2.github.io/" target="_blank" rel="noopener noreferrer">aria2</a>{{ t('aria2Help0Suffix') }}</p>
+                    <p>{{ t('aria2Help1Prefix') }}<code><a style="color:rgb(var(--v-theme-primary))" href="https://aria2.github.io/manual/en/html/aria2c.html#cmdoption-rpc-allow-origin-all" target="_blank" rel="noopener noreferrer">rpc-allow-origin-all</a></code>{{ t('aria2Help1Suffix') }}</p>
+                </details>
                 <v-row>
                     <v-col cols="6">
                         <v-btn
@@ -1403,13 +1411,16 @@ const aria2Dialog = ref(false);
 /** @type {import('vue').Ref<PathItem>} */
 const aria2Item = ref({});
 const aria2Filename = ref('');
+const aria2TokenVisible = ref(false);
 const aria2Config = reactive(localStorage.aria2Config ? JSON.parse(localStorage.aria2Config) : {
     endpoint: 'http://localhost:6800/jsonrpc',
     token: '',
     dir: '',
 });
 watch(aria2Config, () => {
-    localStorage.setItem('aria2Config', JSON.stringify(aria2Config));
+    if (URL.canParse(aria2Config.endpoint)) {
+        localStorage.setItem('aria2Config', JSON.stringify(aria2Config));
+    }
 });
 
 watch(previewDialog, () => {
@@ -1617,6 +1628,9 @@ const checkAria2Version = async () => {
         }
         await fetch(aria2Config.endpoint, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 jsonrpc: '2.0',
                 id: `dufs-material-assets-${Date.now()}`,
@@ -1638,7 +1652,6 @@ const checkAria2Version = async () => {
 
 const triggerAria2Download = async () => {
     try {
-        aria2Dialog.value = false;
         const link = await getLinkWithToken(aria2Item.value);
         const params = [[link], {}];
         if (aria2Config.dir) {
@@ -1652,6 +1665,9 @@ const triggerAria2Download = async () => {
         }
         await fetch(aria2Config.endpoint, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 jsonrpc: '2.0',
                 id: `dufs-material-assets-${Date.now()}`,
@@ -1666,6 +1682,7 @@ const triggerAria2Download = async () => {
                 }
             });
         $toast.success(t('toastAria2Success'));
+        aria2Dialog.value = false;
     } catch (err) {
         $toast.error(t('toastAria2ErrorWithReason', [err.toString()]));
     }

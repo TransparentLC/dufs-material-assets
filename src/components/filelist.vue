@@ -531,7 +531,7 @@
                                         @click="copyLinkWithToken(p)"
                                     ></v-list-item>
                                     <v-list-item
-                                        v-if="((p.is_dir && filelist.allow_archive) || !p.is_dir) && filelist.user"
+                                        v-if="(p.is_dir && filelist.allow_archive) || !p.is_dir"
                                         :title="t('actionAria2')"
                                         prepend-icon="$mdiDownloadNetworkOutline"
                                         @click="aria2Dialog = true; aria2Item = p; aria2Filename = p.filename + (p.is_dir ? '.zip' : '')"

@@ -29,6 +29,7 @@
 * 登录后复制带有 Token 的下载链接✨
     * dufs [v0.44.0](https://github.com/sigoden/dufs/pull/603) 添加的功能
     * 此类链接可用于浏览器以外的下载器，无需在下载器中配置登录
+    * 一键提交给 [aria2](https://aria2.github.io/) 离线下载（需要输入 RPC 地址和密钥后）
 * 文件上传
     * 支持拖拽
 * 新建文件夹
